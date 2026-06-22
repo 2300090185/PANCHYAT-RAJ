@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
-import { Shield, Users, Award, Download, CheckCircle2, QrCode, Sparkles, X, Printer, Search, HelpCircle, FileJson } from 'lucide-react';
+import { Shield, Users, Award, Download, CheckCircle2, QrCode, Sparkles, X, Printer, Search, HelpCircle, FileJson, Bot, AlertTriangle } from 'lucide-react';
 
-export default function AdminPanel({ nominations, updateNominationStatus, triggerToast }) {
+export default function AdminPanel({ nominations, updateNominationStatus, triggerToast, resultsReleased, setResultsReleased }) {
   const [searchTerm, setSearchTerm] = useState('');
   const [activeTab, setActiveTab] = useState('nominations'); // nominations, certificates, settings
   const [activeCert, setActiveCert] = useState(null); // Selected nomination for certificate preview
@@ -30,7 +30,7 @@ export default function AdminPanel({ nominations, updateNominationStatus, trigge
 
   return (
     <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8 space-y-8">
-      {/* myGov Government Header */}
+      {/* Government Header */}
       <div className="rounded-2xl overflow-hidden border border-gray-800 shadow-xl">
         {/* Tricolor top bar */}
         <div className="h-1 w-full flex">
@@ -53,7 +53,7 @@ export default function AdminPanel({ nominations, updateNominationStatus, trigge
               <div className="flex items-center gap-2">
                 <h2 className="text-xl font-extrabold text-white flex items-center gap-2">
                   <Shield className="h-5 w-5 text-rose-500" />
-                  <span>my<span className="text-[#FF9933]">Gov</span> Admin Control Panel</span>
+                  <span>Admin Control Panel</span>
                 </h2>
               </div>
               <p className="text-[11px] text-gray-400 mt-0.5">Ministry of Panchayati Raj & Rural Development — Internal Portal</p>
@@ -94,6 +94,16 @@ export default function AdminPanel({ nominations, updateNominationStatus, trigge
         >
           Certificate Issuance ({nominations.filter(n => n.status === 'Award Winner' || n.status === 'Award Recommended').length})
         </button>
+        <button
+          onClick={() => setActiveTab('jury_management')}
+          className={`px-4 py-2 text-xs font-bold transition-all border-b-2 ${
+            activeTab === 'jury_management' 
+              ? 'border-rose-500 text-rose-400' 
+              : 'border-transparent text-gray-500 hover:text-gray-300'
+          }`}
+        >
+          Jury Management
+        </button>
       </div>
 
       {/* SEARCH OR FILTERS */}
@@ -118,6 +128,7 @@ export default function AdminPanel({ nominations, updateNominationStatus, trigge
                     <th className="px-6 py-4">Nominee Name</th>
                     <th className="px-6 py-4">Project Title</th>
                     <th className="px-6 py-4">State</th>
+                    <th className="px-6 py-4">AI Intelligence</th>
                     <th className="px-6 py-4 text-center">Current Status</th>
                     <th className="px-6 py-4 text-right">Actions</th>
                   </tr>
@@ -125,7 +136,7 @@ export default function AdminPanel({ nominations, updateNominationStatus, trigge
                 <tbody className="divide-y divide-gray-900 bg-transparent text-xs text-gray-300">
                   {filteredNominations.length === 0 ? (
                     <tr>
-                      <td colSpan={5} className="text-center py-8 text-gray-500">No matching applications</td>
+                      <td colSpan={6} className="text-center py-8 text-gray-500">No matching applications</td>
                     </tr>
                   ) : (
                     filteredNominations.map(n => (
@@ -141,6 +152,18 @@ export default function AdminPanel({ nominations, updateNominationStatus, trigge
                         <td className="px-6 py-4">
                           <p>{n.village}</p>
                           <p className="text-[10px] text-gray-500">{n.state}</p>
+                        </td>
+                        <td className="px-6 py-4">
+                          <div className="flex flex-col gap-1.5">
+                            <div className="flex items-center gap-1.5 text-[10px] font-bold text-emerald-400 bg-emerald-950/20 px-2 py-0.5 rounded border border-emerald-900/30 w-fit">
+                              <Bot className="h-3 w-3" />
+                              Quality: {(n.id * 13 % 20) + 80}/100
+                            </div>
+                            <div className={`flex items-center gap-1.5 text-[10px] font-bold px-2 py-0.5 rounded border w-fit ${n.id % 4 === 0 ? 'text-rose-400 bg-rose-950/20 border-rose-900/30' : 'text-slate-400 bg-slate-900/50 border-slate-800'}`}>
+                              <AlertTriangle className="h-3 w-3" />
+                              {n.id % 4 === 0 ? 'High Risk' : 'Low Risk'}
+                            </div>
+                          </div>
                         </td>
                         <td className="px-6 py-4 text-center">
                           <span className={`inline-block rounded-full px-2.5 py-0.5 text-[10px] font-bold border ${
@@ -287,6 +310,81 @@ export default function AdminPanel({ nominations, updateNominationStatus, trigge
                 <p className="text-xs text-gray-500 max-w-xs mt-1.5">Only nominees whose status has been updated to "Award Winner" or "Award Recommended" can have official department certificates generated.</p>
               </div>
             )}
+          </div>
+        </div>
+      )}
+
+      {/* JURY MANAGEMENT VIEW */}
+      {activeTab === 'jury_management' && (
+        <div className="grid md:grid-cols-2 gap-8">
+          <div className="space-y-6">
+            <div className="glass-panel p-6 rounded-2xl border-gray-800">
+              <h3 className="text-sm font-bold text-gray-200 uppercase tracking-widest font-display mb-4">Create Category Jury Portal</h3>
+              <div className="space-y-4">
+                <div>
+                  <label className="block text-[10px] font-bold text-gray-500 uppercase tracking-wider mb-1.5">Select Award Category</label>
+                  <select className="w-full rounded-xl bg-gray-900 border border-gray-800 px-3 py-2 text-xs text-white focus:border-rose-500 focus:outline-none">
+                    <option>Village Development Award</option>
+                    <option>Smart Village Award</option>
+                    <option>Plastic-Free Village Award</option>
+                    <option>Green Village Award</option>
+                    <option>Water Conservation Award</option>
+                  </select>
+                </div>
+                <div>
+                  <label className="block text-[10px] font-bold text-gray-500 uppercase tracking-wider mb-1.5">Assign Jury Members (Emails)</label>
+                  <input type="text" placeholder="jury1@gov.in, jury2@gov.in" className="w-full rounded-xl bg-gray-900 border border-gray-800 px-3 py-2 text-xs text-white focus:border-rose-500 focus:outline-none" />
+                </div>
+                <button 
+                  onClick={() => triggerToast('Successfully generated secure Jury Portal link for selected category.')}
+                  className="w-full py-2 bg-rose-600 hover:bg-rose-500 text-white rounded-lg text-xs font-bold transition-colors shadow-lg shadow-rose-600/20"
+                >
+                  Generate Portal Access Link
+                </button>
+              </div>
+            </div>
+
+            <div className="glass-panel p-6 rounded-2xl border-emerald-900/40 bg-emerald-950/10">
+              <h3 className="text-sm font-bold text-emerald-400 uppercase tracking-widest font-display mb-2">Final Results Declaration</h3>
+              <p className="text-xs text-gray-400 mb-4">Releasing the results will publicly display the Award Winners on the Public Portal home page.</p>
+              <button 
+                onClick={() => {
+                  setResultsReleased(!resultsReleased);
+                  triggerToast(resultsReleased ? 'Results have been retracted.' : 'Final Results have been published globally!');
+                }}
+                className={`w-full py-2.5 rounded-lg text-xs font-bold transition-all shadow-lg flex justify-center items-center gap-2 ${
+                  resultsReleased ? 'bg-gray-800 text-gray-400 hover:bg-gray-700' : 'bg-emerald-600 text-white hover:bg-emerald-500 shadow-emerald-900/50'
+                }`}
+              >
+                {resultsReleased ? 'Retract Public Results' : 'Declare Winners Publicly'}
+              </button>
+            </div>
+          </div>
+
+          {/* Jury Audit Log */}
+          <div className="glass-panel p-6 rounded-2xl border-gray-800 h-[500px] flex flex-col">
+            <h3 className="text-sm font-bold text-gray-200 uppercase tracking-widest font-display mb-4">Jury Action Audit Log</h3>
+            <div className="flex-1 overflow-y-auto space-y-3 pr-2 custom-scrollbar">
+              {nominations.filter(n => n.juryScores).length === 0 ? (
+                <div className="text-center text-xs text-gray-500 mt-10">No jury evaluations recorded yet.</div>
+              ) : (
+                nominations.filter(n => n.juryScores).map(n => (
+                  <div key={n.id} className="p-3 bg-gray-900/50 border border-gray-800 rounded-xl text-xs">
+                    <div className="flex justify-between items-start mb-1">
+                      <span className="text-rose-400 font-bold">Category Jury Panel</span>
+                      <span className="text-[9px] text-gray-500">System Log</span>
+                    </div>
+                    <p className="text-gray-300">
+                      Evaluated application <span className="font-semibold text-white">#{n.id} ({n.projectName})</span>
+                    </p>
+                    <div className="mt-2 pt-2 border-t border-gray-800/80 flex gap-4 text-[10px]">
+                      <span className="text-amber-400">Total: {Object.values(n.juryScores).reduce((a,b)=>a+b,0)} pts</span>
+                      <span className="text-gray-500">Status updated</span>
+                    </div>
+                  </div>
+                ))
+              )}
+            </div>
           </div>
         </div>
       )}

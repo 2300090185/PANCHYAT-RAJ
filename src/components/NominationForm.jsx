@@ -288,7 +288,7 @@ export default function NominationForm({ selectedCategory, setSelectedCategory =
 
   return (
     <div className="mx-auto max-w-5xl px-4 py-8 sm:px-6 lg:px-8">
-      {/* myGov Introduction Card */}
+      {/* Introduction Card */}
       <div className="rounded-2xl overflow-hidden border border-gray-800 shadow-xl mb-8">
         {/* Tricolor top bar */}
         <div className="h-1 w-full flex">
@@ -307,7 +307,7 @@ export default function NominationForm({ selectedCategory, setSelectedCategory =
               <circle cx="4.5" cy="3" r="0.25" fill="#000080" />
             </svg>
             <div>
-              <h2 className="text-xl font-bold text-white font-display">my<span className="text-[#FF9933]">Gov</span> Panchayat Awards — Nomination Form</h2>
+              <h2 className="text-xl font-bold text-white font-display">Panchayat Awards — Nomination Form</h2>
               <p className="text-xs text-gray-400 mt-0.5">Submit your project details to represent your community and stand a chance to win Panchayati Raj Rural Awards — Ministry of Panchayati Raj, Govt. of India.</p>
             </div>
           </div>

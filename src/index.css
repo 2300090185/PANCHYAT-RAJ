@@ -110,3 +110,26 @@ h1, h2, h3, h4, h5, h6 {
 .hero-gradient {
   background: radial-gradient(circle at 50% 50%, rgba(22, 163, 74, 0.12) 0%, rgba(3, 7, 18, 0) 70%);
 }
+
+/* Glow utility classes for workflow timeline dots */
+.glow-emerald {
+  box-shadow: 0 0 10px rgba(16, 185, 129, 0.6);
+}
+
+.glow-rose {
+  box-shadow: 0 0 10px rgba(244, 63, 94, 0.6);
+}
+
+/* Custom scrollbar for AI chatbot */
+.custom-scrollbar::-webkit-scrollbar {
+  width: 4px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: #1f2937;
+  border-radius: 9999px;
+}

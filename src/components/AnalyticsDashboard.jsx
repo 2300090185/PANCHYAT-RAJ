@@ -1,9 +1,12 @@
 import React, { useState, useMemo } from 'react';
 import { ResponsiveContainer, BarChart, Bar, XAxis, YAxis, Tooltip, Legend, PieChart, Pie, Cell, LineChart, Line, CartesianGrid } from 'recharts';
-import { Trees, Trash2, Droplets, Users, ShieldAlert, Award, Globe, Building2, Map } from 'lucide-react';
+import { Trees, Trash2, Droplets, Users, ShieldAlert, Award, Globe, Building2, Map, Download, FileSpreadsheet, FileText } from 'lucide-react';
 
 export default function AnalyticsDashboard({ nominations }) {
   const [selectedRegion, setSelectedRegion] = useState('All Regions');
+  const [mapLayer, setMapLayer] = useState('participation'); // participation, sdg, winner
+  const [drillLevel, setDrillLevel] = useState('National'); // National, State, District, Panchayat
+  const [drillPath, setDrillPath] = useState(['National']);
 
   // Static seeds + dynamic nominations aggregated data
   const metrics = useMemo(() => {
@@ -81,7 +84,7 @@ export default function AnalyticsDashboard({ nominations }) {
 
   return (
     <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8 space-y-8">
-      {/* myGov Analytics Header */}
+      {/* Analytics Header */}
       <div className="rounded-2xl overflow-hidden border border-gray-800 shadow-xl">
         {/* Tricolor top bar */}
         <div className="h-1 w-full flex">
@@ -89,20 +92,33 @@ export default function AnalyticsDashboard({ nominations }) {
           <div className="flex-1 bg-white"></div>
           <div className="flex-1 bg-[#138808]"></div>
         </div>
-        <div className="bg-[#0a1628] px-6 py-4 flex items-center gap-4">
-          <svg className="w-10 h-7 rounded shadow-md shrink-0" viewBox="0 0 9 6" xmlns="http://www.w3.org/2000/svg">
-            <rect width="9" height="2" fill="#FF9933" />
-            <rect y="2" width="9" height="2" fill="#FFFFFF" />
-            <rect y="4" width="9" height="2" fill="#138808" />
-            <circle cx="4.5" cy="3" r="0.7" fill="#000080" />
-            <circle cx="4.5" cy="3" r="0.4" fill="#FFFFFF" />
-            <circle cx="4.5" cy="3" r="0.25" fill="#000080" />
-          </svg>
-          <div>
-            <h2 className="text-xl font-extrabold text-white font-display">
-              my<span className="text-[#FF9933]">Gov</span> — Analytics & GIS Mapping Dashboard
-            </h2>
-            <p className="text-[11px] text-gray-400 mt-0.5">Real-time indicators aggregating registrations, SDG progress, and village level environmental/social metrics.</p>
+        <div className="bg-[#0a1628] px-6 py-4 flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+          <div className="flex items-center gap-4">
+            <svg className="w-10 h-7 rounded shadow-md shrink-0" viewBox="0 0 9 6" xmlns="http://www.w3.org/2000/svg">
+              <rect width="9" height="2" fill="#FF9933" />
+              <rect y="2" width="9" height="2" fill="#FFFFFF" />
+              <rect y="4" width="9" height="2" fill="#138808" />
+              <circle cx="4.5" cy="3" r="0.7" fill="#000080" />
+              <circle cx="4.5" cy="3" r="0.4" fill="#FFFFFF" />
+              <circle cx="4.5" cy="3" r="0.25" fill="#000080" />
+            </svg>
+            <div>
+              <h2 className="text-xl font-extrabold text-white font-display">
+                Analytics & GIS Mapping Dashboard
+              </h2>
+              <p className="text-[11px] text-gray-400 mt-0.5">Real-time indicators aggregating registrations, SDG progress, and village level environmental/social metrics.</p>
+            </div>
+          </div>
+          
+          <div className="flex items-center gap-3">
+            <button className="flex items-center gap-1.5 px-3 py-1.5 bg-rose-600 hover:bg-rose-500 text-white rounded-lg text-xs font-bold transition-colors shadow-lg">
+              <FileText className="h-3.5 w-3.5" />
+              Export PDF Report
+            </button>
+            <button className="flex items-center gap-1.5 px-3 py-1.5 bg-emerald-600 hover:bg-emerald-500 text-white rounded-lg text-xs font-bold transition-colors shadow-lg">
+              <FileSpreadsheet className="h-3.5 w-3.5" />
+              Export State Excel
+            </button>
           </div>
         </div>
       </div>
@@ -205,64 +221,115 @@ export default function AnalyticsDashboard({ nominations }) {
           <Map className="h-5 w-5 text-teal-400" />
           <span>GIS Gram Panchayat Sustainability & Impact Map</span>
         </h3>
-        <p className="text-xs text-gray-400 mb-6">Select a region on the vector map to filter village metrics and see verified ground results.</p>
+        <p className="text-xs text-gray-400 mb-6">Select a region on the vector map to filter village metrics and drill-down to State and District levels.</p>
+
+        {/* GIS Controls & Breadcrumbs */}
+        <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 gap-4 border-b border-gray-800 pb-4">
+          <div className="flex items-center gap-2 text-xs font-bold font-display">
+            {drillPath.map((path, idx) => (
+              <React.Fragment key={path}>
+                <span 
+                  className={`cursor-pointer transition-colors ${idx === drillPath.length - 1 ? 'text-teal-400' : 'text-gray-500 hover:text-gray-300'}`}
+                  onClick={() => {
+                    const newPath = drillPath.slice(0, idx + 1);
+                    setDrillPath(newPath);
+                    setDrillLevel(newPath[newPath.length - 1] === 'National' ? 'National' : 'SubLevel');
+                    if (idx === 0) setSelectedRegion('All Regions');
+                  }}
+                >
+                  {path}
+                </span>
+                {idx < drillPath.length - 1 && <span className="text-gray-700">/</span>}
+              </React.Fragment>
+            ))}
+          </div>
+
+          <div className="flex bg-gray-900 rounded-lg p-1 border border-gray-800 text-[10px] font-bold uppercase tracking-wider">
+            <button 
+              onClick={() => setMapLayer('participation')} 
+              className={`px-3 py-1.5 rounded-md transition-colors ${mapLayer === 'participation' ? 'bg-indigo-500/20 text-indigo-400' : 'text-gray-500 hover:text-gray-300'}`}
+            >
+              Participation Density
+            </button>
+            <button 
+              onClick={() => setMapLayer('sdg')} 
+              className={`px-3 py-1.5 rounded-md transition-colors ${mapLayer === 'sdg' ? 'bg-emerald-500/20 text-emerald-400' : 'text-gray-500 hover:text-gray-300'}`}
+            >
+              SDG Impact Heatmap
+            </button>
+            <button 
+              onClick={() => setMapLayer('winner')} 
+              className={`px-3 py-1.5 rounded-md transition-colors ${mapLayer === 'winner' ? 'bg-amber-500/20 text-amber-400' : 'text-gray-500 hover:text-gray-300'}`}
+            >
+              Winner Clusters
+            </button>
+          </div>
+        </div>
         
         <div className="grid md:grid-cols-5 gap-8 items-center">
           {/* SVG Map (Representing GIS quadrants) */}
           <div className="md:col-span-3 flex justify-center bg-gray-950/40 p-6 rounded-2xl border border-gray-900/60 relative">
-            <svg viewBox="0 0 400 300" className="w-full max-w-[400px] h-auto cursor-pointer">
+            <svg viewBox="0 0 400 300" className="w-full max-w-[400px] h-auto cursor-pointer drop-shadow-2xl">
               {/* North Region */}
               <path 
                 d="M 100,50 L 300,50 L 250,130 L 150,130 Z" 
-                fill={selectedRegion === 'North Region' ? 'rgba(16, 185, 129, 0.4)' : 'rgba(30, 41, 59, 0.6)'} 
-                stroke={selectedRegion === 'North Region' ? '#10b981' : '#334155'} 
-                strokeWidth={2}
-                onClick={() => setSelectedRegion('North Region')}
-                className="transition-colors hover:fill-emerald-500/20"
+                fill={selectedRegion === 'North Region' ? (mapLayer === 'sdg' ? 'rgba(16, 185, 129, 0.6)' : mapLayer === 'winner' ? 'rgba(245, 158, 11, 0.6)' : 'rgba(99, 102, 241, 0.6)') : 'rgba(30, 41, 59, 0.8)'} 
+                stroke={selectedRegion === 'North Region' ? '#ffffff' : '#334155'} 
+                strokeWidth={selectedRegion === 'North Region' ? 2 : 1}
+                onClick={() => { setSelectedRegion('North Region'); setDrillPath(['National', 'North Region', 'Himachal Pradesh']); }}
+                className="transition-all hover:opacity-80"
               />
-              <text x="200" y="85" fill="#f8fafc" fontSize="11" fontWeight="bold" textAnchor="middle" className="pointer-events-none select-none">North Region</text>
+              <text x="200" y="85" fill="#f8fafc" fontSize="11" fontWeight="bold" textAnchor="middle" className="pointer-events-none select-none drop-shadow-md">North</text>
+              {mapLayer === 'winner' && <circle cx="200" cy="100" r="4" fill="#fbbf24" className="animate-pulse" />}
 
               {/* West Region */}
               <path 
                 d="M 50,100 L 150,130 L 120,220 L 50,180 Z" 
-                fill={selectedRegion === 'West Region' ? 'rgba(16, 185, 129, 0.4)' : 'rgba(30, 41, 59, 0.6)'} 
-                stroke={selectedRegion === 'West Region' ? '#10b981' : '#334155'} 
-                strokeWidth={2}
-                onClick={() => setSelectedRegion('West Region')}
-                className="transition-colors hover:fill-emerald-500/20"
+                fill={selectedRegion === 'West Region' ? (mapLayer === 'sdg' ? 'rgba(16, 185, 129, 0.6)' : mapLayer === 'winner' ? 'rgba(245, 158, 11, 0.6)' : 'rgba(99, 102, 241, 0.6)') : 'rgba(30, 41, 59, 0.8)'} 
+                stroke={selectedRegion === 'West Region' ? '#ffffff' : '#334155'} 
+                strokeWidth={selectedRegion === 'West Region' ? 2 : 1}
+                onClick={() => { setSelectedRegion('West Region'); setDrillPath(['National', 'West Region', 'Gujarat']); }}
+                className="transition-all hover:opacity-80"
               />
-              <text x="95" y="155" fill="#f8fafc" fontSize="11" fontWeight="bold" textAnchor="middle" className="pointer-events-none select-none">West</text>
+              <text x="95" y="155" fill="#f8fafc" fontSize="11" fontWeight="bold" textAnchor="middle" className="pointer-events-none select-none drop-shadow-md">West</text>
+              {mapLayer === 'sdg' && <circle cx="95" cy="170" r="5" fill="#34d399" className="animate-pulse" />}
 
               {/* East Region */}
               <path 
                 d="M 250,130 L 350,100 L 350,180 L 280,220 Z" 
-                fill={selectedRegion === 'East Region' ? 'rgba(16, 185, 129, 0.4)' : 'rgba(30, 41, 59, 0.6)'} 
-                stroke={selectedRegion === 'East Region' ? '#10b981' : '#334155'} 
-                strokeWidth={2}
-                onClick={() => setSelectedRegion('East Region')}
-                className="transition-colors hover:fill-emerald-500/20"
+                fill={selectedRegion === 'East Region' ? (mapLayer === 'sdg' ? 'rgba(16, 185, 129, 0.6)' : mapLayer === 'winner' ? 'rgba(245, 158, 11, 0.6)' : 'rgba(99, 102, 241, 0.6)') : 'rgba(30, 41, 59, 0.8)'} 
+                stroke={selectedRegion === 'East Region' ? '#ffffff' : '#334155'} 
+                strokeWidth={selectedRegion === 'East Region' ? 2 : 1}
+                onClick={() => { setSelectedRegion('East Region'); setDrillPath(['National', 'East Region', 'Odisha']); }}
+                className="transition-all hover:opacity-80"
               />
-              <text x="305" y="155" fill="#f8fafc" fontSize="11" fontWeight="bold" textAnchor="middle" className="pointer-events-none select-none">East</text>
+              <text x="305" y="155" fill="#f8fafc" fontSize="11" fontWeight="bold" textAnchor="middle" className="pointer-events-none select-none drop-shadow-md">East</text>
+              {mapLayer === 'participation' && <circle cx="305" cy="140" r="6" fill="#818cf8" className="animate-ping" />}
 
               {/* South Region */}
               <path 
                 d="M 150,130 L 250,130 L 280,220 L 200,280 L 120,220 Z" 
-                fill={selectedRegion === 'South Region' ? 'rgba(16, 185, 129, 0.4)' : 'rgba(30, 41, 59, 0.6)'} 
-                stroke={selectedRegion === 'South Region' ? '#10b981' : '#334155'} 
-                strokeWidth={2}
-                onClick={() => setSelectedRegion('South Region')}
-                className="transition-colors hover:fill-emerald-500/20"
+                fill={selectedRegion === 'South Region' ? (mapLayer === 'sdg' ? 'rgba(16, 185, 129, 0.6)' : mapLayer === 'winner' ? 'rgba(245, 158, 11, 0.6)' : 'rgba(99, 102, 241, 0.6)') : 'rgba(30, 41, 59, 0.8)'} 
+                stroke={selectedRegion === 'South Region' ? '#ffffff' : '#334155'} 
+                strokeWidth={selectedRegion === 'South Region' ? 2 : 1}
+                onClick={() => { setSelectedRegion('South Region'); setDrillPath(['National', 'South Region', 'Andhra Pradesh', 'Kurnool District']); }}
+                className="transition-all hover:opacity-80"
               />
-              <text x="200" y="190" fill="#f8fafc" fontSize="11" fontWeight="bold" textAnchor="middle" className="pointer-events-none select-none">South Region</text>
+              <text x="200" y="190" fill="#f8fafc" fontSize="11" fontWeight="bold" textAnchor="middle" className="pointer-events-none select-none drop-shadow-md">South</text>
+              {mapLayer === 'winner' && <circle cx="200" cy="220" r="5" fill="#fbbf24" className="animate-pulse" />}
             </svg>
 
             {selectedRegion !== 'All Regions' && (
-              <button 
-                onClick={() => setSelectedRegion('All Regions')} 
-                className="absolute top-4 right-4 text-[10px] bg-slate-900 border border-gray-800 rounded-lg px-2 py-1 text-gray-400 hover:text-white"
-              >
-                Reset Map Filter
-              </button>
+              <div className="absolute bottom-4 right-4 bg-gray-900/90 backdrop-blur border border-gray-800 rounded-lg p-3 w-48 shadow-xl">
+                <span className="text-[10px] text-gray-500 font-bold uppercase tracking-wider block mb-1">Drill-down Analytics</span>
+                <p className="text-xs text-white mb-2">You are currently viewing granular data for the <span className="font-bold text-teal-400">{drillPath[drillPath.length - 1]}</span> administrative level.</p>
+                <button 
+                  onClick={() => { setSelectedRegion('All Regions'); setDrillPath(['National']); }} 
+                  className="w-full text-[10px] bg-slate-800 border border-gray-700 rounded py-1.5 text-gray-300 hover:bg-slate-700"
+                >
+                  Reset to National View
+                </button>
+              </div>
             )}
           </div>
 

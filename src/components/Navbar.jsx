@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
-import { Award, Bell, Shield, User, Users, FileText, BarChart3, Star, Menu, X, Sparkles } from 'lucide-react';
+import { Award, Bell, Shield, User, Users, FileText, BarChart3, Star, Menu, X, Sparkles, Globe } from 'lucide-react';
 
-export default function Navbar({ activeRole, setActiveRole, activeTab, setActiveTab, notifications, markNotificationsAsRead }) {
+export default function Navbar({ activeRole, setActiveRole, activeTab, setActiveTab, notifications, markNotificationsAsRead, authenticatedRoles, onLogout }) {
   const [showNotifications, setShowNotifications] = useState(false);
   const [showMobileMenu, setShowMobileMenu] = useState(false);
 
@@ -35,8 +35,6 @@ export default function Navbar({ activeRole, setActiveRole, activeTab, setActive
             <span className="hidden md:inline text-gray-500 uppercase">Ministry of Panchayati Raj / पंचायती राज मंत्रालय</span>
           </div>
           <div className="flex items-center gap-4 text-[10px] text-gray-500">
-            <a href="https://mygov.in" target="_blank" rel="noopener noreferrer" className="hover:text-[#ff9933] transition-colors">mygov.in</a>
-            <span>|</span>
             <a href="https://india.gov.in" target="_blank" rel="noopener noreferrer" className="hover:text-[#ff9933] transition-colors">National Portal</a>
           </div>
         </div>
@@ -56,15 +54,14 @@ export default function Navbar({ activeRole, setActiveRole, activeTab, setActive
             <div className="flex items-center gap-3 cursor-pointer" onClick={() => { setActiveTab('home'); setActiveRole('public'); }}>
               <div className="relative flex h-11 w-11 items-center justify-center rounded-xl bg-gradient-to-tr from-amber-600/20 to-emerald-600/20 border border-gray-800 text-white shadow-lg">
                 <div className="text-center font-black tracking-tighter leading-none flex flex-col items-center select-none">
-                  <span className="text-[9px] text-[#ff9933] uppercase leading-none">my</span>
-                  <span className="text-[11px] text-[#138808] font-black uppercase leading-none -mt-0.5">Gov</span>
+                  <span className="text-[11px] text-[#138808] font-black uppercase leading-none">PR</span>
                 </div>
                 <div className="absolute -right-1 -top-1 h-3 w-3 rounded-full bg-orange-500 border border-white"></div>
               </div>
               <div>
                 <div className="flex items-center gap-1.5">
                   <span className="font-black text-lg sm:text-xl tracking-tight text-white font-display flex items-center">
-                    my<span className="text-[#ff9933]">Gov</span>&nbsp;<span className="text-gray-300 font-medium">Panchayat</span>
+                    <span className="text-gray-300 font-medium">Panchayat</span>
                   </span>
                   <span className="rounded-full bg-amber-500/10 px-2 py-0.5 text-[9px] font-bold text-[#ff9933] border border-[#ff9933]/20 uppercase tracking-wider">Awards</span>
                 </div>
@@ -142,6 +139,24 @@ export default function Navbar({ activeRole, setActiveRole, activeTab, setActive
               )}
             </div>
 
+            {/* Language Selector */}
+            <div className="flex items-center border-l border-gray-800 pl-6 mr-2 relative z-[70]">
+              <div className="relative group cursor-pointer">
+                <button className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold text-gray-400 border border-gray-800 hover:text-white hover:bg-gray-800 transition-all">
+                  <Globe className="h-3.5 w-3.5 text-emerald-400" />
+                  <span>ENG</span>
+                </button>
+                {/* Simulated Dropdown */}
+                <div className="absolute top-full left-1/2 -translate-x-1/2 mt-2 w-36 bg-gray-950 border border-gray-800 rounded-xl shadow-2xl overflow-hidden opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none group-hover:pointer-events-auto">
+                  {['English', 'हिंदी (Hindi)', 'తెలుగు (Telugu)', 'தமிழ் (Tamil)', 'मराठी (Marathi)'].map((lang, idx) => (
+                    <div key={idx} className={`px-4 py-2.5 text-xs cursor-pointer transition-colors ${idx === 0 ? 'text-emerald-400 font-bold bg-emerald-950/20' : 'text-gray-400 hover:bg-gray-900 hover:text-white'}`}>
+                      {lang}
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+
             {/* Role Picker (Dropdown layout inside Navbar for easy testing) */}
             <div className="flex items-center gap-2 border-l border-gray-800 pl-6">
               <span className="text-[11px] font-semibold text-gray-500 uppercase tracking-wider mr-1">Switch View:</span>
@@ -173,6 +188,15 @@ export default function Navbar({ activeRole, setActiveRole, activeTab, setActive
                 })}
               </div>
             </div>
+
+            {authenticatedRoles && authenticatedRoles[activeRole] && (
+              <button 
+                onClick={() => onLogout(activeRole)}
+                className="rounded-xl border border-rose-900/50 bg-rose-950/40 px-3 py-1.5 text-xs font-bold text-rose-400 hover:text-white hover:bg-rose-900 transition-all mr-2"
+              >
+                Sign Out
+              </button>
+            )}
 
             {/* Notification Bell */}
             <div className="relative">

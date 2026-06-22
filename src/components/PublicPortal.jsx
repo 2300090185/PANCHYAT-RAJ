@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
 import { 
   Home, Cpu, Trash2, Trees, Droplets, BookOpen, Heart, Sparkles, Sprout, Wifi, Award, Smile, Users, Briefcase, Sun, Compass,
-  Play, ExternalLink, Calendar, MapPin, Globe, ShieldCheck, ArrowRight, UserPlus, FileText, CheckCircle2, ChevronRight, X 
+  Play, ExternalLink, Calendar, MapPin, Globe, ShieldCheck, ArrowRight, UserPlus, FileText, CheckCircle2, ChevronRight, X,
+  MessageSquare, ThumbsUp, BarChart2, Trophy 
 } from 'lucide-react';
 
-export default function PublicPortal({ nominations = [], setSelectedCategory, setActiveTab, setActiveRole, triggerToast }) {
+export default function PublicPortal({ nominations = [], setSelectedCategory, setActiveTab, setActiveRole, triggerToast, resultsReleased }) {
   const [activeRegModal, setActiveRegModal] = useState(null); // 'volunteer', 'ngo', 'csr'
   const [formData, setFormData] = useState({ name: '', email: '', phone: '', org: '', interest: '' });
 
@@ -80,7 +81,7 @@ export default function PublicPortal({ nominations = [], setSelectedCategory, se
                   <circle cx="4.5" cy="3" r="0.25" fill="#000080" />
                 </svg>
               </span>
-              <span>Official MyGov Panchayati Raj Initiative</span>
+              <span>Official Panchayati Raj Initiative</span>
             </div>
             <h1 className="text-4xl font-extrabold tracking-tight text-white sm:text-6xl font-display leading-[1.1]">
               Recognize. Inspire.<br />
@@ -89,7 +90,7 @@ export default function PublicPortal({ nominations = [], setSelectedCategory, se
               </span>
             </h1>
             <p className="text-base sm:text-lg text-gray-300 font-normal leading-relaxed max-w-xl">
-              "Empowering Communities. Transforming Rural India." Join the official MyGov platform in partnership with the Ministry of Panchayati Raj to recognize local changemakers driving sustainable development and village governance under Viksit Bharat 2047.
+              "Empowering Communities. Transforming Rural India." Join the official platform in partnership with the Ministry of Panchayati Raj to recognize local changemakers driving sustainable development and village governance under Viksit Bharat 2047.
             </p>
 
             <div className="flex flex-col sm:flex-row items-center gap-4 pt-4">
@@ -204,6 +205,50 @@ export default function PublicPortal({ nominations = [], setSelectedCategory, se
         </div>
       </div>
 
+      {/* 1.5 Final Results Declaration (Conditional) */}
+      {resultsReleased && (
+        <div className="mx-auto max-w-7xl px-4 mt-20 sm:px-6 lg:px-8">
+          <div className="glass-panel p-8 sm:p-12 rounded-3xl border-emerald-900/60 bg-gradient-to-br from-emerald-950/40 to-slate-900/80 relative overflow-hidden shadow-2xl">
+            <div className="absolute top-0 right-0 p-8 opacity-10 pointer-events-none">
+              <Award className="w-64 h-64 text-emerald-500" />
+            </div>
+            
+            <div className="relative z-10 text-center mb-10">
+              <span className="inline-block px-3 py-1 bg-emerald-500/20 border border-emerald-500/30 rounded-full text-[10px] font-black text-emerald-400 uppercase tracking-widest mb-4">Official Announcement</span>
+              <h2 className="text-3xl sm:text-5xl font-black text-white font-display">Panchayat Award Winners</h2>
+              <p className="mt-3 text-gray-300 max-w-2xl mx-auto">The final evaluation process has concluded. Congratulations to the outstanding individuals and projects leading grassroots transformation across the nation.</p>
+            </div>
+
+            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 relative z-10">
+              {nominations.filter(n => n.status === 'Award Winner').length === 0 ? (
+                <div className="col-span-full text-center p-8 bg-gray-900/50 rounded-2xl border border-gray-800 text-gray-500">
+                  Winners are currently being compiled. Check back shortly.
+                </div>
+              ) : (
+                nominations.filter(n => n.status === 'Award Winner').map(n => (
+                  <div key={n.id} className="p-6 bg-slate-900 border border-emerald-900/40 rounded-2xl shadow-xl shadow-emerald-900/10 flex flex-col items-center text-center">
+                    <div className="h-16 w-16 rounded-full bg-emerald-500/10 text-emerald-400 flex items-center justify-center mb-4 border border-emerald-500/20">
+                      <Award className="h-8 w-8" />
+                    </div>
+                    <h3 className="text-lg font-black text-white font-display leading-tight">{n.fullName}</h3>
+                    <p className="text-[11px] text-emerald-400 font-bold mt-1.5 uppercase tracking-wider">{n.category}</p>
+                    <div className="w-8 h-0.5 bg-gray-800 my-4"></div>
+                    <p className="text-[11px] text-gray-400 mb-1 leading-relaxed">"{n.projectName}"</p>
+                    <p className="text-[10px] font-semibold text-gray-500">{n.village} GP, {n.state}</p>
+                    {n.juryScores && (
+                      <div className="mt-4 px-3 py-1.5 bg-emerald-950/30 rounded border border-emerald-900/50 text-[10px] text-emerald-300 font-bold flex gap-2 items-center">
+                        <CheckCircle2 className="w-3.5 h-3.5" />
+                        Jury Score: {Object.values(n.juryScores).reduce((a, b) => a + b, 0)} / 100
+                      </div>
+                    )}
+                  </div>
+                ))
+              )}
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* 2. Vision & Mission Section */}
       <div className="mx-auto max-w-7xl px-4 mt-28 sm:px-6 lg:px-8">
         <div className="glass-panel rounded-3xl p-8 sm:p-12 relative overflow-hidden border-gray-800/80">
@@ -256,7 +301,7 @@ export default function PublicPortal({ nominations = [], setSelectedCategory, se
                     <circle cx="4.5" cy="3" r="0.25" fill="#000080" />
                   </svg>
                 </div>
-                <h3 className="font-bold text-white text-base">my<span className="text-[#FF9933]">Gov</span> / Viksit Bharat</h3>
+                <h3 className="font-bold text-white text-base">Viksit Bharat</h3>
                 <p className="text-xs text-gray-400 mt-1.5">Driving youth participation in grassroots governance & development for 2047.</p>
               </div>
             </div>
@@ -306,6 +351,67 @@ export default function PublicPortal({ nominations = [], setSelectedCategory, se
         </div>
       </div>
 
+      {/* Panchayat Ranking Engine: National Leaderboard */}
+      <div className="mx-auto max-w-7xl px-4 mt-28 sm:px-6 lg:px-8">
+        <div className="text-center mb-14">
+          <h2 className="text-3xl font-extrabold text-white tracking-tight sm:text-4xl font-display flex items-center justify-center gap-3">
+            <Trophy className="h-8 w-8 text-amber-500" />
+            National Sustainability Leaderboard
+          </h2>
+          <p className="mt-4 text-gray-400 max-w-xl mx-auto text-sm sm:text-base">
+            Live dynamic rankings of the top performing Gram Panchayats based on aggregated AI scores and verified ground impact.
+          </p>
+        </div>
+
+        <div className="glass-panel p-6 rounded-3xl border-amber-900/40">
+          <div className="overflow-x-auto">
+            <table className="w-full text-left border-collapse min-w-[600px]">
+              <thead>
+                <tr className="border-b border-gray-800 text-xs font-bold text-gray-500 uppercase tracking-widest bg-gray-900/50">
+                  <th className="px-6 py-4">Rank</th>
+                  <th className="px-6 py-4">Gram Panchayat</th>
+                  <th className="px-6 py-4">State</th>
+                  <th className="px-6 py-4">SDG Index Score</th>
+                  <th className="px-6 py-4 text-right">Trend</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-gray-900/50 text-sm">
+                {[
+                  { rank: 1, name: 'Punsari', state: 'Gujarat', score: 98.4, trend: '+2' },
+                  { rank: 2, name: 'Hiware Bazar', state: 'Maharashtra', score: 97.1, trend: '-' },
+                  { rank: 3, name: 'Odanthurai', state: 'Tamil Nadu', score: 96.5, trend: '+1' },
+                  { rank: 4, name: 'Piplantri', state: 'Rajasthan', score: 95.8, trend: '-2' },
+                  { rank: 5, name: 'Mawlynnong', state: 'Meghalaya', score: 94.2, trend: '+3' },
+                ].map((gp, idx) => (
+                  <tr key={idx} className="hover:bg-gray-900/30 transition-colors">
+                    <td className="px-6 py-4 font-black">
+                      <span className={`inline-flex items-center justify-center h-8 w-8 rounded-full ${idx === 0 ? 'bg-amber-500/20 text-amber-400 border border-amber-500/30' : idx === 1 ? 'bg-slate-300/20 text-slate-300 border border-slate-300/30' : idx === 2 ? 'bg-orange-700/20 text-orange-400 border border-orange-700/30' : 'bg-gray-900 text-gray-500'}`}>
+                        #{gp.rank}
+                      </span>
+                    </td>
+                    <td className="px-6 py-4 font-bold text-white">{gp.name}</td>
+                    <td className="px-6 py-4 text-gray-400 text-xs">{gp.state}</td>
+                    <td className="px-6 py-4">
+                      <div className="flex items-center gap-2">
+                        <div className="h-1.5 w-24 bg-gray-900 rounded-full overflow-hidden">
+                          <div className="h-full bg-emerald-500 rounded-full" style={{ width: `${gp.score}%` }}></div>
+                        </div>
+                        <span className="font-mono text-emerald-400 font-bold">{gp.score}</span>
+                      </div>
+                    </td>
+                    <td className="px-6 py-4 text-right font-bold">
+                      <span className={gp.trend.startsWith('+') ? 'text-emerald-500' : gp.trend.startsWith('-') && gp.trend.length > 1 ? 'text-rose-500' : 'text-gray-600'}>
+                        {gp.trend}
+                      </span>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
       {/* 4. SDG Goals Mapping Directory */}
       <div className="mx-auto max-w-7xl px-4 mt-28 sm:px-6 lg:px-8">
         <div className="glass-panel p-8 sm:p-12 rounded-3xl border-gray-800/80">
@@ -332,6 +438,61 @@ export default function PublicPortal({ nominations = [], setSelectedCategory, se
                 <div>
                   <h4 className="text-xs font-bold text-gray-200">{s.name}</h4>
                   <p className="text-[10px] text-gray-500 mt-1 leading-snug">{s.desc}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+
+      {/* Citizen Participation Module */}
+      <div className="mx-auto max-w-7xl px-4 mt-28 sm:px-6 lg:px-8">
+        <div className="grid lg:grid-cols-2 gap-12 items-center">
+          <div>
+            <div className="inline-flex items-center gap-2 rounded-full border border-sky-500/30 bg-sky-500/10 px-3 py-1 text-xs font-bold text-sky-400 mb-6">
+              <MessageSquare className="h-3 w-3" />
+              Citizen Participation
+            </div>
+            <h2 className="text-3xl font-extrabold text-white font-display mb-4">Community Voices & Testimonials</h2>
+            <p className="text-gray-400 text-sm leading-relaxed mb-8">
+              We empower local citizens to validate the ground reality. Browse public feedback, upvote impactful projects, and participate in the "People's Choice" ranking matrix.
+            </p>
+            <div className="grid grid-cols-2 gap-4">
+              <div className="glass-panel p-4 rounded-xl border-sky-900/30 text-center">
+                <span className="block text-2xl font-black text-sky-400">12.4k</span>
+                <span className="text-[10px] font-bold text-gray-500 uppercase tracking-widest mt-1">Verified Upvotes</span>
+              </div>
+              <div className="glass-panel p-4 rounded-xl border-emerald-900/30 text-center">
+                <span className="block text-2xl font-black text-emerald-400">4,820</span>
+                <span className="text-[10px] font-bold text-gray-500 uppercase tracking-widest mt-1">Public Testimonials</span>
+              </div>
+            </div>
+            <button className="mt-8 px-6 py-3 bg-sky-600 hover:bg-sky-500 text-white rounded-xl font-bold text-sm transition-colors shadow-lg shadow-sky-900/40">
+              Submit Public Feedback
+            </button>
+          </div>
+          <div className="space-y-4">
+            {[
+              { name: 'Ramesh K.', role: 'Farmer, Karnataka', quote: 'The new solar micro-grid has transformed our irrigation schedules. We no longer rely on erratic power cuts!', likes: 245 },
+              { name: 'Anita Devi', role: 'SHG Leader, UP', quote: 'With the digital literacy center, 50 women in our village have started their own online handicraft businesses.', likes: 189 },
+              { name: 'Dr. Suresh', role: 'Medical Officer, Bihar', quote: 'The upgraded primary health center has reduced maternal mortality to zero in the last 12 months. Amazing work by the Panchayat.', likes: 412 }
+            ].map((test, idx) => (
+              <div key={idx} className="glass-panel p-5 rounded-2xl border-gray-800/80 hover:border-gray-700 transition-colors">
+                <p className="text-sm text-gray-300 italic mb-4">"{test.quote}"</p>
+                <div className="flex justify-between items-center">
+                  <div className="flex items-center gap-3">
+                    <div className="h-8 w-8 rounded-full bg-gradient-to-tr from-indigo-500 to-purple-500 flex items-center justify-center text-white font-bold text-xs shadow-md">
+                      {test.name.charAt(0)}
+                    </div>
+                    <div>
+                      <p className="text-xs font-bold text-white">{test.name}</p>
+                      <p className="text-[10px] text-gray-500">{test.role}</p>
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-1.5 text-[10px] font-bold text-emerald-500 bg-emerald-950/30 px-2 py-1 rounded-lg border border-emerald-900/50 cursor-pointer hover:bg-emerald-900/50 transition-colors">
+                    <ThumbsUp className="h-3 w-3" />
+                    {test.likes}
+                  </div>
                 </div>
               </div>
             ))}

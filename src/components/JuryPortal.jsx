@@ -97,13 +97,13 @@ export default function JuryPortal({ nominations, updateNominationStatus, addJur
     setShowCustomFieldsPanel(true);
   };
 
-  const categories = ['All', ...new Set(nominations.map(n => n.category))];
+  const categories = ['All (Master Override)', ...new Set(nominations.map(n => n.category))];
 
   const filteredNominations = nominations.filter(n => {
     const matchesSearch = n.fullName.toLowerCase().includes(searchTerm.toLowerCase()) ||
       n.projectName.toLowerCase().includes(searchTerm.toLowerCase()) ||
       n.village.toLowerCase().includes(searchTerm.toLowerCase());
-    const matchesCategory = filterCategory === 'All' || n.category === filterCategory;
+    const matchesCategory = filterCategory.startsWith('All') || n.category === filterCategory;
     return matchesSearch && matchesCategory;
   });
 
@@ -113,7 +113,7 @@ export default function JuryPortal({ nominations, updateNominationStatus, addJur
 
   return (
     <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8 space-y-8">
-      {/* myGov Jury Header */}
+      {/* Jury Header */}
       <div className="rounded-2xl overflow-hidden border border-gray-800 shadow-xl">
         {/* Tricolor top bar */}
         <div className="h-1 w-full flex">
@@ -135,7 +135,7 @@ export default function JuryPortal({ nominations, updateNominationStatus, addJur
             <div>
               <h2 className="text-xl font-extrabold text-white flex items-center gap-2">
                 <ClipboardCheck className="h-5 w-5 text-amber-500" />
-                <span>my<span className="text-[#FF9933]">Gov</span> — Jury Evaluation Portal</span>
+                <span>Jury Evaluation Portal</span>
               </h2>
               <p className="text-[11px] text-gray-400 mt-0.5">Review nominations, score with category-specific criteria, schedule field visits, and recommend finalists.</p>
             </div>
@@ -166,12 +166,16 @@ export default function JuryPortal({ nominations, updateNominationStatus, addJur
                 value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)}
                 className="w-full rounded-xl bg-gray-900 border border-gray-800 pl-9 pr-4 py-2.5 text-xs text-white placeholder-gray-500 focus:outline-none focus:border-amber-500" />
             </div>
-            <div className="relative">
-              <select value={filterCategory} onChange={(e) => setFilterCategory(e.target.value)}
-                className="rounded-xl bg-gray-900 border border-gray-800 px-4 py-2.5 text-xs text-white focus:outline-none focus:border-amber-500 appearance-none pr-8">
+            <div className="relative mt-4 sm:mt-0">
+              <span className="absolute -top-4 right-1 text-[9px] text-amber-500/80 uppercase tracking-widest font-bold">Assigned Jury Panel</span>
+              <select value={filterCategory} onChange={(e) => {
+                  setFilterCategory(e.target.value);
+                  setSelectedNomination(null);
+                }}
+                className="rounded-xl bg-amber-950/20 border border-amber-900/50 px-4 py-2.5 text-xs text-amber-400 font-bold focus:outline-none focus:border-amber-500 appearance-none pr-8">
                 {categories.map((c, i) => <option key={i} value={c}>{c}</option>)}
               </select>
-              <Filter className="absolute right-3 top-3 h-3.5 w-3.5 text-gray-500 pointer-events-none" />
+              <Filter className="absolute right-3 top-3 h-3.5 w-3.5 text-amber-500 pointer-events-none" />
             </div>
           </div>
 
