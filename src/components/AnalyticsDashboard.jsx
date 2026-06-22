@@ -81,10 +81,30 @@ export default function AnalyticsDashboard({ nominations }) {
 
   return (
     <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8 space-y-8">
-      {/* Page Header */}
-      <div>
-        <h2 className="text-2xl font-extrabold text-white font-display">Analytics & GIS Mapping Dashboard</h2>
-        <p className="text-xs text-gray-400 mt-1">Real-time indicators aggregating registrations, SDG progress, and village level environmental/social metrics.</p>
+      {/* myGov Analytics Header */}
+      <div className="rounded-2xl overflow-hidden border border-gray-800 shadow-xl">
+        {/* Tricolor top bar */}
+        <div className="h-1 w-full flex">
+          <div className="flex-1 bg-[#FF9933]"></div>
+          <div className="flex-1 bg-white"></div>
+          <div className="flex-1 bg-[#138808]"></div>
+        </div>
+        <div className="bg-[#0a1628] px-6 py-4 flex items-center gap-4">
+          <svg className="w-10 h-7 rounded shadow-md shrink-0" viewBox="0 0 9 6" xmlns="http://www.w3.org/2000/svg">
+            <rect width="9" height="2" fill="#FF9933" />
+            <rect y="2" width="9" height="2" fill="#FFFFFF" />
+            <rect y="4" width="9" height="2" fill="#138808" />
+            <circle cx="4.5" cy="3" r="0.7" fill="#000080" />
+            <circle cx="4.5" cy="3" r="0.4" fill="#FFFFFF" />
+            <circle cx="4.5" cy="3" r="0.25" fill="#000080" />
+          </svg>
+          <div>
+            <h2 className="text-xl font-extrabold text-white font-display">
+              my<span className="text-[#FF9933]">Gov</span> — Analytics & GIS Mapping Dashboard
+            </h2>
+            <p className="text-[11px] text-gray-400 mt-0.5">Real-time indicators aggregating registrations, SDG progress, and village level environmental/social metrics.</p>
+          </div>
+        </div>
       </div>
 
       {/* KPI Cards Grid */}

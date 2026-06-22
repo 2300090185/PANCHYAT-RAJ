@@ -135,7 +135,7 @@ export default function App() {
               <div className="mx-auto max-w-4xl px-4 py-16 sm:px-6 lg:px-8 space-y-12">
                 <div className="text-center">
                   <h1 className="text-4xl font-extrabold text-white font-display">About the Recognition Initiative</h1>
-                  <p className="text-xs text-gray-400 mt-2">A national program strengthening grassroots democracy and Viksit Bharat goals.</p>
+                  <p className="text-xs text-gray-400 mt-2">An official myGov national program strengthening grassroots democracy and Viksit Bharat 2047.</p>
                 </div>
 
                 <div className="glass-panel p-8 rounded-3xl border-gray-800 space-y-6">
@@ -149,9 +149,19 @@ export default function App() {
                 </div>
 
                 <div className="grid sm:grid-cols-2 gap-6">
-                  <div className="p-6 bg-slate-900 border border-gray-800 rounded-2xl">
-                    <h3 className="font-bold text-white text-sm">Objectives & Scope</h3>
-                    <p className="text-xs text-gray-400 mt-2 leading-relaxed">Encourage self-reliance (Atmanirbhar), eliminate village plastics, enhance water tables, and build a unified directory of rural youth achievements.</p>
+                  <div className="p-6 rounded-2xl bg-slate-900 border border-gray-800 flex flex-col items-start">
+                    <div className="flex items-center gap-2 mb-3">
+                      <svg className="w-6 h-4 shadow rounded-sm" viewBox="0 0 9 6" xmlns="http://www.w3.org/2000/svg">
+                        <rect width="9" height="2" fill="#FF9933" />
+                        <rect y="2" width="9" height="2" fill="#FFFFFF" />
+                        <rect y="4" width="9" height="2" fill="#138808" />
+                        <circle cx="4.5" cy="3" r="0.7" fill="#000080" />
+                        <circle cx="4.5" cy="3" r="0.4" fill="#FFFFFF" />
+                        <circle cx="4.5" cy="3" r="0.25" fill="#000080" />
+                      </svg>
+                    </div>
+                    <h3 className="font-bold text-white text-base">myGov / Viksit Bharat</h3>
+                    <p className="text-xs text-gray-400 mt-1.5">Driving youth participation in grassroots governance & development.</p>
                   </div>
                   <div className="p-6 bg-slate-900 border border-gray-800 rounded-2xl">
                     <h3 className="font-bold text-white text-sm">Government Collaboration</h3>
@@ -328,9 +338,33 @@ export default function App() {
       )}
 
       {/* Footer */}
-      <footer className="border-t border-gray-900 bg-gray-950/60 py-8 text-center text-xs text-gray-500 font-medium">
-        <p className="text-gray-400">"Recognize. Inspire. Transform. Sustain."</p>
-        <p className="mt-2 text-[10px] text-gray-600">© 2026 Ministry of Panchayati Raj & Rural Development. Powered by Viksit Bharat digital ledger.</p>
+      <footer className="border-t border-gray-900 bg-gray-950 py-8 text-center text-xs text-gray-500 font-medium">
+        {/* Tricolor line */}
+        <div className="w-full h-0.5 grid grid-cols-3 mb-6">
+          <div className="bg-[#FF9933]"></div>
+          <div className="bg-white"></div>
+          <div className="bg-[#138808]"></div>
+        </div>
+        <div className="flex items-center justify-center gap-3 mb-3">
+          <svg className="w-8 h-6 shadow rounded-sm" viewBox="0 0 9 6" xmlns="http://www.w3.org/2000/svg">
+            <rect width="9" height="2" fill="#FF9933" />
+            <rect y="2" width="9" height="2" fill="#FFFFFF" />
+            <rect y="4" width="9" height="2" fill="#138808" />
+            <circle cx="4.5" cy="3" r="0.7" fill="#000080" />
+            <circle cx="4.5" cy="3" r="0.4" fill="#FFFFFF" />
+            <circle cx="4.5" cy="3" r="0.25" fill="#000080" />
+          </svg>
+          <span className="text-gray-300 font-semibold text-sm">my<span className="text-[#FF9933] font-black">Gov</span> Panchayat Awards</span>
+        </div>
+        <p className="text-gray-400">&quot;Recognize. Inspire. Transform. Sustain.&quot;</p>
+        <p className="mt-2 text-[10px] text-gray-600">© 2026 Ministry of Panchayati Raj & Rural Development, Government of India | भारत सरकार</p>
+        <div className="flex items-center justify-center gap-6 mt-4 text-[10px] text-gray-600">
+          <a href="https://mygov.in" target="_blank" rel="noopener noreferrer" className="hover:text-[#FF9933] transition-colors">mygov.in</a>
+          <span>|</span>
+          <a href="https://india.gov.in" target="_blank" rel="noopener noreferrer" className="hover:text-[#FF9933] transition-colors">india.gov.in</a>
+          <span>|</span>
+          <a href="https://panchayat.gov.in" target="_blank" rel="noopener noreferrer" className="hover:text-[#FF9933] transition-colors">panchayat.gov.in</a>
+        </div>
       </footer>
     </div>
   );

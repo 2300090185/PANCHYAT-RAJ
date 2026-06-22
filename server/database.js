@@ -5,17 +5,15 @@ import { fileURLToPath } from 'url';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const DB_FILE_PATH = path.join(__dirname, 'db.json');
-const DB_VERSION = 3; // Increment this to trigger auto-reseed on schema changes
+const DB_VERSION = 5; // Increment this to trigger auto-reseed on schema changes
 
 const DEFAULT_NOMINATIONS = [
   {
     id: 'nom-101',
     fullName: 'Anjali Sharma',
     gender: 'female',
-    dob: '2003-05-12',
     mobile: '9848022338',
     email: 'anjali.sharma@example.org',
-    aadhaar: '123456789012',
     address: 'H-No 4-50, Main Road',
     state: 'Andhra Pradesh',
     district: 'Anantapur',
@@ -38,7 +36,13 @@ const DEFAULT_NOMINATIONS = [
     csrPartnership: 'Rs 1 Lakh grant from Green India Foundation CSR.',
     customFields: {
       sortingSystem: 'Set up 12 color-coded dry/wet bins across 4 wards. Partnered with Ramapuram Green Recyclers to buy plastic at Rs 8/kg. Covers all 320 households.',
-      plasticReduction: 'Conducted 6 weekend awareness marches, distributed 600 free cloth bags, inspected 28 shops monthly to ban 5-layer plastic usage. Reduced usage by 70%.'
+      plasticReduction: 'Conducted 6 weekend awareness marches, distributed 600 free cloth bags, inspected 28 shops monthly to ban 5-layer plastic usage. Reduced usage by 70%.',
+      collectionSchedule: 'Bi-weekly door-to-door waste collection using 2 clean energy e-rickshaws driven by trained youth.',
+      sortingFacility: 'Developed a local dry waste recovery shed with 4 segregation tables sorting PET, hard PVC, multi-layer films.',
+      buybackProgram: 'Implemented a Plastic Exchange Counter where villagers swap clean plastic bags for grocery reward coupons (Rs 10/kg).',
+      shopInspections: 'Panchayat enforcement team performs surprise weekly audits of all 18 local grocers, levying a Rs 200 fine for violations.',
+      alternativeMaterials: 'Distributed 1,200 durable jute/cloth shopping bags to households; local SHG trained to manufacture cheap paper bags.',
+      recyclerPartnership: 'Signed a formal agreement (MoU) with Ramapuram Green Recyclers to supply segregated dry plastic pellets monthly.'
     },
     selectedSDGs: [12, 11, 15],
     selectedLDGs: [2, 3, 10],
@@ -72,10 +76,8 @@ const DEFAULT_NOMINATIONS = [
     id: 'nom-102',
     fullName: 'Green Youth Club NGO',
     gender: 'other',
-    dob: '2015-08-20',
     mobile: '8897044551',
     email: 'kothur.greenclub@example.org',
-    aadhaar: '',
     address: 'Sector 3, Community Center',
     state: 'Telangana',
     district: 'Mahabubnagar',
@@ -98,7 +100,13 @@ const DEFAULT_NOMINATIONS = [
     csrPartnership: 'Sponsored by HydroCorp CSR under water stewardship agenda.',
     customFields: {
       desilting: 'De-silted 3 irrigation tanks removing 2,400 cubic metres of silt. Cleared 1.2 km of main drainage channels and widened 6 blocked discharge outlets for monsoon overflow.',
-      harvesting: 'Constructed 15 recharge shafts (3-ft dia, 20-ft deep) using sand-gravel filter beds near the main tanks. Groundwater level rose by 4.2 feet post-monsoon per DTDWM survey.'
+      harvesting: 'Constructed 15 recharge shafts (3-ft dia, 20-ft deep) using sand-gravel filter beds near the main tanks. Groundwater level rose by 4.2 feet post-monsoon per DTDWM survey.',
+      drainageClearing: 'Cleared 2.4 km of feeder channels to ensure rainwater runs directly into central check-dams without flooding roads.',
+      rooftopHarvesting: 'Installed rooftop rainwater collection systems with sand filters in the village primary school and community health center.',
+      waterUsersAssoc: 'Formed a Water Committee consisting of 12 members (6 women) to manage water allocation and collect Rs 20/month maintenance fee.',
+      greywaterReuse: 'Dug 85 household greywater soak pits utilizing broken bricks and sand to recharge backyard soil profiles.',
+      leakageControl: 'Conducted a community pipeline audit; repaired 12 leaks in the main overhead water supply pipelines.',
+      cropDiversification: 'Encouraged 45 farmers to switch from high-water sugarcane crops to native millet and pulse crops during the dry season.'
     },
     selectedSDGs: [6, 15, 17],
     selectedLDGs: [2, 3, 4],
@@ -132,10 +140,8 @@ const DEFAULT_NOMINATIONS = [
     id: 'nom-103',
     fullName: 'Vikas Academy',
     gender: 'other',
-    dob: '2010-01-01',
     mobile: '9123456789',
     email: 'contact@vikasacademy.org',
-    aadhaar: '',
     address: 'Near Fort Road',
     state: 'Karnataka',
     district: 'Hassan',
@@ -158,7 +164,13 @@ const DEFAULT_NOMINATIONS = [
     csrPartnership: 'Supported by TechLabs Ltd providing refurbished computers.',
     customFields: {
       internetAccess: '30 Raspberry Pi nodes with 50Mbps fiber broadband running on 2 kW solar + 2x200Ah battery backup. 3 outdoor hotspot antennas covering main street and market. 99.2% uptime.',
-      digitalTraining: 'Trained 420 villagers in UPI payments, DigiLocker, and PFMS portal access. 18 workshops across 5 schools. 85% of student families onboarded to digital bill payments.'
+      digitalTraining: 'Trained 420 villagers in UPI payments, DigiLocker, and PFMS portal access. 18 workshops across 5 schools. 85% of student families onboarded to digital bill payments.',
+      broadbandUptime: 'The village digital hub maintains a 50Mbps fiber backup line, logging a 99.2% uptime over the past 6 months.',
+      wifiHotspots: 'Set up 3 solar-powered outdoor Wi-Fi hotspots covering the public square, school ground, and GP office.',
+      digitalServiceCenter: 'The Common Service Centre (CSC) processes over 650 e-governance and banking services requests monthly.',
+      upiMerchantDrive: 'Onboarded 28 local small business owners to cashless payment methods, establishing 100% digital transactions at local stalls.',
+      digitalLiteracy: 'Registered and certified 150 school children and 110 adult villagers under the PMGDisha scheme.',
+      solarPowerBackup: 'Equipped the digital hub with a 2kW rooftop solar solar microgrid and two 200Ah battery packs to sustain 12 hours of blackout.'
     },
     selectedSDGs: [4, 9, 10],
     selectedLDGs: [5, 9, 10],
@@ -298,3 +310,6 @@ export const db = {
     return data.notifications;
   }
 };
+
+// Initialize/Migrate database immediately on startup
+readDB();

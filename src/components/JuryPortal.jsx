@@ -113,29 +113,46 @@ export default function JuryPortal({ nominations, updateNominationStatus, addJur
 
   return (
     <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8 space-y-8">
-      {/* Header */}
-      <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
-        <div>
-          <h2 className="text-2xl font-extrabold text-white font-display flex items-center gap-2">
-            <ClipboardCheck className="h-6 w-6 text-amber-500" />
-            Jury Evaluation Portal
-          </h2>
-          <p className="text-xs text-gray-400 mt-1">
-            Review nominations, score with category-specific criteria, schedule field visits, and recommend finalists.
-          </p>
+      {/* myGov Jury Header */}
+      <div className="rounded-2xl overflow-hidden border border-gray-800 shadow-xl">
+        {/* Tricolor top bar */}
+        <div className="h-1 w-full flex">
+          <div className="flex-1 bg-[#FF9933]"></div>
+          <div className="flex-1 bg-white"></div>
+          <div className="flex-1 bg-[#138808]"></div>
         </div>
-        {/* Quick stats */}
-        <div className="flex gap-3">
-          {[
-            { label: 'Total', value: nominations.length, color: 'text-white' },
-            { label: 'Recommended', value: nominations.filter(n => n.status === 'Award Recommended' || n.status === 'Award Winner').length, color: 'text-emerald-400' },
-            { label: 'Pending', value: nominations.filter(n => n.status === 'Pending').length, color: 'text-amber-400' }
-          ].map(stat => (
-            <div key={stat.label} className="glass-panel px-4 py-2 rounded-xl border-gray-800/80 text-center min-w-[70px]">
-              <p className={`text-lg font-black ${stat.color}`}>{stat.value}</p>
-              <p className="text-[10px] text-gray-500 font-bold uppercase tracking-wider">{stat.label}</p>
+        <div className="bg-[#0a1628] px-6 py-4 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+          <div className="flex items-center gap-4">
+            {/* Indian Flag SVG */}
+            <svg className="w-10 h-7 rounded shadow-md shrink-0" viewBox="0 0 9 6" xmlns="http://www.w3.org/2000/svg">
+              <rect width="9" height="2" fill="#FF9933" />
+              <rect y="2" width="9" height="2" fill="#FFFFFF" />
+              <rect y="4" width="9" height="2" fill="#138808" />
+              <circle cx="4.5" cy="3" r="0.7" fill="#000080" />
+              <circle cx="4.5" cy="3" r="0.4" fill="#FFFFFF" />
+              <circle cx="4.5" cy="3" r="0.25" fill="#000080" />
+            </svg>
+            <div>
+              <h2 className="text-xl font-extrabold text-white flex items-center gap-2">
+                <ClipboardCheck className="h-5 w-5 text-amber-500" />
+                <span>my<span className="text-[#FF9933]">Gov</span> — Jury Evaluation Portal</span>
+              </h2>
+              <p className="text-[11px] text-gray-400 mt-0.5">Review nominations, score with category-specific criteria, schedule field visits, and recommend finalists.</p>
             </div>
-          ))}
+          </div>
+          {/* Quick stats */}
+          <div className="flex gap-3">
+            {[
+              { label: 'Total', value: nominations.length, color: 'text-white' },
+              { label: 'Recommended', value: nominations.filter(n => n.status === 'Award Recommended' || n.status === 'Award Winner').length, color: 'text-emerald-400' },
+              { label: 'Pending', value: nominations.filter(n => n.status === 'Pending').length, color: 'text-amber-400' }
+            ].map(stat => (
+              <div key={stat.label} className="glass-panel px-4 py-2 rounded-xl border-gray-800/80 text-center min-w-[70px]">
+                <p className={`text-lg font-black ${stat.color}`}>{stat.value}</p>
+                <p className="text-[10px] text-gray-500 font-bold uppercase tracking-wider">{stat.label}</p>
+              </div>
+            ))}
+          </div>
         </div>
       </div>
 

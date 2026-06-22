@@ -30,25 +30,45 @@ export default function AdminPanel({ nominations, updateNominationStatus, trigge
 
   return (
     <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8 space-y-8">
-      {/* Header */}
-      <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
-        <div>
-          <h2 className="text-2xl font-extrabold text-white font-display flex items-center gap-2">
-            <Shield className="h-6 w-6 text-rose-500" />
-            <span>Admin Control Panel</span>
-          </h2>
-          <p className="text-xs text-gray-400 mt-1">Manage user levels, override verification status, export registry archives, and issue QR-coded awards certificates.</p>
+      {/* myGov Government Header */}
+      <div className="rounded-2xl overflow-hidden border border-gray-800 shadow-xl">
+        {/* Tricolor top bar */}
+        <div className="h-1 w-full flex">
+          <div className="flex-1 bg-[#FF9933]"></div>
+          <div className="flex-1 bg-white"></div>
+          <div className="flex-1 bg-[#138808]"></div>
         </div>
-
-        {/* Administrative Tools */}
-        <div className="flex gap-2">
-          <button 
-            onClick={() => handleExportData('json')}
-            className="flex items-center gap-1.5 rounded-lg border border-gray-800 bg-gray-950 px-3.5 py-2 text-xs font-semibold text-gray-300 hover:text-white"
-          >
-            <FileJson className="h-4.5 w-4.5 text-blue-400" />
-            <span>Export JSON Registry</span>
-          </button>
+        <div className="bg-[#0a1628] px-6 py-4 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+          <div className="flex items-center gap-4">
+            {/* Indian Flag SVG */}
+            <svg className="w-10 h-7 rounded shadow-md shrink-0" viewBox="0 0 9 6" xmlns="http://www.w3.org/2000/svg">
+              <rect width="9" height="2" fill="#FF9933" />
+              <rect y="2" width="9" height="2" fill="#FFFFFF" />
+              <rect y="4" width="9" height="2" fill="#138808" />
+              <circle cx="4.5" cy="3" r="0.7" fill="#000080" />
+              <circle cx="4.5" cy="3" r="0.4" fill="#FFFFFF" />
+              <circle cx="4.5" cy="3" r="0.25" fill="#000080" />
+            </svg>
+            <div>
+              <div className="flex items-center gap-2">
+                <h2 className="text-xl font-extrabold text-white flex items-center gap-2">
+                  <Shield className="h-5 w-5 text-rose-500" />
+                  <span>my<span className="text-[#FF9933]">Gov</span> Admin Control Panel</span>
+                </h2>
+              </div>
+              <p className="text-[11px] text-gray-400 mt-0.5">Ministry of Panchayati Raj & Rural Development — Internal Portal</p>
+            </div>
+          </div>
+          {/* Administrative Tools */}
+          <div className="flex gap-2">
+            <button 
+              onClick={() => handleExportData('json')}
+              className="flex items-center gap-1.5 rounded-lg border border-gray-700 bg-gray-900 px-3.5 py-2 text-xs font-semibold text-gray-300 hover:text-white hover:border-[#FF9933] transition-colors"
+            >
+              <FileJson className="h-4 w-4 text-blue-400" />
+              <span>Export JSON Registry</span>
+            </button>
+          </div>
         </div>
       </div>
 

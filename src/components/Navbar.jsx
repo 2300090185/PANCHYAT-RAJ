@@ -15,24 +15,62 @@ export default function Navbar({ activeRole, setActiveRole, activeTab, setActive
   const unreadCount = notifications.filter(n => !n.read).length;
 
   return (
-    <nav className="sticky top-0 z-50 border-b border-gray-800 bg-gray-950/80 backdrop-blur-md">
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <div className="flex h-20 items-center justify-between">
-          {/* Logo Section */}
-          <div className="flex items-center gap-3 cursor-pointer" onClick={() => { setActiveTab('home'); setActiveRole('public'); }}>
-            <div className="relative flex h-11 w-11 items-center justify-center rounded-xl bg-gradient-to-tr from-emerald-500 to-teal-400 text-slate-950 shadow-lg shadow-emerald-500/20">
-              <Award className="h-6 w-6" />
-              <div className="absolute -right-1 -top-1 h-3.5 w-3.5 animate-ping rounded-full bg-emerald-400 opacity-75"></div>
-              <div className="absolute -right-1 -top-1 h-3.5 w-3.5 rounded-full bg-emerald-500 border-2 border-slate-950"></div>
-            </div>
-            <div>
-              <div className="flex items-center gap-1.5">
-                <span className="font-extrabold text-lg sm:text-xl tracking-tight text-white font-display">Viksit Bharat</span>
-                <span className="rounded-full bg-emerald-500/10 px-2 py-0.5 text-[10px] font-semibold text-emerald-400 border border-emerald-500/20">PRD Portal</span>
-              </div>
-              <p className="text-[10px] text-gray-400 font-medium hidden sm:block">Youth Social Impact & Sustainable Development</p>
-            </div>
+    <>
+      {/* Official Government of India Topbar */}
+      <div className="w-full bg-[#0a0a0a] border-b border-gray-900 text-[10px] text-gray-400 py-1 font-semibold select-none z-[60]">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <span className="flex items-center gap-1.5">
+              <svg className="w-4 h-3 shadow-sm rounded-sm shrink-0" viewBox="0 0 9 6" xmlns="http://www.w3.org/2000/svg">
+                <rect width="9" height="2" fill="#FF9933" />
+                <rect y="2" width="9" height="2" fill="#FFFFFF" />
+                <rect y="4" width="9" height="2" fill="#138808" />
+                <circle cx="4.5" cy="3" r="0.7" fill="#000080" />
+                <circle cx="4.5" cy="3" r="0.4" fill="#FFFFFF" />
+                <circle cx="4.5" cy="3" r="0.25" fill="#000080" />
+              </svg>
+              GOVERNMENT OF INDIA | भारत सरकार
+            </span>
+            <span className="text-gray-800">|</span>
+            <span className="hidden md:inline text-gray-500 uppercase">Ministry of Panchayati Raj / पंचायती राज मंत्रालय</span>
           </div>
+          <div className="flex items-center gap-4 text-[10px] text-gray-500">
+            <a href="https://mygov.in" target="_blank" rel="noopener noreferrer" className="hover:text-[#ff9933] transition-colors">mygov.in</a>
+            <span>|</span>
+            <a href="https://india.gov.in" target="_blank" rel="noopener noreferrer" className="hover:text-[#ff9933] transition-colors">National Portal</a>
+          </div>
+        </div>
+      </div>
+      
+      {/* Tricolor Accent Line */}
+      <div className="w-full h-0.5 grid grid-cols-3 z-[60] relative">
+        <div className="bg-[#FF9933]"></div>
+        <div className="bg-white"></div>
+        <div className="bg-[#138808]"></div>
+      </div>
+
+      <nav className="sticky top-0 z-50 border-b border-gray-800 bg-gray-950/80 backdrop-blur-md">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <div className="flex h-20 items-center justify-between">
+            {/* Logo Section */}
+            <div className="flex items-center gap-3 cursor-pointer" onClick={() => { setActiveTab('home'); setActiveRole('public'); }}>
+              <div className="relative flex h-11 w-11 items-center justify-center rounded-xl bg-gradient-to-tr from-amber-600/20 to-emerald-600/20 border border-gray-800 text-white shadow-lg">
+                <div className="text-center font-black tracking-tighter leading-none flex flex-col items-center select-none">
+                  <span className="text-[9px] text-[#ff9933] uppercase leading-none">my</span>
+                  <span className="text-[11px] text-[#138808] font-black uppercase leading-none -mt-0.5">Gov</span>
+                </div>
+                <div className="absolute -right-1 -top-1 h-3 w-3 rounded-full bg-orange-500 border border-white"></div>
+              </div>
+              <div>
+                <div className="flex items-center gap-1.5">
+                  <span className="font-black text-lg sm:text-xl tracking-tight text-white font-display flex items-center">
+                    my<span className="text-[#ff9933]">Gov</span>&nbsp;<span className="text-gray-300 font-medium">Panchayat</span>
+                  </span>
+                  <span className="rounded-full bg-amber-500/10 px-2 py-0.5 text-[9px] font-bold text-[#ff9933] border border-[#ff9933]/20 uppercase tracking-wider">Awards</span>
+                </div>
+                <p className="text-[10px] text-gray-400 font-medium hidden sm:block">Social Impact & Sustainable Development Portal</p>
+              </div>
+            </div>
 
           {/* Desktop Navigation */}
           <div className="hidden lg:flex items-center gap-6">
@@ -299,5 +337,6 @@ export default function Navbar({ activeRole, setActiveRole, activeTab, setActive
         </div>
       )}
     </nav>
+  </>
   );
 }

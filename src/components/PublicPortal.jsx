@@ -69,18 +69,27 @@ export default function PublicPortal({ nominations = [], setSelectedCategory, se
           
           {/* Left Column: Heading and Details */}
           <div className="text-left space-y-6">
-            <div className="inline-flex items-center gap-2 rounded-full border border-emerald-500/30 bg-emerald-500/5 px-4 py-1.5 text-xs sm:text-sm font-semibold text-emerald-400 shadow-sm">
-              <Sparkles className="h-4.5 w-4.5 animate-pulse" />
-              <span>Panchayati Raj & Rural Development Initiative</span>
+            <div className="inline-flex items-center gap-2 rounded-full border border-amber-500/30 bg-amber-500/5 px-4 py-1.5 text-xs sm:text-sm font-semibold text-amber-400 shadow-sm select-none">
+              <span className="flex items-center gap-1.5">
+                <svg className="w-4 h-3 shadow rounded-sm" viewBox="0 0 9 6" xmlns="http://www.w3.org/2000/svg">
+                  <rect width="9" height="2" fill="#FF9933" />
+                  <rect y="2" width="9" height="2" fill="#FFFFFF" />
+                  <rect y="4" width="9" height="2" fill="#138808" />
+                  <circle cx="4.5" cy="3" r="0.7" fill="#000080" />
+                  <circle cx="4.5" cy="3" r="0.4" fill="#FFFFFF" />
+                  <circle cx="4.5" cy="3" r="0.25" fill="#000080" />
+                </svg>
+              </span>
+              <span>Official MyGov Panchayati Raj Initiative</span>
             </div>
             <h1 className="text-4xl font-extrabold tracking-tight text-white sm:text-6xl font-display leading-[1.1]">
               Recognize. Inspire.<br />
-              <span className="bg-gradient-to-r from-emerald-400 via-teal-300 to-emerald-500 bg-clip-text text-transparent">
+              <span className="bg-gradient-to-r from-orange-400 via-white to-green-500 bg-clip-text text-transparent font-black">
                 Transform. Sustain.
               </span>
             </h1>
             <p className="text-base sm:text-lg text-gray-300 font-normal leading-relaxed max-w-xl">
-              "Empowering Youth. Transforming Villages. Achieving the Sustainable Development Goals." Join India's largest digital network recognizing social changemakers building resilient communities under Viksit Bharat 2047.
+              "Empowering Communities. Transforming Rural India." Join the official MyGov platform in partnership with the Ministry of Panchayati Raj to recognize local changemakers driving sustainable development and village governance under Viksit Bharat 2047.
             </p>
 
             <div className="flex flex-col sm:flex-row items-center gap-4 pt-4">
@@ -235,10 +244,20 @@ export default function PublicPortal({ nominations = [], setSelectedCategory, se
                 <h3 className="font-bold text-white text-base">Village Adoption</h3>
                 <p className="text-xs text-gray-400 mt-1.5">Promoting self-reliance (Atmanirbhar) across Gram Panchayats.</p>
               </div>
-              <div className="p-6 rounded-2xl bg-slate-900 border border-gray-800">
-                <Sparkles className="h-8 w-8 text-emerald-400 mb-3" />
-                <h3 className="font-bold text-white text-base">Viksit Bharat</h3>
-                <p className="text-xs text-gray-400 mt-1.5">Driving youth participation in grassroots governance & development.</p>
+              <div className="p-6 rounded-2xl bg-slate-900 border border-[#138808]/40 relative overflow-hidden">
+                <div className="absolute top-0 left-0 right-0 h-0.5 bg-gradient-to-r from-[#FF9933] via-white to-[#138808]"></div>
+                <div className="flex items-center gap-2 mb-3">
+                  <svg className="w-7 h-5 rounded shadow-sm" viewBox="0 0 9 6" xmlns="http://www.w3.org/2000/svg">
+                    <rect width="9" height="2" fill="#FF9933" />
+                    <rect y="2" width="9" height="2" fill="#FFFFFF" />
+                    <rect y="4" width="9" height="2" fill="#138808" />
+                    <circle cx="4.5" cy="3" r="0.7" fill="#000080" />
+                    <circle cx="4.5" cy="3" r="0.4" fill="#FFFFFF" />
+                    <circle cx="4.5" cy="3" r="0.25" fill="#000080" />
+                  </svg>
+                </div>
+                <h3 className="font-bold text-white text-base">my<span className="text-[#FF9933]">Gov</span> / Viksit Bharat</h3>
+                <p className="text-xs text-gray-400 mt-1.5">Driving youth participation in grassroots governance & development for 2047.</p>
               </div>
             </div>
           </div>

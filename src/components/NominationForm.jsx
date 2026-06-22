@@ -108,7 +108,7 @@ const categoryGuides = {
 export default function NominationForm({ selectedCategory, setSelectedCategory = () => {}, onNominationSubmit, triggerToast }) {
   const [currentStep, setCurrentStep] = useState(1);
   const [formData, setFormData] = useState({
-    fullName: '', gender: 'male', dob: '', mobile: '', email: '', address: '',
+    fullName: '', gender: 'male', mobile: '', email: '', address: '',
     state: 'Andhra Pradesh', district: '', mandal: '', gp: '', village: '', pinCode: '',
     orgType: 'Individual',
     projectName: '', category: 'Village Development Award', startDate: '', endDate: '',
@@ -269,7 +269,7 @@ export default function NominationForm({ selectedCategory, setSelectedCategory =
     triggerToast('Nomination submitted successfully! Keep note of your reference ID.');
     setCurrentStep(1);
     setFormData({
-      fullName: '', gender: 'male', dob: '', mobile: '', email: '', aadhaar: '', address: '',
+      fullName: '', gender: 'male', mobile: '', email: '', address: '',
       state: 'Andhra Pradesh', district: '', mandal: '', gp: '', village: '', pinCode: '',
       orgType: 'Individual', projectName: '', category: 'Village Development Award',
       startDate: '', endDate: '', location: '', objectives: '', challenges: '', innovations: '',
@@ -288,15 +288,33 @@ export default function NominationForm({ selectedCategory, setSelectedCategory =
 
   return (
     <div className="mx-auto max-w-5xl px-4 py-8 sm:px-6 lg:px-8">
-      {/* Introduction Card */}
-      <div className="glass-panel p-6 rounded-2xl border-gray-800/80 mb-8 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
-        <div>
-          <h2 className="text-xl font-bold text-white font-display">New Social Impact Nomination</h2>
-          <p className="text-xs text-gray-400 mt-1">Submit your project details to represent your community and stand a chance to win Panchayati Raj Rural Awards.</p>
+      {/* myGov Introduction Card */}
+      <div className="rounded-2xl overflow-hidden border border-gray-800 shadow-xl mb-8">
+        {/* Tricolor top bar */}
+        <div className="h-1 w-full flex">
+          <div className="flex-1 bg-[#FF9933]"></div>
+          <div className="flex-1 bg-white"></div>
+          <div className="flex-1 bg-[#138808]"></div>
         </div>
-        <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-emerald-500/10 text-emerald-400 text-xs font-semibold border border-emerald-500/25">
-          <Sparkles className="h-4 w-4" />
-          <span>Award-Specific Application</span>
+        <div className="glass-panel p-5 rounded-b-2xl flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+          <div className="flex items-center gap-4">
+            <svg className="w-10 h-7 rounded shadow-md shrink-0" viewBox="0 0 9 6" xmlns="http://www.w3.org/2000/svg">
+              <rect width="9" height="2" fill="#FF9933" />
+              <rect y="2" width="9" height="2" fill="#FFFFFF" />
+              <rect y="4" width="9" height="2" fill="#138808" />
+              <circle cx="4.5" cy="3" r="0.7" fill="#000080" />
+              <circle cx="4.5" cy="3" r="0.4" fill="#FFFFFF" />
+              <circle cx="4.5" cy="3" r="0.25" fill="#000080" />
+            </svg>
+            <div>
+              <h2 className="text-xl font-bold text-white font-display">my<span className="text-[#FF9933]">Gov</span> Panchayat Awards — Nomination Form</h2>
+              <p className="text-xs text-gray-400 mt-0.5">Submit your project details to represent your community and stand a chance to win Panchayati Raj Rural Awards — Ministry of Panchayati Raj, Govt. of India.</p>
+            </div>
+          </div>
+          <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-emerald-500/10 text-emerald-400 text-xs font-semibold border border-emerald-500/25 shrink-0">
+            <Sparkles className="h-4 w-4" />
+            <span>Award-Specific Application</span>
+          </div>
         </div>
       </div>
 
@@ -374,11 +392,6 @@ export default function NominationForm({ selectedCategory, setSelectedCategory =
                         }`}>{g}</button>
                     ))}
                   </div>
-                </div>
-                <div>
-                  <label className="block text-xs font-bold text-gray-400 mb-1">Date of Birth</label>
-                  <input type="date" value={formData.dob} onChange={(e) => handleInputChange('dob', e.target.value)}
-                    className="w-full rounded-lg bg-gray-950 border border-gray-800 px-3 py-2 text-xs text-white focus:outline-none focus:border-indigo-500" />
                 </div>
               </div>
 
