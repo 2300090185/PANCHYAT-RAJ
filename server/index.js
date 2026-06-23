@@ -139,6 +139,17 @@ app.put('/api/nominations/:id/status', (req, res) => {
   }
 });
 
+// 3.5. Delete nomination (admin action)
+app.delete('/api/nominations/:id', (req, res) => {
+  try {
+    const { id } = req.params;
+    const remaining = db.deleteNomination(id);
+    res.json(remaining);
+  } catch {
+    res.status(500).json({ error: 'Failed to delete nomination' });
+  }
+});
+
 // 4. Update scores and field verification details (jury action)
 app.put('/api/nominations/:id/scores', (req, res) => {
   try {

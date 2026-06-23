@@ -1,9 +1,9 @@
 import { translations } from "../constants/translations";
 import { useState } from 'react';
-import { Shield, Award, CheckCircle2, QrCode, X, Printer, Search, FileJson, Bot, AlertTriangle } from 'lucide-react';
+import { Shield, Award, CheckCircle2, QrCode, X, Printer, Search, FileJson, Bot, AlertTriangle, Trash2 } from 'lucide-react';
 import { categoryCustomFields } from '../constants/awardConfigs';
 
-export default function AdminPanel({ nominations, updateNominationStatus, triggerToast, resultsReleased, setResultsReleased, currentLanguage }) {
+export default function AdminPanel({ nominations, updateNominationStatus, triggerToast, resultsReleased, setResultsReleased, currentLanguage, deleteNomination }) {
   const [searchTerm, setSearchTerm] = useState('');
   const t = translations[currentLanguage] || translations.ENG;
   const [activeTab, setActiveTab] = useState('nominations'); // nominations, certificates, settings
@@ -182,18 +182,31 @@ export default function AdminPanel({ nominations, updateNominationStatus, trigge
                           </span>
                         </td>
                         <td className="px-6 py-4 text-right">
-                          <select
-                            value={n.status}
-                            onChange={(e) => {
-                              updateNominationStatus(n.id, e.target.value);
-                              triggerToast(`Updated status of ${n.fullName} to ${e.target.value}`);
-                            }}
-                            className="bg-slate-900 border border-gray-800 rounded px-2 py-1 text-xs text-white focus:outline-none"
-                          >
-                            {availableStatuses.map((st, i) => (
-                              <option key={i} value={st}>{st}</option>
-                            ))}
-                          </select>
+                          <div className="flex items-center justify-end gap-3">
+                            <select
+                              value={n.status}
+                              onChange={(e) => {
+                                updateNominationStatus(n.id, e.target.value);
+                                triggerToast(`Updated status of ${n.fullName} to ${e.target.value}`);
+                              }}
+                              className="bg-slate-900 border border-gray-800 rounded px-2 py-1 text-xs text-white focus:outline-none"
+                            >
+                              {availableStatuses.map((st, i) => (
+                                <option key={i} value={st}>{st}</option>
+                              ))}
+                            </select>
+                            <button
+                              onClick={() => {
+                                if (confirm(`Are you sure you want to delete the nomination for "${n.projectName}"?`)) {
+                                  deleteNomination(n.id);
+                                }
+                              }}
+                              className="text-gray-500 hover:text-rose-400 hover:bg-rose-950/20 p-1.5 rounded border border-transparent hover:border-rose-900/30 transition-all"
+                              title="Delete Nomination"
+                            >
+                              <Trash2 className="h-4 w-4" />
+                            </button>
+                          </div>
                         </td>
                       </tr>
                     ))

@@ -125,7 +125,10 @@ export default function NominationForm({ selectedCategory, setSelectedCategory =
     metricWomen: 0, metricFarmers: 0, metricVolunteers: 0, metricTrees: 0,
     metricPlastic: 0, metricWaterBodies: 0, metricHarvesting: 0, metricJobs: 0,
     metricSkills: 0, metricCarbon: 0,
-    declared: false
+    declared: false,
+    professionalPhoto: '',
+    evidenceReport: '',
+    mediaEvidence: ''
   });
 
   const steps = [
@@ -234,14 +237,38 @@ export default function NominationForm({ selectedCategory, setSelectedCategory =
 
   const validateStep = () => {
     if (currentStep === 1) {
-      if (!formData.fullName || !formData.mobile || !formData.email || !formData.village) {
-        triggerToast('Please fill all mandatory fields (Name, Mobile, Email, Village).');
+      if (
+        !formData.fullName ||
+        !formData.mobile ||
+        !formData.email ||
+        !formData.address ||
+        !formData.state ||
+        !formData.district ||
+        !formData.mandal ||
+        !formData.gp ||
+        !formData.village ||
+        !formData.pinCode ||
+        !formData.professionalPhoto
+      ) {
+        triggerToast('Please fill all mandatory profile and regional fields, including your professional photo.');
         return false;
       }
     }
     if (currentStep === 2) {
-      if (!formData.projectName || !formData.startDate || !formData.location || !formData.objectives) {
-        triggerToast('Please fill all mandatory project fields (Name, Start Date, Location, Objectives).');
+      if (
+        !formData.projectName ||
+        !formData.startDate ||
+        !formData.endDate ||
+        !formData.location ||
+        !formData.objectives ||
+        !formData.challenges ||
+        !formData.innovations ||
+        !formData.sustainabilityPlan ||
+        !formData.communityParticipation ||
+        !formData.governmentSupport ||
+        !formData.csrPartnership
+      ) {
+        triggerToast('Please fill all mandatory project fields (Name, Dates, Location, Objectives, Challenges, Innovations, Sustainability, Community, Govt, CSR).');
         return false;
       }
       const fields = categoryCustomFields[formData.category] || [];
@@ -257,6 +284,20 @@ export default function NominationForm({ selectedCategory, setSelectedCategory =
         triggerToast('Please map at least one Sustainable Development Goal (SDG).');
         return false;
       }
+      if (formData.selectedLDGs.length === 0) {
+        triggerToast('Please map at least one Life Development Goal (LDG).');
+        return false;
+      }
+    }
+    if (currentStep === 4) {
+      const activeGuide = categoryGuides[formData.category];
+      const metrics = activeGuide?.metrics || [];
+      for (const m of metrics) {
+        if (formData[m] === undefined || formData[m] === '' || formData[m] <= 0) {
+          triggerToast('Please fill all category-specific impact metrics with valid positive values.');
+          return false;
+        }
+      }
     }
     return true;
   };
@@ -269,6 +310,10 @@ export default function NominationForm({ selectedCategory, setSelectedCategory =
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    if (!formData.evidenceReport || !formData.mediaEvidence) {
+      triggerToast('Please upload both the Evidence Report and Media Evidence documents.');
+      return;
+    }
     if (!formData.declared) {
       triggerToast('Please check the declaration box certifying your information is authentic.');
       return;
@@ -286,7 +331,8 @@ export default function NominationForm({ selectedCategory, setSelectedCategory =
       metricVillages: 0, metricHouseholds: 0, metricBeneficiaries: 0, metricStudents: 0,
       metricWomen: 0, metricFarmers: 0, metricVolunteers: 0, metricTrees: 0,
       metricPlastic: 0, metricWaterBodies: 0, metricHarvesting: 0, metricJobs: 0,
-      metricSkills: 0, metricCarbon: 0, declared: false
+      metricSkills: 0, metricCarbon: 0, declared: false,
+      professionalPhoto: '', evidenceReport: '', mediaEvidence: ''
     });
   };
 
@@ -407,13 +453,47 @@ export default function NominationForm({ selectedCategory, setSelectedCategory =
                   <label className="block text-xs font-bold text-gray-400 mb-1">Mobile / WhatsApp <span className="text-red-500">*</span></label>
                   <input type="tel" required placeholder="10-digit phone" value={formData.mobile}
                     onChange={(e) => handleInputChange('mobile', e.target.value)}
-                    className="w-full rounded-lg bg-gray-950 border border-gray-800 px-3 py-2 text-xs text-white placeholder-gray-500 focus:outline-none focus:border-indigo-500" />
+                    className="w-full rounded-lg bg-gray-950 border border-gray-800 px-3 py-2.5 text-xs text-white placeholder-gray-500 focus:outline-none focus:border-indigo-500" />
                 </div>
                 <div>
                   <label className="block text-xs font-bold text-gray-400 mb-1">Email Address <span className="text-red-500">*</span></label>
                   <input type="email" required placeholder="email@example.com" value={formData.email}
                     onChange={(e) => handleInputChange('email', e.target.value)}
-                    className="w-full rounded-lg bg-gray-950 border border-gray-800 px-3 py-2 text-xs text-white placeholder-gray-500 focus:outline-none focus:border-indigo-500" />
+                    className="w-full rounded-lg bg-gray-950 border border-gray-800 px-3 py-2.5 text-xs text-white placeholder-gray-500 focus:outline-none focus:border-indigo-500" />
+                </div>
+              </div>
+
+              <div className="grid sm:grid-cols-2 gap-4 border-t border-gray-900 pt-5">
+                <div>
+                  <label className="block text-xs font-bold text-gray-400 mb-1">Professional Attire Photo <span className="text-red-500">*</span></label>
+                  <div className="relative">
+                    <input 
+                      type="file" 
+                      accept="image/*"
+                      id="professionalPhoto"
+                      className="hidden" 
+                      onChange={(e) => {
+                        const file = e.target.files[0];
+                        if (file) {
+                          handleInputChange('professionalPhoto', file.name);
+                          triggerToast(`Selected photo: ${file.name}`);
+                        }
+                      }}
+                    />
+                    <label 
+                      htmlFor="professionalPhoto"
+                      className="flex items-center gap-2 rounded-lg border border-dashed border-gray-800 bg-gray-950 px-4 py-2.5 text-xs text-gray-400 cursor-pointer hover:border-indigo-500/50 hover:text-white transition-colors"
+                    >
+                      <Upload className="h-4.5 w-4.5 text-indigo-500 shrink-0" />
+                      <span className="truncate">{formData.professionalPhoto ? formData.professionalPhoto : 'Choose professional photo'}</span>
+                    </label>
+                  </div>
+                </div>
+                <div>
+                  <label className="block text-xs font-bold text-gray-400 mb-1">Nominee Address <span className="text-red-500">*</span></label>
+                  <input type="text" required placeholder="Full street address" value={formData.address}
+                    onChange={(e) => handleInputChange('address', e.target.value)}
+                    className="w-full rounded-lg bg-gray-950 border border-gray-800 px-3 py-2.5 text-xs text-white placeholder-gray-500 focus:outline-none focus:border-indigo-500" />
                 </div>
               </div>
 
@@ -494,8 +574,8 @@ export default function NominationForm({ selectedCategory, setSelectedCategory =
                     className="w-full rounded-lg bg-gray-950 border border-gray-800 px-3 py-2 text-xs text-white focus:outline-none focus:border-indigo-500" />
                 </div>
                 <div>
-                  <label className="block text-xs font-bold text-gray-400 mb-1">Completion Date (optional if ongoing)</label>
-                  <input type="date" value={formData.endDate} onChange={(e) => handleInputChange('endDate', e.target.value)}
+                  <label className="block text-xs font-bold text-gray-400 mb-1">Completion Date <span className="text-red-500">*</span></label>
+                  <input type="date" required value={formData.endDate} onChange={(e) => handleInputChange('endDate', e.target.value)}
                     className="w-full rounded-lg bg-gray-950 border border-gray-800 px-3 py-2 text-xs text-white focus:outline-none focus:border-indigo-500" />
                 </div>
                 <div>
@@ -555,8 +635,8 @@ export default function NominationForm({ selectedCategory, setSelectedCategory =
 
               <div className="grid sm:grid-cols-2 gap-4 border-t border-gray-900 pt-4">
                 <div>
-                  <label className="block text-xs font-bold text-gray-400 mb-1">Challenges Faced</label>
-                  <textarea rows={2} placeholder="What roadblocks did you overcome?" value={formData.challenges}
+                  <label className="block text-xs font-bold text-gray-400 mb-1">Challenges Faced <span className="text-red-500">*</span></label>
+                  <textarea rows={2} required placeholder="What roadblocks did you overcome?" value={formData.challenges}
                     onChange={(e) => handleInputChange('challenges', e.target.value)}
                     className="w-full rounded-lg bg-gray-950 border border-gray-800 px-3 py-2 text-xs text-white focus:outline-none focus:border-indigo-500" />
                   <div className={`text-[10px] text-right mt-1 ${getWordCount(formData.challenges) > 150 ? 'text-red-500 font-bold' : 'text-gray-500'}`}>
@@ -564,8 +644,8 @@ export default function NominationForm({ selectedCategory, setSelectedCategory =
                   </div>
                 </div>
                 <div>
-                  <label className="block text-xs font-bold text-gray-400 mb-1">Key Innovations</label>
-                  <textarea rows={2} placeholder="What unique ideas did you execute?" value={formData.innovations}
+                  <label className="block text-xs font-bold text-gray-400 mb-1">Key Innovations <span className="text-red-500">*</span></label>
+                  <textarea rows={2} required placeholder="What unique ideas did you execute?" value={formData.innovations}
                     onChange={(e) => handleInputChange('innovations', e.target.value)}
                     className="w-full rounded-lg bg-gray-950 border border-gray-800 px-3 py-2 text-xs text-white focus:outline-none focus:border-indigo-500" />
                   <div className={`text-[10px] text-right mt-1 ${getWordCount(formData.innovations) > 150 ? 'text-red-500 font-bold' : 'text-gray-500'}`}>
@@ -573,8 +653,8 @@ export default function NominationForm({ selectedCategory, setSelectedCategory =
                   </div>
                 </div>
                 <div>
-                  <label className="block text-xs font-bold text-gray-400 mb-1">Sustainability & Future Plan</label>
-                  <textarea rows={2} placeholder="How will the project sustain long-term?" value={formData.sustainabilityPlan}
+                  <label className="block text-xs font-bold text-gray-400 mb-1">Sustainability & Future Plan <span className="text-red-500">*</span></label>
+                  <textarea rows={2} required placeholder="How will the project sustain long-term?" value={formData.sustainabilityPlan}
                     onChange={(e) => handleInputChange('sustainabilityPlan', e.target.value)}
                     className="w-full rounded-lg bg-gray-950 border border-gray-800 px-3 py-2 text-xs text-white focus:outline-none focus:border-indigo-500" />
                   <div className={`text-[10px] text-right mt-1 ${getWordCount(formData.sustainabilityPlan) > 150 ? 'text-red-500 font-bold' : 'text-gray-500'}`}>
@@ -582,12 +662,30 @@ export default function NominationForm({ selectedCategory, setSelectedCategory =
                   </div>
                 </div>
                 <div>
-                  <label className="block text-xs font-bold text-gray-400 mb-1">Community & Govt Collaboration</label>
-                  <textarea rows={2} placeholder="Panchayat participation, Govt certs, CSR grants, etc." value={formData.communityParticipation}
+                  <label className="block text-xs font-bold text-gray-400 mb-1">Community Participation <span className="text-red-500">*</span></label>
+                  <textarea rows={2} required placeholder="How did local villagers engage?" value={formData.communityParticipation}
                     onChange={(e) => handleInputChange('communityParticipation', e.target.value)}
                     className="w-full rounded-lg bg-gray-950 border border-gray-800 px-3 py-2 text-xs text-white focus:outline-none focus:border-indigo-500" />
                   <div className={`text-[10px] text-right mt-1 ${getWordCount(formData.communityParticipation) > 150 ? 'text-red-500 font-bold' : 'text-gray-500'}`}>
                     {getWordCount(formData.communityParticipation)} / 150 words
+                  </div>
+                </div>
+                <div>
+                  <label className="block text-xs font-bold text-gray-400 mb-1">Government Support <span className="text-red-500">*</span></label>
+                  <textarea rows={2} required placeholder="GP resolutions, block endorsements, or schemes." value={formData.governmentSupport}
+                    onChange={(e) => handleInputChange('governmentSupport', e.target.value)}
+                    className="w-full rounded-lg bg-gray-950 border border-gray-800 px-3 py-2 text-xs text-white focus:outline-none focus:border-indigo-500" />
+                  <div className={`text-[10px] text-right mt-1 ${getWordCount(formData.governmentSupport) > 150 ? 'text-red-500 font-bold' : 'text-gray-500'}`}>
+                    {getWordCount(formData.governmentSupport)} / 150 words
+                  </div>
+                </div>
+                <div>
+                  <label className="block text-xs font-bold text-gray-400 mb-1">CSR Partnership & Funding <span className="text-red-500">*</span></label>
+                  <textarea rows={2} required placeholder="Private sponsorships, corporate grants, etc." value={formData.csrPartnership}
+                    onChange={(e) => handleInputChange('csrPartnership', e.target.value)}
+                    className="w-full rounded-lg bg-gray-950 border border-gray-800 px-3 py-2 text-xs text-white focus:outline-none focus:border-indigo-500" />
+                  <div className={`text-[10px] text-right mt-1 ${getWordCount(formData.csrPartnership) > 150 ? 'text-red-500 font-bold' : 'text-gray-500'}`}>
+                    {getWordCount(formData.csrPartnership)} / 150 words
                   </div>
                 </div>
               </div>
@@ -688,15 +786,50 @@ export default function NominationForm({ selectedCategory, setSelectedCategory =
               <h3 className="text-base font-bold text-white border-b border-gray-900 pb-3 font-display">Step 5: Document Uploads & Official Declaration</h3>
 
               <div className="grid md:grid-cols-2 gap-6">
-                <div className="p-6 rounded-2xl bg-gray-950 border border-dashed border-gray-800 text-center flex flex-col items-center justify-center cursor-pointer hover:border-indigo-500/50 transition-colors">
-                  <Upload className="h-10 w-10 text-indigo-500 mb-3" />
-                  <h4 className="font-bold text-xs text-gray-200 font-display">Upload Category Evidence Report</h4>
-                  <p className="text-[10px] text-gray-500 mt-1">Required: {activeGuide.requiredDocs}</p>
+                <div>
+                  <input 
+                    type="file" 
+                    id="evidenceReportFile" 
+                    className="hidden" 
+                    onChange={(e) => {
+                      const file = e.target.files[0];
+                      if (file) {
+                        handleInputChange('evidenceReport', file.name);
+                        triggerToast(`Uploaded Evidence Report: ${file.name}`);
+                      }
+                    }} 
+                  />
+                  <label 
+                    htmlFor="evidenceReportFile"
+                    className="p-6 rounded-2xl bg-gray-950 border border-dashed border-gray-800 text-center flex flex-col items-center justify-center cursor-pointer hover:border-indigo-500/50 hover:text-white transition-colors block"
+                  >
+                    <Upload className="h-10 w-10 text-indigo-500 mb-3" />
+                    <h4 className="font-bold text-xs text-gray-200 font-display">Upload Category Evidence Report <span className="text-red-500">*</span></h4>
+                    <p className="text-[10px] text-gray-500 mt-1">{formData.evidenceReport ? `Selected: ${formData.evidenceReport}` : `Required: ${activeGuide.requiredDocs}`}</p>
+                  </label>
                 </div>
-                <div className="p-6 rounded-2xl bg-gray-950 border border-dashed border-gray-800 text-center flex flex-col items-center justify-center cursor-pointer hover:border-indigo-500/50 transition-colors">
-                  <Upload className="h-10 w-10 text-indigo-500 mb-3" />
-                  <h4 className="font-bold text-xs text-gray-200">Upload Media Evidence</h4>
-                  <p className="text-[10px] text-gray-500 mt-1">Photos, recommendation letters (PNG, JPG, PDF)</p>
+
+                <div>
+                  <input 
+                    type="file" 
+                    id="mediaEvidenceFile" 
+                    className="hidden" 
+                    onChange={(e) => {
+                      const file = e.target.files[0];
+                      if (file) {
+                        handleInputChange('mediaEvidence', file.name);
+                        triggerToast(`Uploaded Media Evidence: ${file.name}`);
+                      }
+                    }} 
+                  />
+                  <label 
+                    htmlFor="mediaEvidenceFile"
+                    className="p-6 rounded-2xl bg-gray-950 border border-dashed border-gray-800 text-center flex flex-col items-center justify-center cursor-pointer hover:border-indigo-500/50 hover:text-white transition-colors block"
+                  >
+                    <Upload className="h-10 w-10 text-indigo-500 mb-3" />
+                    <h4 className="font-bold text-xs text-gray-200">Upload Media Evidence <span className="text-red-500">*</span></h4>
+                    <p className="text-[10px] text-gray-500 mt-1">{formData.mediaEvidence ? `Selected: ${formData.mediaEvidence}` : 'Photos, recommendation letters (PNG, JPG, PDF)'}</p>
+                  </label>
                 </div>
               </div>
 

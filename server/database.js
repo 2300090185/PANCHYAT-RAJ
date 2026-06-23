@@ -275,6 +275,13 @@ export const db = {
     return data.nominations.find(n => n.id === id);
   },
 
+  deleteNomination: (id) => {
+    const data = readDB();
+    data.nominations = data.nominations.filter(n => n.id !== id);
+    writeDB(data);
+    return data.nominations;
+  },
+
   addJuryScores: (id, scores, remarks, fieldVisit) => {
     const data = readDB();
     data.nominations = data.nominations.map(n => {

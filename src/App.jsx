@@ -6,7 +6,8 @@ import AnalyticsDashboard from './components/AnalyticsDashboard';
 import JuryPortal from './components/JuryPortal';
 import AdminPanel from './components/AdminPanel';
 import LoginPage from './components/LoginPage';
-import { Award, ArrowRight, ShieldCheck, X, Send, Bot, FileText, Copy } from 'lucide-react';
+import { Award, ArrowRight, ShieldCheck, X, Send, Bot, FileText, Copy, QrCode, CheckCircle2, Printer } from 'lucide-react';
+import { translations } from './constants/translations';
 
 const inlineTranslations = {
   "ENG": {
@@ -194,6 +195,8 @@ export default function App() {
   const [selectedCategory, setSelectedCategory] = useState('Village Development Award');
   const [resultsReleased, setResultsReleased] = useState(false);
   const [submittedNomination, setSubmittedNomination] = useState(null);
+  const [activeCert, setActiveCert] = useState(null);
+  const [showQrVerification, setShowQrVerification] = useState(false);
 
   const [chatOpen, setChatOpen] = useState(false);
   const [chatMessages, setChatMessages] = useState([
@@ -312,6 +315,22 @@ export default function App() {
         setNominations(prev => prev.map(n => n.id === id ? updated : n));
       })
       .catch(err => console.error('Error saving jury scores:', err));
+  };
+
+  const deleteNomination = (id) => {
+    fetch(`/api/nominations/${id}`, { method: 'DELETE' })
+      .then(res => {
+        if (!res.ok) throw new Error('Delete failed');
+        return res.json();
+      })
+      .then(remaining => {
+        setNominations(remaining);
+        triggerToast('Nomination deleted successfully.');
+      })
+      .catch(err => {
+        console.error('Error deleting nomination:', err);
+        triggerToast('Failed to delete nomination.');
+      });
   };
 
   return (
@@ -489,6 +508,18 @@ export default function App() {
                                 <p className="text-xs text-indigo-400 font-semibold">{nom.category}</p>
                               </div>
                               <div className="flex items-center gap-2">
+                                {nom.status === 'Award Winner' && (
+                                  <button
+                                    onClick={() => {
+                                      setActiveCert(nom);
+                                    }}
+                                    className="flex items-center gap-1.5 rounded-lg bg-emerald-600 hover:bg-emerald-500 border border-emerald-500/20 px-3 py-1 text-xs font-bold text-white transition-all shadow-md shadow-emerald-900/20 hover:scale-105"
+                                    title="Click to view and download your official award certificate"
+                                  >
+                                    <Award className="h-3.5 w-3.5 text-amber-300 animate-pulse" />
+                                    <span>Download Certificate</span>
+                                  </button>
+                                )}
                                 <span className={['rounded-full px-3 py-1 text-xs font-bold border', statusBadge].join(' ')}>
                                   {nom.status}
                                 </span>
@@ -596,6 +627,7 @@ export default function App() {
               resultsReleased={resultsReleased}
               setResultsReleased={setResultsReleased}
               currentLanguage={currentLanguage}
+              deleteNomination={deleteNomination}
             />
           )
         )}
@@ -861,6 +893,145 @@ export default function App() {
                 Close
               </button>
             </div>
+          </div>
+        </div>
+      )}
+
+      {/* Certificate Modal Preview for Nominee */}
+      {activeCert && (
+        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-sm animate-in fade-in">
+          <div className="glass-panel w-full max-w-2xl rounded-2xl p-6 relative border-gray-800 bg-slate-950 shadow-2xl overflow-y-auto max-h-[90vh]">
+            <button
+              onClick={() => {
+                setActiveCert(null);
+                setShowQrVerification(false);
+              }}
+              className="absolute right-4 top-4 text-gray-400 hover:text-white z-10"
+            >
+              <X className="h-5 w-5" />
+            </button>
+
+            <div className="flex justify-between items-center mb-4">
+              <h3 className="text-sm font-bold text-gray-200 uppercase tracking-widest font-display">Your Official Award Certificate</h3>
+              <button 
+                onClick={() => window.print()}
+                className="flex items-center gap-1.5 rounded-lg bg-gray-900 border border-gray-800 px-3 py-1.5 text-xs font-semibold text-gray-300 hover:text-white"
+              >
+                <Printer className="h-4 w-4" />
+                <span>Print / Download</span>
+              </button>
+            </div>
+
+            {/* Printable certificate design */}
+            <div className="printable-certificate-canvas rounded-2xl border-8 border-double border-amber-900/60 bg-slate-900 p-8 text-center text-slate-100 shadow-2xl relative overflow-hidden select-none">
+              {/* Tricolor Ribbon/Stripe */}
+              <div className="absolute top-0 left-0 right-0 h-1.5 flex print:h-2">
+                <div className="flex-1 bg-[#FF9933]"></div>
+                <div className="flex-1 bg-white"></div>
+                <div className="flex-1 bg-[#138808]"></div>
+              </div>
+
+              {/* Subtle watermarks / shapes */}
+              <div className="absolute -left-12 -top-12 h-44 w-44 rounded-full bg-emerald-500/5 blur-xl"></div>
+              <div className="absolute -right-12 -bottom-12 h-44 w-44 rounded-full bg-amber-500/5 blur-xl"></div>
+              
+              <div className="flex justify-center mb-3">
+                <Award className="h-10 w-10 text-amber-500" />
+              </div>
+              
+              <span className="text-[10px] font-black tracking-widest text-amber-500 uppercase">
+                {translations[currentLanguage]?.certPanchayatDept || translations.ENG.certPanchayatDept}
+              </span>
+              <h2 className="text-xl font-bold tracking-tight text-white mt-1.5 font-display">NATIONAL SOCIAL IMPACT CERTIFICATE</h2>
+              
+              <div className="h-0.5 w-24 bg-gradient-to-r from-transparent via-amber-500 to-transparent mx-auto my-4"></div>
+              
+              <p className="text-xs text-gray-400 italic">
+                {translations[currentLanguage]?.certPresented || translations.ENG.certPresented}
+              </p>
+              <p className="text-lg font-black text-white tracking-wide mt-2 font-display">{activeCert.fullName}</p>
+              
+              <p className="text-xs text-gray-400 mt-2 max-w-sm mx-auto leading-relaxed">
+                {translations[currentLanguage]?.certText || translations.ENG.certText}
+              </p>
+              <p className="text-xs font-black text-amber-400 mt-1 uppercase tracking-wider">{activeCert.category}</p>
+              
+              <p className="text-[10px] text-gray-500 mt-4 leading-relaxed">
+                Project name: <span className="font-bold text-gray-300">"{activeCert.projectName}"</span> {translations[currentLanguage]?.certGramPanchayat || translations.ENG.certGramPanchayat} <span className="font-bold text-gray-300">{activeCert.village}</span>.
+              </p>
+
+              <div className="mt-8 flex justify-between items-center border-t border-gray-800 pt-6">
+                <div className="text-left">
+                  <p className="text-[10px] font-bold text-gray-300">Shri R. K. Prasad</p>
+                  <p className="text-[9px] text-gray-500">
+                    {translations[currentLanguage]?.certSecretary || translations.ENG.certSecretary}
+                  </p>
+                </div>
+
+                {/* QR Code Container */}
+                <div 
+                  onClick={() => setShowQrVerification(true)}
+                  className="cursor-pointer p-1.5 rounded-lg bg-white hover:ring-2 hover:ring-emerald-500 transition-all flex flex-col items-center gap-0.5"
+                  title="Click to Verify QR Code"
+                >
+                  <QrCode className="h-10 w-10 text-slate-900" />
+                  <span className="text-[8px] text-slate-800 font-bold tracking-tighter">
+                    {translations[currentLanguage]?.secureVerify || translations.ENG.secureVerify}
+                  </span>
+                </div>
+
+                <div className="text-right">
+                  <p className="text-[10px] font-bold text-gray-300">
+                    {translations[currentLanguage]?.certDateIssued || translations.ENG.certDateIssued}
+                  </p>
+                  <p className="text-[9px] text-gray-500">{new Date().toISOString().slice(0, 10)}</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* QR VERIFICATION MODAL FOR NOMINEE */}
+      {showQrVerification && activeCert && (
+        <div className="fixed inset-0 z-[110] flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-sm">
+          <div className="glass-panel w-full max-w-md rounded-2xl p-6 relative border-gray-800 shadow-2xl animate-float">
+            <button
+              onClick={() => setShowQrVerification(false)}
+              className="absolute right-4 top-4 text-gray-400 hover:text-white"
+            >
+              <X className="h-5 w-5" />
+            </button>
+            
+            <div className="flex justify-center mb-4">
+              <div className="h-12 w-12 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 flex items-center justify-center">
+                <CheckCircle2 className="h-6 w-6" />
+              </div>
+            </div>
+
+            <h3 className="text-center text-lg font-bold text-white font-display">
+              {translations[currentLanguage]?.blockchainQrVerified || translations.ENG.blockchainQrVerified}
+            </h3>
+            <p className="text-center text-xs text-gray-400 mt-1">
+              {translations[currentLanguage]?.blockchainQrSub || translations.ENG.blockchainQrSub}
+            </p>
+
+            <div className="mt-5 p-4 rounded-xl bg-gray-900 border border-gray-800 text-xs space-y-2 text-gray-300">
+              <p><span className="font-bold text-gray-400">{translations[currentLanguage]?.registryRef || translations.ENG.registryRef}</span> PRD-VERIFY-{activeCert.id.toUpperCase().slice(0, 12)}</p>
+              <p><span className="font-bold text-gray-400">{translations[currentLanguage]?.awardRecipient || translations.ENG.awardRecipient}</span> {activeCert.fullName}</p>
+              <p><span className="font-bold text-gray-400">{translations[currentLanguage]?.orgTypeLabel || translations.ENG.orgTypeLabel}</span> {activeCert.orgType}</p>
+              <p><span className="font-bold text-gray-400">{translations[currentLanguage]?.certProject || translations.ENG.certProject}</span> {activeCert.projectName}</p>
+              <p><span className="font-bold text-gray-400">GP Location:</span> {activeCert.village} GP, {activeCert.state}</p>
+              <p><span className="font-bold text-gray-400">Jury Verification Score:</span> {activeCert.juryScores ? Object.values(activeCert.juryScores).reduce((a,b)=>a+b, 0) : '85'} / 100</p>
+              <p><span className="font-bold text-gray-400">{translations[currentLanguage]?.verifiedBy || translations.ENG.verifiedBy}</span> District Ground Verification Panel</p>
+            </div>
+
+            <button
+              onClick={() => setShowQrVerification(false)}
+              className="w-full mt-5 rounded-lg bg-emerald-600 py-2 text-xs font-bold text-white hover:bg-emerald-500"
+            >
+              {translations[currentLanguage]?.closeDiagnostics || translations.ENG.closeDiagnostics}
+            </button>
           </div>
         </div>
       )}
