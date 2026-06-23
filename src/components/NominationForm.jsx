@@ -497,24 +497,30 @@ export default function NominationForm({ selectedCategory, setSelectedCategory =
                 </div>
               </div>
 
-              <div className="grid grid-cols-2 sm:grid-cols-6 gap-4 border-t border-gray-900 pt-5">
-                <div className="col-span-2">
-                  <label className="block text-xs font-bold text-gray-400 mb-1">State</label>
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 border-t border-gray-900 pt-5">
+                <div>
+                  <label className="block text-xs font-bold text-gray-400 mb-1">State <span className="text-red-500">*</span></label>
                   <select value={formData.state} onChange={(e) => handleInputChange('state', e.target.value)}
                     className="w-full rounded-lg bg-gray-950 border border-gray-800 px-3 py-2 text-xs text-white focus:outline-none focus:border-indigo-500">
                     <option>Andhra Pradesh</option><option>Telangana</option><option>Karnataka</option><option>Maharashtra</option><option>Tamil Nadu</option><option>Kerala</option><option>Gujarat</option><option>Rajasthan</option><option>Uttar Pradesh</option><option>Madhya Pradesh</option><option>Delhi</option>
                   </select>
                 </div>
                 <div>
-                  <label className="block text-xs font-bold text-gray-400 mb-1">District</label>
-                  <input type="text" placeholder="District" value={formData.district}
+                  <label className="block text-xs font-bold text-gray-400 mb-1">District <span className="text-red-500">*</span></label>
+                  <input type="text" required placeholder="District" value={formData.district}
                     onChange={(e) => handleInputChange('district', e.target.value)}
                     className="w-full rounded-lg bg-gray-950 border border-gray-800 px-3 py-2 text-xs text-white focus:outline-none focus:border-indigo-500" />
                 </div>
                 <div>
-                  <label className="block text-xs font-bold text-gray-400 mb-1">Mandal / Block</label>
-                  <input type="text" placeholder="Mandal" value={formData.mandal}
+                  <label className="block text-xs font-bold text-gray-400 mb-1">Mandal / Block <span className="text-red-500">*</span></label>
+                  <input type="text" required placeholder="Mandal" value={formData.mandal}
                     onChange={(e) => handleInputChange('mandal', e.target.value)}
+                    className="w-full rounded-lg bg-gray-950 border border-gray-800 px-3 py-2 text-xs text-white focus:outline-none focus:border-indigo-500" />
+                </div>
+                <div>
+                  <label className="block text-xs font-bold text-gray-400 mb-1">Gram Panchayat (GP) <span className="text-red-500">*</span></label>
+                  <input type="text" required placeholder="Gram Panchayat" value={formData.gp}
+                    onChange={(e) => handleInputChange('gp', e.target.value)}
                     className="w-full rounded-lg bg-gray-950 border border-gray-800 px-3 py-2 text-xs text-white focus:outline-none focus:border-indigo-500" />
                 </div>
                 <div>
@@ -524,8 +530,8 @@ export default function NominationForm({ selectedCategory, setSelectedCategory =
                     className="w-full rounded-lg bg-gray-950 border border-gray-800 px-3 py-2 text-xs text-white focus:outline-none focus:border-indigo-500" />
                 </div>
                 <div>
-                  <label className="block text-xs font-bold text-gray-400 mb-1">PIN Code</label>
-                  <input type="text" placeholder="6-digits" value={formData.pinCode}
+                  <label className="block text-xs font-bold text-gray-400 mb-1">PIN Code <span className="text-red-500">*</span></label>
+                  <input type="text" required placeholder="6-digits" value={formData.pinCode}
                     onChange={(e) => handleInputChange('pinCode', e.target.value)}
                     className="w-full rounded-lg bg-gray-950 border border-gray-800 px-3 py-2 text-xs text-white focus:outline-none focus:border-indigo-500" />
                 </div>
