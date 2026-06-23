@@ -1,8 +1,11 @@
-import React, { useState } from 'react';
-import { Shield, Users, Award, Download, CheckCircle2, QrCode, Sparkles, X, Printer, Search, HelpCircle, FileJson, Bot, AlertTriangle } from 'lucide-react';
+import { translations } from "../constants/translations";
+import { useState } from 'react';
+import { Shield, Award, CheckCircle2, QrCode, X, Printer, Search, FileJson, Bot, AlertTriangle } from 'lucide-react';
+import { categoryCustomFields } from '../constants/awardConfigs';
 
-export default function AdminPanel({ nominations, updateNominationStatus, triggerToast, resultsReleased, setResultsReleased }) {
+export default function AdminPanel({ nominations, updateNominationStatus, triggerToast, resultsReleased, setResultsReleased, currentLanguage }) {
   const [searchTerm, setSearchTerm] = useState('');
+  const t = translations[currentLanguage] || translations.ENG;
   const [activeTab, setActiveTab] = useState('nominations'); // nominations, certificates, settings
   const [activeCert, setActiveCert] = useState(null); // Selected nomination for certificate preview
   const [showQrVerification, setShowQrVerification] = useState(false);
@@ -53,10 +56,10 @@ export default function AdminPanel({ nominations, updateNominationStatus, trigge
               <div className="flex items-center gap-2">
                 <h2 className="text-xl font-extrabold text-white flex items-center gap-2">
                   <Shield className="h-5 w-5 text-rose-500" />
-                  <span>Admin Control Panel</span>
+                  <span>{t.adminControlHeader}</span>
                 </h2>
               </div>
-              <p className="text-[11px] text-gray-400 mt-0.5">Ministry of Panchayati Raj & Rural Development — Internal Portal</p>
+              <p className="text-[11px] text-gray-400 mt-0.5">{t.adminControlSub}</p>
             </div>
           </div>
           {/* Administrative Tools */}
@@ -66,7 +69,7 @@ export default function AdminPanel({ nominations, updateNominationStatus, trigge
               className="flex items-center gap-1.5 rounded-lg border border-gray-700 bg-gray-900 px-3.5 py-2 text-xs font-semibold text-gray-300 hover:text-white hover:border-[#FF9933] transition-colors"
             >
               <FileJson className="h-4 w-4 text-blue-400" />
-              <span>Export JSON Registry</span>
+              <span>{t.exportRegistry}</span>
             </button>
           </div>
         </div>
@@ -82,7 +85,7 @@ export default function AdminPanel({ nominations, updateNominationStatus, trigge
               : 'border-transparent text-gray-500 hover:text-gray-300'
           }`}
         >
-          Nomination Management
+          {t.nominationMgmt}
         </button>
         <button
           onClick={() => setActiveTab('certificates')}
@@ -92,7 +95,7 @@ export default function AdminPanel({ nominations, updateNominationStatus, trigge
               : 'border-transparent text-gray-500 hover:text-gray-300'
           }`}
         >
-          Certificate Issuance ({nominations.filter(n => n.status === 'Award Winner' || n.status === 'Award Recommended').length})
+          {t.certificateIssuance} ({nominations.filter(n => n.status === 'Award Winner' || n.status === 'Award Recommended').length})
         </button>
         <button
           onClick={() => setActiveTab('jury_management')}
@@ -102,7 +105,7 @@ export default function AdminPanel({ nominations, updateNominationStatus, trigge
               : 'border-transparent text-gray-500 hover:text-gray-300'
           }`}
         >
-          Jury Management
+          {t.juryMgmt}
         </button>
       </div>
 
@@ -128,7 +131,7 @@ export default function AdminPanel({ nominations, updateNominationStatus, trigge
                     <th className="px-6 py-4">Nominee Name</th>
                     <th className="px-6 py-4">Project Title</th>
                     <th className="px-6 py-4">State</th>
-                    <th className="px-6 py-4">AI Intelligence</th>
+                    <th className="px-6 py-4">{t.aiIntelligence}</th>
                     <th className="px-6 py-4 text-center">Current Status</th>
                     <th className="px-6 py-4 text-right">Actions</th>
                   </tr>
@@ -207,11 +210,11 @@ export default function AdminPanel({ nominations, updateNominationStatus, trigge
         <div className="grid md:grid-cols-2 gap-8">
           {/* Winners list */}
           <div className="space-y-4">
-            <h3 className="text-sm font-bold text-gray-200 uppercase tracking-widest font-display">Qualified Award Finalists</h3>
+            <h3 className="text-sm font-bold text-gray-200 uppercase tracking-widest font-display">{t.qualifiedFinalists}</h3>
             <div className="space-y-3">
               {nominations.filter(n => n.status === 'Award Winner' || n.status === 'Award Recommended').length === 0 ? (
                 <div className="p-8 rounded-xl bg-gray-950/40 border border-gray-900 text-center text-gray-500">
-                  No verified winners or recommended nominees found. Change statuses in Nomination management to generate certificates.
+                  {t.noWinnersFound}
                 </div>
               ) : (
                 nominations
@@ -243,18 +246,25 @@ export default function AdminPanel({ nominations, updateNominationStatus, trigge
             {activeCert ? (
               <div className="space-y-4">
                 <div className="flex justify-between items-center">
-                  <h3 className="text-sm font-bold text-gray-200 uppercase tracking-widest font-display">Official Certificate Sandbox</h3>
+                  <h3 className="text-sm font-bold text-gray-200 uppercase tracking-widest font-display">{t.certificateSandbox}</h3>
                   <button 
                     onClick={() => window.print()}
                     className="flex items-center gap-1.5 rounded-lg bg-gray-900 border border-gray-800 px-3 py-1.5 text-xs font-semibold text-gray-300 hover:text-white"
                   >
                     <Printer className="h-4 w-4" />
-                    <span>Print</span>
+                    <span>{t.printBtn}</span>
                   </button>
                 </div>
 
                 {/* Printable certificate design */}
-                <div className="rounded-2xl border-8 border-double border-amber-900/60 bg-slate-900 p-8 text-center text-slate-100 shadow-2xl relative overflow-hidden select-none">
+                <div className="printable-certificate-canvas rounded-2xl border-8 border-double border-amber-900/60 bg-slate-900 p-8 text-center text-slate-100 shadow-2xl relative overflow-hidden select-none">
+                  {/* Tricolor Ribbon/Stripe */}
+                  <div className="absolute top-0 left-0 right-0 h-1.5 flex print:h-2">
+                    <div className="flex-1 bg-[#FF9933]"></div>
+                    <div className="flex-1 bg-white"></div>
+                    <div className="flex-1 bg-[#138808]"></div>
+                  </div>
+
                   {/* Subtle watermarks / shapes */}
                   <div className="absolute -left-12 -top-12 h-44 w-44 rounded-full bg-emerald-500/5 blur-xl"></div>
                   <div className="absolute -right-12 -bottom-12 h-44 w-44 rounded-full bg-amber-500/5 blur-xl"></div>
@@ -263,27 +273,27 @@ export default function AdminPanel({ nominations, updateNominationStatus, trigge
                     <Award className="h-10 w-10 text-amber-500" />
                   </div>
                   
-                  <span className="text-[10px] font-black tracking-widest text-amber-500 uppercase">Panchayati Raj & Rural Development Department</span>
+                  <span className="text-[10px] font-black tracking-widest text-amber-500 uppercase">{t.certPanchayatDept}</span>
                   <h2 className="text-xl font-bold tracking-tight text-white mt-1.5 font-display">NATIONAL SOCIAL IMPACT AWARD</h2>
                   
                   <div className="h-0.5 w-24 bg-gradient-to-r from-transparent via-amber-500 to-transparent mx-auto my-4"></div>
                   
-                  <p className="text-xs text-gray-400 italic">This certificate of excellence is proudly presented to</p>
+                  <p className="text-xs text-gray-400 italic">{t.certPresented}</p>
                   <p className="text-lg font-black text-white tracking-wide mt-2 font-display">{activeCert.fullName}</p>
                   
                   <p className="text-xs text-gray-400 mt-2 max-w-sm mx-auto leading-relaxed">
-                    for outstanding youth leadership, sustainable stewardship, and pioneering contributions under the award category:
+                    {t.certText}
                   </p>
                   <p className="text-xs font-black text-amber-400 mt-1 uppercase tracking-wider">{activeCert.category}</p>
                   
                   <p className="text-[10px] text-gray-500 mt-4 leading-relaxed">
-                    Project name: <span className="font-bold text-gray-300">"{activeCert.projectName}"</span> executed in Gram Panchayat: <span className="font-bold text-gray-300">{activeCert.village}</span>.
+                    Project name: <span className="font-bold text-gray-300">"{activeCert.projectName}"</span> {t.certGramPanchayat} <span className="font-bold text-gray-300">{activeCert.village}</span>.
                   </p>
 
                   <div className="mt-8 flex justify-between items-center border-t border-gray-800 pt-6">
                     <div className="text-left">
                       <p className="text-[10px] font-bold text-gray-300">Shri R. K. Prasad</p>
-                      <p className="text-[9px] text-gray-500">Secretary, Panchayati Raj Dept.</p>
+                      <p className="text-[9px] text-gray-500">{t.certSecretary}</p>
                     </div>
 
                     {/* QR Code Container */}
@@ -293,11 +303,11 @@ export default function AdminPanel({ nominations, updateNominationStatus, trigge
                       title="Click to Verify QR Code"
                     >
                       <QrCode className="h-10 w-10 text-slate-900" />
-                      <span className="text-[8px] text-slate-800 font-bold tracking-tighter">SECURE VERIFY</span>
+                      <span className="text-[8px] text-slate-800 font-bold tracking-tighter">{t.secureVerify}</span>
                     </div>
 
                     <div className="text-right">
-                      <p className="text-[10px] font-bold text-gray-300">Date Issued</p>
+                      <p className="text-[10px] font-bold text-gray-300">{t.certDateIssued}</p>
                       <p className="text-[9px] text-gray-500">{new Date().toISOString().slice(0, 10)}</p>
                     </div>
                   </div>
@@ -306,8 +316,8 @@ export default function AdminPanel({ nominations, updateNominationStatus, trigge
             ) : (
               <div className="glass-panel p-8 rounded-2xl border-gray-800/80 text-center flex flex-col items-center justify-center h-96">
                 <Award className="h-10 w-10 text-gray-700 animate-pulse mb-3" />
-                <h3 className="font-bold text-sm text-gray-300">Select Nominee for Certificate</h3>
-                <p className="text-xs text-gray-500 max-w-xs mt-1.5">Only nominees whose status has been updated to "Award Winner" or "Award Recommended" can have official department certificates generated.</p>
+                <h3 className="font-bold text-sm text-gray-300">{t.selectNomineeCert}</h3>
+                <p className="text-xs text-gray-500 max-w-xs mt-1.5">{t.selectNomineeCertSub}</p>
               </div>
             )}
           </div>
@@ -319,34 +329,32 @@ export default function AdminPanel({ nominations, updateNominationStatus, trigge
         <div className="grid md:grid-cols-2 gap-8">
           <div className="space-y-6">
             <div className="glass-panel p-6 rounded-2xl border-gray-800">
-              <h3 className="text-sm font-bold text-gray-200 uppercase tracking-widest font-display mb-4">Create Category Jury Portal</h3>
+              <h3 className="text-sm font-bold text-gray-200 uppercase tracking-widest font-display mb-4">{t.createJuryPortal}</h3>
               <div className="space-y-4">
                 <div>
                   <label className="block text-[10px] font-bold text-gray-500 uppercase tracking-wider mb-1.5">Select Award Category</label>
                   <select className="w-full rounded-xl bg-gray-900 border border-gray-800 px-3 py-2 text-xs text-white focus:border-rose-500 focus:outline-none">
-                    <option>Village Development Award</option>
-                    <option>Smart Village Award</option>
-                    <option>Plastic-Free Village Award</option>
-                    <option>Green Village Award</option>
-                    <option>Water Conservation Award</option>
+                    {Object.keys(categoryCustomFields).map((cat, idx) => (
+                      <option key={idx} value={cat}>{cat}</option>
+                    ))}
                   </select>
                 </div>
                 <div>
-                  <label className="block text-[10px] font-bold text-gray-500 uppercase tracking-wider mb-1.5">Assign Jury Members (Emails)</label>
+                  <label className="block text-[10px] font-bold text-gray-500 uppercase tracking-wider mb-1.5">{t.assignJuryMembers}</label>
                   <input type="text" placeholder="jury1@gov.in, jury2@gov.in" className="w-full rounded-xl bg-gray-900 border border-gray-800 px-3 py-2 text-xs text-white focus:border-rose-500 focus:outline-none" />
                 </div>
                 <button 
                   onClick={() => triggerToast('Successfully generated secure Jury Portal link for selected category.')}
                   className="w-full py-2 bg-rose-600 hover:bg-rose-500 text-white rounded-lg text-xs font-bold transition-colors shadow-lg shadow-rose-600/20"
                 >
-                  Generate Portal Access Link
+                  {t.generateLinkBtn}
                 </button>
               </div>
             </div>
 
             <div className="glass-panel p-6 rounded-2xl border-emerald-900/40 bg-emerald-950/10">
-              <h3 className="text-sm font-bold text-emerald-400 uppercase tracking-widest font-display mb-2">Final Results Declaration</h3>
-              <p className="text-xs text-gray-400 mb-4">Releasing the results will publicly display the Award Winners on the Public Portal home page.</p>
+              <h3 className="text-sm font-bold text-emerald-400 uppercase tracking-widest font-display mb-2">{t.finalResultsDeclaration}</h3>
+              <p className="text-xs text-gray-400 mb-4">{t.resultsDeclarationSub}</p>
               <button 
                 onClick={() => {
                   setResultsReleased(!resultsReleased);
@@ -356,17 +364,17 @@ export default function AdminPanel({ nominations, updateNominationStatus, trigge
                   resultsReleased ? 'bg-gray-800 text-gray-400 hover:bg-gray-700' : 'bg-emerald-600 text-white hover:bg-emerald-500 shadow-emerald-900/50'
                 }`}
               >
-                {resultsReleased ? 'Retract Public Results' : 'Declare Winners Publicly'}
+                {resultsReleased ? t.retractResultsBtn : t.declareWinnersBtn}
               </button>
             </div>
           </div>
 
           {/* Jury Audit Log */}
           <div className="glass-panel p-6 rounded-2xl border-gray-800 h-[500px] flex flex-col">
-            <h3 className="text-sm font-bold text-gray-200 uppercase tracking-widest font-display mb-4">Jury Action Audit Log</h3>
+            <h3 className="text-sm font-bold text-gray-200 uppercase tracking-widest font-display mb-4">{t.juryAuditLog}</h3>
             <div className="flex-1 overflow-y-auto space-y-3 pr-2 custom-scrollbar">
               {nominations.filter(n => n.juryScores).length === 0 ? (
-                <div className="text-center text-xs text-gray-500 mt-10">No jury evaluations recorded yet.</div>
+                <div className="text-center text-xs text-gray-500 mt-10">{t.noJuryLogs}</div>
               ) : (
                 nominations.filter(n => n.juryScores).map(n => (
                   <div key={n.id} className="p-3 bg-gray-900/50 border border-gray-800 rounded-xl text-xs">
@@ -406,24 +414,24 @@ export default function AdminPanel({ nominations, updateNominationStatus, trigge
               </div>
             </div>
 
-            <h3 className="text-center text-lg font-bold text-white font-display">Blockchain QR Certificate Verified</h3>
-            <p className="text-center text-xs text-gray-400 mt-1">This digital credential is authenticated against the Ministry of Panchayati Raj Central Registry database.</p>
+            <h3 className="text-center text-lg font-bold text-white font-display">{t.blockchainQrVerified}</h3>
+            <p className="text-center text-xs text-gray-400 mt-1">{t.blockchainQrSub}</p>
 
             <div className="mt-5 p-4 rounded-xl bg-gray-900 border border-gray-800 text-xs space-y-2 text-gray-300">
-              <p><span className="font-bold text-gray-400">Registry Reference:</span> PRD-VERIFY-{activeCert.id.toUpperCase().slice(0, 12)}</p>
-              <p><span className="font-bold text-gray-400">Award Recipient:</span> {activeCert.fullName}</p>
-              <p><span className="font-bold text-gray-400">Organization Type:</span> {activeCert.orgType}</p>
-              <p><span className="font-bold text-gray-400">Project:</span> {activeCert.projectName}</p>
+              <p><span className="font-bold text-gray-400">{t.registryRef}</span> PRD-VERIFY-{activeCert.id.toUpperCase().slice(0, 12)}</p>
+              <p><span className="font-bold text-gray-400">{t.awardRecipient}</span> {activeCert.fullName}</p>
+              <p><span className="font-bold text-gray-400">{t.orgTypeLabel}</span> {activeCert.orgType}</p>
+              <p><span className="font-bold text-gray-400">{t.certProject}</span> {activeCert.projectName}</p>
               <p><span className="font-bold text-gray-400">GP Location:</span> {activeCert.village} GP, {activeCert.state}</p>
               <p><span className="font-bold text-gray-400">Jury Verification Score:</span> {activeCert.juryScores ? Object.values(activeCert.juryScores).reduce((a,b)=>a+b, 0) : '85'} / 100</p>
-              <p><span className="font-bold text-gray-400">Verified By:</span> District Ground Verification Panel</p>
+              <p><span className="font-bold text-gray-400">{t.verifiedBy}</span> District Ground Verification Panel</p>
             </div>
 
             <button
               onClick={() => setShowQrVerification(false)}
               className="w-full mt-5 rounded-lg bg-emerald-600 py-2 text-xs font-bold text-white hover:bg-emerald-500"
             >
-              Close Diagnostics
+              {t.closeDiagnostics}
             </button>
           </div>
         </div>

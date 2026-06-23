@@ -1,3 +1,4 @@
+/* global process */
 import express from 'express';
 import cors from 'cors';
 import { db } from './database.js';
@@ -18,7 +19,7 @@ app.get('/api/nominations', (req, res) => {
   try {
     const list = db.getNominations();
     res.json(list);
-  } catch (error) {
+  } catch {
     res.status(550).json({ error: 'Failed to retrieve nominations' });
   }
 });
@@ -49,9 +50,68 @@ app.post('/api/nominations', (req, res) => {
     };
     db.saveNotification(alert);
 
-    res.status(201).json(saved);
-  } catch (error) {
+    // Trigger Mock SMTP email log
+    const emailTo = submission.email || 'nominee@panchayatawards.gov.in';
+    const emailSubject = `Nomination Submission Received - Ref ID: ${id}`;
+    const emailBody = `Dear ${submission.fullName},\n\nWe have received your nomination application for the project "${submission.projectName}" under the category "${submission.category}" for the National Panchayat Raj Awards.\n\nYour application reference ID is: ${id}.\nThe verification process will be conducted at three levels (Block, District, and State level) before final compilation by the Jury Panel.\n\nYou can track your live application status in the Nominee Portal using your credentials.\n\nBest regards,\nMinistry of Panchayati Raj,\nGovernment of India.`;
+
+    console.log("\n=======================================================");
+    console.log(`✉️  [SMTP Server] Sending Nomination Success Email to: ${emailTo}`);
+    console.log(`Subject: ${emailSubject}`);
+    console.log("-------------------------------------------------------");
+    console.log(emailBody);
+    console.log("=======================================================\n");
+
+    res.status(201).json({
+      ...saved,
+      mockEmailSent: {
+        to: emailTo,
+        subject: emailSubject,
+        body: emailBody
+      }
+    });
+  } catch {
     res.status(500).json({ error: 'Failed to submit nomination' });
+  }
+});
+
+// 2.5. Register volunteer/NGO/CSR and trigger confirmation email
+app.post('/api/register', (req, res) => {
+  try {
+    const { name, email, phone, org, interest, role } = req.body;
+    
+    // Auto-generate system alert for admin
+    const alert = {
+      id: Date.now(),
+      title: `New ${role.toUpperCase()} Registered`,
+      message: `${name} has registered as a ${role} focusing on SDG: ${interest}.`,
+      time: 'Just now',
+      read: false
+    };
+    db.saveNotification(alert);
+
+    // Trigger Mock SMTP email log
+    const emailSubject = `Registration Confirmation - National Panchayat Awards`;
+    const emailBody = `Dear ${name},\n\nThank you for registering as a ${role.toUpperCase()} on the Panchayat Raj Sustainable Development Portal.\n\nRegistered Details:\n- Role: ${role.toUpperCase()}\n- Focus Area: ${interest.toUpperCase()}\n- Mobile: ${phone}\n${org ? `- Organization: ${org}\n` : ''}\nYour credentials have been successfully updated in the National Sustainable Development Registry database. Our local block representatives and community managers will reach out to you with specific updates and volunteer guidelines.\n\nBest regards,\nMinistry of Panchayati Raj,\nGovernment of India.`;
+
+    console.log("\n=======================================================");
+    console.log(`✉️  [SMTP Server] Sending Registration Success Email to: ${email}`);
+    console.log(`Subject: ${emailSubject}`);
+    console.log("-------------------------------------------------------");
+    console.log(emailBody);
+    console.log("=======================================================\n");
+
+    res.status(200).json({
+      success: true,
+      message: `${role.toUpperCase()} registered successfully!`,
+      mockEmailSent: {
+        to: email,
+        subject: emailSubject,
+        body: emailBody
+      }
+    });
+  } catch {
+    res.status(500).json({ error: 'Failed to register' });
   }
 });
 
@@ -74,7 +134,7 @@ app.put('/api/nominations/:id/status', (req, res) => {
     db.saveNotification(alert);
 
     res.json(updated);
-  } catch (error) {
+  } catch {
     res.status(500).json({ error: 'Failed to update status' });
   }
 });
@@ -87,7 +147,7 @@ app.put('/api/nominations/:id/scores', (req, res) => {
 
     const updated = db.addJuryScores(id, scores, remarks, fieldVisit);
     res.json(updated);
-  } catch (error) {
+  } catch {
     res.status(500).json({ error: 'Failed to save jury scores' });
   }
 });
@@ -97,7 +157,7 @@ app.get('/api/notifications', (req, res) => {
   try {
     const list = db.getNotifications();
     res.json(list);
-  } catch (error) {
+  } catch {
     res.status(500).json({ error: 'Failed to retrieve notifications' });
   }
 });
@@ -107,7 +167,7 @@ app.post('/api/notifications/clear', (req, res) => {
   try {
     const list = db.clearNotifications();
     res.json(list);
-  } catch (error) {
+  } catch {
     res.status(500).json({ error: 'Failed to clear notifications' });
   }
 });

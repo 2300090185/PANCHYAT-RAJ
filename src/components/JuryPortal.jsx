@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { 
-  Star, CheckCircle, Calendar, MessageSquare, ClipboardCheck, Award, Search, Filter, 
+  Star, Calendar, MessageSquare, ClipboardCheck, Search, Filter, 
   ChevronDown, ChevronUp, AlertCircle, Info, TrendingUp, BarChart2, Eye
 } from 'lucide-react';
 import { categoryJuryCriteria, categoryCustomFields } from '../constants/awardConfigs';
@@ -46,6 +46,7 @@ export default function JuryPortal({ nominations, updateNominationStatus, addJur
   };
 
   // When nomination changes, reset scores to fit new criteria
+  /* eslint-disable react-hooks/set-state-in-effect */
   useEffect(() => {
     if (!selectedNomination) {
       setScores({});
@@ -60,7 +61,7 @@ export default function JuryPortal({ nominations, updateNominationStatus, addJur
       // Merge existing saved scores; fill missing criteria with 0
       const merged = buildEmptyScores(criteria);
       Object.keys(selectedNomination.juryScores).forEach(k => {
-        if (merged.hasOwnProperty(k)) merged[k] = selectedNomination.juryScores[k];
+        if (Object.prototype.hasOwnProperty.call(merged, k)) merged[k] = selectedNomination.juryScores[k];
       });
       setScores(merged);
     } else {
@@ -68,7 +69,8 @@ export default function JuryPortal({ nominations, updateNominationStatus, addJur
     }
     setRemarks(selectedNomination.juryRemarks || '');
     setFieldVisitDate(selectedNomination.fieldVisit || '');
-  }, [selectedNomination?.id]);
+  }, [selectedNomination]);
+  /* eslint-enable react-hooks/set-state-in-effect */
 
   const totalScore = Object.values(scores).reduce((sum, v) => sum + (parseFloat(v) || 0), 0);
   const maxScore = activeCriteria.reduce((sum, c) => sum + c.weight, 0);

@@ -1,11 +1,10 @@
 import React, { useState, useMemo } from 'react';
 import { ResponsiveContainer, BarChart, Bar, XAxis, YAxis, Tooltip, Legend, PieChart, Pie, Cell, LineChart, Line, CartesianGrid } from 'recharts';
-import { Trees, Trash2, Droplets, Users, ShieldAlert, Award, Globe, Building2, Map, Download, FileSpreadsheet, FileText } from 'lucide-react';
+import { Trees, Trash2, Droplets, Users, Globe, Building2, Map, FileSpreadsheet, FileText } from 'lucide-react';
 
-export default function AnalyticsDashboard({ nominations }) {
+export default function AnalyticsDashboard({ nominations, triggerToast }) {
   const [selectedRegion, setSelectedRegion] = useState('All Regions');
   const [mapLayer, setMapLayer] = useState('participation'); // participation, sdg, winner
-  const [drillLevel, setDrillLevel] = useState('National'); // National, State, District, Panchayat
   const [drillPath, setDrillPath] = useState(['National']);
 
   // Static seeds + dynamic nominations aggregated data
@@ -111,11 +110,17 @@ export default function AnalyticsDashboard({ nominations }) {
           </div>
           
           <div className="flex items-center gap-3">
-            <button className="flex items-center gap-1.5 px-3 py-1.5 bg-rose-600 hover:bg-rose-500 text-white rounded-lg text-xs font-bold transition-colors shadow-lg">
+            <button 
+              onClick={() => triggerToast ? triggerToast("Generating and downloading PDF Report for Analytics...") : alert("Generating PDF Report...")}
+              className="flex items-center gap-1.5 px-3 py-1.5 bg-rose-600 hover:bg-rose-500 text-white rounded-lg text-xs font-bold transition-colors shadow-lg"
+            >
               <FileText className="h-3.5 w-3.5" />
               Export PDF Report
             </button>
-            <button className="flex items-center gap-1.5 px-3 py-1.5 bg-emerald-600 hover:bg-emerald-500 text-white rounded-lg text-xs font-bold transition-colors shadow-lg">
+            <button 
+              onClick={() => triggerToast ? triggerToast("Exporting state-level analytics to Excel spreadsheet...") : alert("Exporting to Excel...")}
+              className="flex items-center gap-1.5 px-3 py-1.5 bg-emerald-600 hover:bg-emerald-500 text-white rounded-lg text-xs font-bold transition-colors shadow-lg"
+            >
               <FileSpreadsheet className="h-3.5 w-3.5" />
               Export State Excel
             </button>
@@ -233,7 +238,6 @@ export default function AnalyticsDashboard({ nominations }) {
                   onClick={() => {
                     const newPath = drillPath.slice(0, idx + 1);
                     setDrillPath(newPath);
-                    setDrillLevel(newPath[newPath.length - 1] === 'National' ? 'National' : 'SubLevel');
                     if (idx === 0) setSelectedRegion('All Regions');
                   }}
                 >

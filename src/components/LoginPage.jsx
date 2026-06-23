@@ -1,7 +1,8 @@
-import React, { useState } from 'react';
+import { translations } from "../constants/translations";
+import { useState } from 'react';
 import { Lock, User, FileText, Star, Shield, ArrowRight } from 'lucide-react';
 
-export default function LoginPage({ role, onLogin }) {
+export default function LoginPage({ role, onLogin, currentLanguage }) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   
@@ -12,12 +13,14 @@ export default function LoginPage({ role, onLogin }) {
     }
   };
 
+  const t = translations[currentLanguage] || translations.ENG;
+
   const getRoleConfig = () => {
     switch (role) {
       case 'nominee':
         return {
-          title: 'Nominee Portal Login',
-          subtitle: 'Sign in to submit or track your award nominations.',
+          title: t.nomineeTitle,
+          subtitle: t.nomineeSub,
           icon: FileText,
           color: 'text-indigo-400',
           bg: 'bg-indigo-950/20',
@@ -26,8 +29,8 @@ export default function LoginPage({ role, onLogin }) {
         };
       case 'jury':
         return {
-          title: 'Jury Evaluation Portal',
-          subtitle: 'Sign in to access your secure evaluation dashboard and review nominations.',
+          title: t.juryTitle,
+          subtitle: t.jurySub,
           icon: Star,
           color: 'text-amber-400',
           bg: 'bg-amber-950/20',
@@ -36,8 +39,8 @@ export default function LoginPage({ role, onLogin }) {
         };
       case 'admin':
         return {
-          title: 'Admin Control Panel',
-          subtitle: 'Secure access for Ministry of Panchayati Raj administrators.',
+          title: t.adminTitle,
+          subtitle: t.adminSub,
           icon: Shield,
           color: 'text-rose-400',
           bg: 'bg-rose-950/20',
@@ -76,7 +79,7 @@ export default function LoginPage({ role, onLogin }) {
 
         <form onSubmit={handleLogin} className="space-y-5">
           <div>
-            <label className="block text-xs font-bold text-gray-400 mb-1">Email Address</label>
+            <label className="block text-xs font-bold text-gray-400 mb-1">{t.emailLabel}</label>
             <div className="relative">
               <User className="absolute left-3 top-2.5 h-4 w-4 text-gray-500" />
               <input
@@ -84,14 +87,14 @@ export default function LoginPage({ role, onLogin }) {
                 required
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                placeholder="Enter your email"
+                placeholder={t.emailPlaceholder}
                 className="w-full rounded-xl bg-gray-900 border border-gray-800 pl-9 pr-4 py-2.5 text-xs text-white placeholder-gray-500 focus:outline-none focus:border-gray-600 transition-colors"
               />
             </div>
           </div>
 
           <div>
-            <label className="block text-xs font-bold text-gray-400 mb-1">Password</label>
+            <label className="block text-xs font-bold text-gray-400 mb-1">{t.passwordLabel}</label>
             <div className="relative">
               <Lock className="absolute left-3 top-2.5 h-4 w-4 text-gray-500" />
               <input
@@ -99,7 +102,7 @@ export default function LoginPage({ role, onLogin }) {
                 required
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                placeholder="Enter your password"
+                placeholder={t.passwordPlaceholder}
                 className="w-full rounded-xl bg-gray-900 border border-gray-800 pl-9 pr-4 py-2.5 text-xs text-white placeholder-gray-500 focus:outline-none focus:border-gray-600 transition-colors"
               />
             </div>
@@ -108,21 +111,21 @@ export default function LoginPage({ role, onLogin }) {
           <div className="flex items-center justify-between mt-2 mb-4">
             <label className="flex items-center gap-2 cursor-pointer">
               <input type="checkbox" className="h-3 w-3 rounded border-gray-800 bg-gray-900 text-emerald-500 focus:ring-0" />
-              <span className="text-[10px] text-gray-400">Remember me</span>
+              <span className="text-[10px] text-gray-400">{t.rememberMe}</span>
             </label>
-            <span className={`text-[10px] font-bold ${config.color} cursor-pointer hover:underline`}>Forgot Password?</span>
+            <span className={`text-[10px] font-bold ${config.color} cursor-pointer hover:underline`}>{t.forgotPass}</span>
           </div>
 
           <button
             type="submit"
             className={`w-full flex items-center justify-center gap-2 py-3 rounded-xl text-xs font-bold text-white transition-all shadow-lg ${config.btn}`}
           >
-            <span>Secure Sign In</span>
+            <span>{t.secureSignIn}</span>
             <ArrowRight className="h-4 w-4" />
           </button>
           
           <p className="text-center text-[10px] text-gray-500 mt-6">
-            For demonstration purposes, any email and password combination will grant access to the prototype.
+            {t.demoNotice}
           </p>
         </form>
       </div>

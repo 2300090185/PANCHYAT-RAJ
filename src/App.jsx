@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import Navbar from './components/Navbar';
 import PublicPortal from './components/PublicPortal';
 import NominationForm from './components/NominationForm';
@@ -6,15 +6,191 @@ import AnalyticsDashboard from './components/AnalyticsDashboard';
 import JuryPortal from './components/JuryPortal';
 import AdminPanel from './components/AdminPanel';
 import LoginPage from './components/LoginPage';
-import { Award, Info, Heart, ArrowRight, ShieldCheck, MessageCircle, X, Send, Bot } from 'lucide-react';
+import { Award, ArrowRight, ShieldCheck, X, Send, Bot, FileText } from 'lucide-react';
+
+const inlineTranslations = {
+  "ENG": {
+    "aboutHeader": "About the Recognition Initiative",
+    "aboutSub": "An official national program strengthening grassroots democracy and Viksit Bharat 2047.",
+    "govStructure": "Governance Structure",
+    "govDesc1": "The portal operates under a tripartite verification schema. Youth, NGOs, and community builders register their localized works. Ground-level verification is driven by Gram Panchayat members, District Welfare offices, and NSS/NCC coordinators.",
+    "govDesc2": "Evaluations are transparent and structured on a 100-point index reviewed by regional academic and government jury panels before final blockchain-secured certificate signatures are cleared by the State Secretary of Rural Development.",
+    "viksitBharatTitle": "Viksit Bharat",
+    "viksitBharatDesc": "Driving youth participation in grassroots governance & development.",
+    "govCollabTitle": "Government Collaboration",
+    "govCollabDesc": "Collaborating directly with Mandal Parishads, Gram Panchayats, and CSR partners to bridge micro-funding into local transformation ideas.",
+    "awardsDirHeader": "Award Categories Directory",
+    "awardsDirSub": "We recognize 16 specialized spheres of rural and urban social engineering.",
+    "autoCheck": "Automatic Eligibility Check",
+    "autoCheckDesc": "Submit a project in the nominee wizard, select your target category, and the system automatically matches your entry to corresponding SDGs.",
+    "openWizard": "Open Nomination wizard",
+    "evalJury": "Evaluated by Regional Jury panels.",
+    "myStatusHeader": "My Nomination Status",
+    "myStatusSub": "Track the live evaluation progress of your submitted social impact applications.",
+    "noAppsFound": "No applications found. Fill out a nomination first.",
+    "panchayatLocation": "Panchayat Location",
+    "juryGrading": "Jury Grading",
+    "pendingEval": "Pending evaluation",
+    "totalPoints": "Total Points",
+    "fieldInspection": "Field Inspection",
+    "notScheduled": "Not scheduled yet",
+    "scheduledOn": "Scheduled: ",
+    "reviewRemarks": "Official Review Remarks:",
+    "timelineTitle": "Multi-Level Approval Workflow Timeline",
+    "stepSubmitted": "Submitted",
+    "stepDistrict": "District Cleared",
+    "stepState": "State Endorsed",
+    "stepJury": "National Jury",
+    "stepMinistry": "Ministry Final"
+  },
+  "HIN": {
+    "aboutHeader": "मान्यता पहल के बारे में",
+    "aboutSub": "जमीनी स्तर के लोकतंत्र और विकसित भारत 2047 को मजबूत करने वाला एक आधिकारिक राष्ट्रीय कार्यक्रम।",
+    "govStructure": "शासन संरचना",
+    "govDesc1": "पोर्टल एक त्रिपक्षीय सत्यापन योजना के तहत संचालित होता है। युवा, गैर सरकारी संगठन और समुदाय निर्माता अपने स्थानीयकृत कार्यों को पंजीकृत करते हैं। जमीनी स्तर पर सत्यापन ग्राम पंचायत सदस्यों, जिला कल्याण कार्यालयों और एनएसएस/एनसीसी समन्वयकों द्वारा किया जाता है।",
+    "govDesc2": "मूल्यांकन पारदर्शी हैं और राज्य ग्रामीण विकास सचिव द्वारा अंतिम ब्लॉकचेन-सुरक्षित प्रमाणपत्र हस्ताक्षरों को मंजूरी देने से पहले क्षेत्रीय शैक्षणिक और सरकारी जूरी पैनलों द्वारा समीक्षा किए गए 100-बिंदू सूचकांक पर संरचित हैं।",
+    "viksitBharatTitle": "विकसित भारत",
+    "viksitBharatDesc": "जमीनी स्तर पर शासन और विकास में युवाओं की भागीदारी को बढ़ावा देना।",
+    "govCollabTitle": "सरकारी सहयोग",
+    "govCollabDesc": "स्थानीय परिवर्तन विचारों में सूक्ष्म वित्त पोषण को जोड़ने के लिए मण्डल परिषदों, ग्राम पंचायतों और सीएसआर भागीदारों के साथ सीधे सहयोग करना।",
+    "awardsDirHeader": "पुरस्कार श्रेणियाँ निर्देशिका",
+    "awardsDirSub": "हम ग्रामीण और शहरी सामाजिक इंजीनियरिंग के 16 विशेष क्षेत्रों को मान्यता देते हैं।",
+    "autoCheck": "स्वचालित पात्रता जांच",
+    "autoCheckDesc": "नामांकित विज़ार्ड में एक परियोजना सबमिट करें, अपनी लक्षित श्रेणी चुनें, और सिस्टम स्वचालित रूप से आपकी प्रविष्टि को संबंधित एसडीजी से मिलाता है।",
+    "openWizard": "नामांकन विज़ार्ड खोलें",
+    "evalJury": "क्षेत्रीय जूरी पैनलों द्वारा मूल्यांकन किया गया।",
+    "myStatusHeader": "मेरे नामांकन की स्थिति",
+    "myStatusSub": "अपने प्रस्तुत सामाजिक प्रभाव अनुप्रयोगों के लाइव मूल्यांकन प्रगति को ट्रैक करें।",
+    "noAppsFound": "कोई आवेदन नहीं मिला। पहले एक नामांकन भरें।",
+    "panchayatLocation": "पंचायत स्थान",
+    "juryGrading": "जूरी ग्रेडिंग",
+    "pendingEval": "मूल्यांकन लंबित है",
+    "totalPoints": "कुल अंक",
+    "fieldInspection": "क्षेत्र निरीक्षण",
+    "notScheduled": "अभी तक शेड्यूल नहीं किया गया",
+    "scheduledOn": "शेड्यूल किया गया: ",
+    "reviewRemarks": "आधिकारिक समीक्षा टिप्पणियां:",
+    "timelineTitle": "बहु-स्तरीय अनुमोदन कार्यप्रवाह समयरेखा",
+    "stepSubmitted": "प्रस्तुत किया गया",
+    "stepDistrict": "जिला स्वीकृत",
+    "stepState": "राज्य समर्थित",
+    "stepJury": "राष्ट्रीय जूरी",
+    "stepMinistry": "मंत्रालय अंतिम"
+  },
+  "TEL": {
+    "aboutHeader": "ఈ గుర్తింపు చొరవ గురించి",
+    "aboutSub": "క్షేత్రస్థాయి ప్రజాస్వామ్యాన్ని మరియు వికసిత్ భారత్ 2047 ను బలోపేతం చేసే అధికారిక జాతీయ కార్యక్రమం.",
+    "govStructure": "పాలనా నిర్మాణం",
+    "govDesc1": "ఈ పోర్టల్ త్రైపాక్షిక ధృవీకరణ విధానం కింద పనిచేస్తుంది. యువత, స్వచ్ఛంద సంస్థలు మరియు సమాజ నిర్మాతలు వారి స్థానిక పనులను నమోదు చేస్తారు. క్షేత్రస్థాయి ధృవీకరణను గ్రామ పంచాయతీ సభ్యులు, జిల్లా సంక్షేమ కార్యాలయాలు మరియు NSS/NCC సమన్వయకర్తలు నిర్వహిస్తారు.",
+    "govDesc2": "రాష్ట్ర గ్రామీణాభివృద్ధి కార్యదర్శి తుది బ్లాక్‌చైన్-సురక్షిత సర్టిఫికేట్ సంతకాలను క్లియర్ చేయడానికి ముందు ప్రాంతీయ విద్యా మరియు ప్రభుత్వ జూరీ ప్యానెల్‌లు సమీక్షించిన 100-పాయింట్ల సూచీపై మూల్యాంకనాలు పారదర్శకంగా మరియు నిర్మాణాत्मकకంగా ఉంటాయి.",
+    "viksitBharatTitle": "వికసిత్ భారత్",
+    "viksitBharatDesc": "క్షేత్రస్థాయి పాలన మరియు అభివృద్ధిలో యువత భాగస్వామ్యాన్ని పెంపొందించడం.",
+    "govCollabTitle": "ప్రభుత్వ సహకారం",
+    "govCollabDesc": "స్థానిక పరివర్తన ఆలోచనలలోకి సూక్ష్మ నిధులను అనుసంధానించడానికి మండల పరిషత్తులు, గ్రామ పంచాయతీలు మరియు CSR భాగస్వాములతో నేరుగా సహకరించడం.",
+    "awardsDirHeader": "అవార్డు వర్గాల డైరెక్టరీ",
+    "awardsDirSub": "మేము గ్రామీణ మరియు పట్టణ సామాజిక ఇంజనీరింగ్ యొక్క 16 ప్రత్యేక విభాగాలను గుర్తిస్తాము.",
+    "autoCheck": "స్వయంచాలక అర్హత తనిఖీ",
+    "autoCheckDesc": "నామినీ విజార్డ్‌లో ప్రాజెక్ట్‌ను సమర్పించి, మీ లక్ష్య వర్గాన్ని ఎంచుకోండి, సిస్టమ్ స్వయంచాలకంగా మీ ఎంట్రీని సంబంధిత SDGs తో సరిపోల్చుతుంది.",
+    "openWizard": "నామినేషన్ విజార్డ్‌ను తెరవండి",
+    "evalJury": "ప్రాంతీయ జూరీ ప్యానెల్స్ ద్వారా మూల్యాంకనం చేయబడుతుంది.",
+    "myStatusHeader": "నా నామినేషన్ స్థితి",
+    "myStatusSub": "మీరు సమర్పించిన సామాజిక ప్రభావ దరఖాస్తుల ప్రత్యక్ష మూల్యాంకన పురోగతిని ట్రాక్ చేయండి.",
+    "noAppsFound": "దరఖాస్తులు ఏవీ కనుగొనబడలేదు. మొదట నామినేషన్ నింపండి.",
+    "panchayatLocation": "పంచాయితీ స్థానం",
+    "juryGrading": "జూరీ గ్రేడింగ్",
+    "pendingEval": "మూల్యాంకనం పెండింగ్‌లో ఉంది",
+    "totalPoints": "మొత్తం పాయింట్లు",
+    "fieldInspection": "క్షేత్ర పరిశీలన",
+    "notScheduled": "ఇంకా షెడ్యూల్ చేయబడలేదు",
+    "scheduledOn": "షెడ్యూల్ చేయబడింది: ",
+    "reviewRemarks": "అధికారిక సమీక్ష వ్యాఖ్యలు:",
+    "timelineTitle": "బహుళ-స్థాయి ఆమోద వర్క్‌ఫ్లో కాలక్రమం",
+    "stepSubmitted": "సమర్పించబడింది",
+    "stepDistrict": "జిల్లా క్లియర్ చేయబడింది",
+    "stepState": "రాష్ట్ర ఆమోదం",
+    "stepJury": "జాతీయ జూరీ",
+    "stepMinistry": "మంత్రిత్వ శాఖ తుది"
+  },
+  "TAM": {
+    "aboutHeader": "அங்கீகார முயற்சி பற்றி",
+    "aboutSub": "ஜனநாயகத்தை மற்றும் விக்சித் பாரத் 2047 ஐ வலுப்படுத்தும் அதிகாரப்பூர்வ தேசிய திட்டம்.",
+    "govStructure": "நிர்வாகக் கட்டமைப்பு",
+    "govDesc1": "இந்த போர்டல் முத்தரப்பு சரிபார்ப்பு திட்டத்தின் கீழ் இயங்குகிறது. இளைஞர்கள், தன்னார்வ தொண்டு நிறுவனங்கள் மற்றும் சமூக உருவாக்குநர்கள் தங்களது உள்ளூர் பணிகளைப் பதிவு செய்கிறார்கள். கள அளவிலான சரிபார்ப்பு கிராம பஞ்சாயத்து உறுப்பினர்கள், மாவட்ட நல அலுவலகங்கள் மற்றும் NSS/NCC ஒருங்கிணைப்பாளர்களால் மேற்கொள்ளப்படுகிறது.",
+    "govDesc2": "மதிப்பீடுகள் வெளிப்படையானவை மற்றும் மாநில ஊரக வளர்ச்சி செயலாளரால் இறுதி பிளாக்செயின்-பாதுகாக்கப்பட்ட சான்றிதழ் கையொப்பங்கள் அழிக்கப்படுவதற்கு முன்பு பிராந்திய கல்வி மற்றும் அரசு நடுவர் குழுக்களால் மதிப்பாய்வு செய்யப்பட்ட 100 புள்ளி குறியீட்டில் கட்டமைக்கப்பட்டுள்ளன.",
+    "viksitBharatTitle": "விக்சித் பாரத்",
+    "viksitBharatDesc": "மக்களாட்சி மற்றும் மேம்பாட்டில் இளைஞர்களின் பங்களிப்பை ஊக்குவித்தல்.",
+    "govCollabTitle": "அரசு ஒத்துழைப்பு",
+    "govCollabDesc": "உள்ளூர் மாற்றுக் கருத்துக்களில் நுண் நிதியுதவியை இணைக்க மண்டல परिषத்துகள், கிராம பஞ்சாயத்துகள் மற்றும் CSR கூட்டாளர்களுடன் நேரடியாக ஒத்துழைத்தல்.",
+    "awardsDirHeader": "விருது வகைகள் அடைவு",
+    "awardsDirSub": "கிராமப்புற மற்றும் நகர்ப்புற சமூக பொறியியலின் 16 சிறப்புத் துறைகளை நாங்கள் அங்கீகரிக்கிறோம்.",
+    "autoCheck": "தானியங்கி தகுதி சரிபார்ப்பு",
+    "autoCheckDesc": "விண்ணப்பதாரர் வழிகாட்டியில் ஒரு திட்டத்தைச் சமர்ப்பித்து, உங்கள் இலக்கு வகையைத் தேர்ந்தெடுக்கவும், கணினி தானாகவே உங்கள் உள்ளீட்டை தொடர்புடைய SDGகளுடன் பொருத்துகிறது.",
+    "openWizard": "விண்ணப்ப வழிகாட்டியைத் திறக்கவும்",
+    "evalJury": "பிராந்திய நடுவர் குழுக்களால் மதிப்பிடப்படுகிறது.",
+    "myStatusHeader": "எனது விண்ணப்ப நிலை",
+    "myStatusSub": "சமர்ப்பிக்கப்பட்ட சமூக தாக்க விண்ணப்பங்களின் நேரடி மதிப்பீட்டு முன்னேற்றத்தைக் கண்காணிக்கவும்.",
+    "noAppsFound": "விண்ணப்பங்கள் எதுவும் இல்லை. முதலில் விண்ணப்பத்தை நிரப்பவும்.",
+    "panchayatLocation": "பஞ்சாயத்து இருப்பிடம்",
+    "juryGrading": "நடுவர் மதிப்பீடு",
+    "pendingEval": "மதிப்பீடு நிலுவையில் உள்ளது",
+    "totalPoints": "மொத்த புள்ளிகள்",
+    "fieldInspection": "கள ஆய்வு",
+    "notScheduled": "இன்னும் திட்டமிடப்படவில்லை",
+    "scheduledOn": "திட்டமிடப்பட்டுள்ளது: ",
+    "reviewRemarks": "அதிகாரப்பூர்வ மதிப்பாய்வுக் குறிப்புகள்:",
+    "timelineTitle": "பல்வேறு நிலை ஒப்புதல் பணிப்பாய்வு காலவரிசை",
+    "stepSubmitted": "சமர்ப்பிக்கப்பட்டது",
+    "stepDistrict": "மாவட்டம் அங்கீகரிக்கப்பட்டது",
+    "stepState": "மாநிலம் பரிந்துரைத்தது",
+    "stepJury": "தேசிய நடுவர்",
+    "stepMinistry": "அமைச்சக இறுதி"
+  },
+  "MAR": {
+    "aboutHeader": "मान्यता उपक्रमाबद्दल",
+    "aboutSub": "तळागाळातील लोकशाही आणि विकसित भारत 2047 ला बळकट करणारा अधिकृत राष्ट्रीय कार्यक्रम.",
+    "govStructure": "प्रशासकीय रचना",
+    "govDesc1": "पोर्टल त्रिपक्षीय पडताळणी योजनेअंतर्गत कार्य करते. तरुण, स्वयंसेवी संस्था आणि समुदाय निर्माते त्यांच्या स्थानिक कामांची नोंदणी करतात. जमिनीवरील पडताळणी ग्रामपंचायत सदस्य, जिल्हा कल्याण कार्यालये आणि एनएसएस/एनसीसी समन्वयक यांच्याद्वारे केली जाते.",
+    "govDesc2": "मूल्यमापन पारदर्शक आहे आणि राज्य ग्रामीण विकास सचिवांद्वारे अंतिम ब्लॉकचेन-सुरक्षित प्रमाणपत्र स्वाक्षरी मंजूर होण्यापूर्वी प्रादेशिक शैक्षणिक आणि सरकारी जूरी पॅनेलद्वारे पुनरावलोकन केलेल्या 100-बिंदू निर्देशांकावर आधारित आहे.",
+    "viksitBharatTitle": "विकसित भारत",
+    "viksitBharatDesc": "तळागाळातील प्रशासन आणि विकासामध्ये तरुणांच्या सहभागाला चालना देणे.",
+    "govCollabTitle": "सरकारी सहकार्य",
+    "govCollabDesc": "स्थानिक परिवर्तनाच्या कल्पनांमध्ये सूक्ष्म-निधी जोडण्यासाठी मंडळ परिषद, ग्रामपंचायती आणि सीएसआर भागीदारांसह थेट सहकार्य करणे.",
+    "awardsDirHeader": "पुरस्कार श्रेणी निर्देशिका",
+    "awardsDirSub": "आम्ही ग्रामीण आणि शहरी सामाजिक अभियांत्रिकीच्या 16 विशेष क्षेत्रांना मान्यता देतो.",
+    "autoCheck": "स्वयंचलित पात्रता तपासणी",
+    "autoCheckDesc": "नामांकित विझार्डमध्ये प्रकल्प सबमिट करा, तुमची लक्ष्य श्रेणी निवडा आणि सिस्टम स्वयंचलितपणे तुमची नोंदणी संबंधित एसडीजीशी जुळवते.",
+    "openWizard": "नामांकन विझार्ड उघडा",
+    "evalJury": "प्रादेशिक जूरी पॅनेलद्वारे मूल्यमापन केले जाते.",
+    "myStatusHeader": "माझ्या नामांकनाची स्थिती",
+    "myStatusSub": "तुमच्या सादर केलेल्या सामाजिक प्रभाव अर्जांच्या थेट मूल्यमापन प्रगतीचा मागोवा घ्या.",
+    "noAppsFound": "कोणतेही अर्ज आढळले नाहीत. प्रथम नामांकन भरा.",
+    "panchayatLocation": "पंचायत ठिकाण",
+    "juryGrading": "जूरी श्रेणीकरण",
+    "pendingEval": "मूल्यमापन प्रलंबित",
+    "totalPoints": "एकूण गुण",
+    "fieldInspection": "क्षेत्र तपासणी",
+    "notScheduled": "अद्याप नियोजित नाही",
+    "scheduledOn": "नियोजित: ",
+    "reviewRemarks": "अधिकृत पुनरावलोकन शेरे:",
+    "timelineTitle": "बहु-स्तरीय मंजूरी कार्यप्रवाह समयरेखा",
+    "stepSubmitted": "सादर केले",
+    "stepDistrict": "जिल्हा मंजूर",
+    "stepState": "राज्य समर्थित",
+    "stepJury": "राष्ट्रीय जूरी",
+    "stepMinistry": "मंत्रालय अंतिम"
+  }
+};
 
 export default function App() {
   const [activeRole, setActiveRole] = useState('public'); // public, nominee, jury, admin
   const [activeTab, setActiveTab] = useState('home'); // home, about, awards, nominate, my-status, jury-reviews, admin-dashboard
+  const [currentLanguage, setCurrentLanguage] = useState('ENG');
+  const it = inlineTranslations[currentLanguage] || inlineTranslations.ENG;
 
   const [nominations, setNominations] = useState([]);
   const [notifications, setNotifications] = useState([]);
   const [toastMessage, setToastMessage] = useState(null);
+  const [activeMockEmail, setActiveMockEmail] = useState(null);
   const [selectedCategory, setSelectedCategory] = useState('Village Development Award');
   const [resultsReleased, setResultsReleased] = useState(false);
 
@@ -84,9 +260,15 @@ export default function App() {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(newNom)
     })
-      .then(res => res.json())
+      .then(res => {
+        if (!res.ok) throw new Error('Submission failed');
+        return res.json();
+      })
       .then(saved => {
         setNominations(prev => [saved, ...prev]);
+        if (saved.mockEmailSent) {
+          setActiveMockEmail(saved.mockEmailSent);
+        }
         
         // Sync notifications
         fetch('/api/notifications')
@@ -131,17 +313,20 @@ export default function App() {
   };
 
   return (
-    <div className="flex flex-col min-h-screen bg-[#030712] text-slate-100 bg-grid-pattern">
+    <div className="flex flex-col min-h-screen text-slate-100 bg-grid-pattern relative">
+      <div className="bg-mesh"></div>
       {/* Navbar */}
       <Navbar 
         activeRole={activeRole} 
         setActiveRole={setActiveRole} 
         activeTab={activeTab} 
         setActiveTab={setActiveTab} 
-        notifications={notifications}
-        markNotificationsAsRead={markNotificationsAsRead}
-        authenticatedRoles={authenticatedRoles}
-        onLogout={handleLogout}
+        notifications={notifications} 
+        markNotificationsAsRead={markNotificationsAsRead} 
+        authenticatedRoles={authenticatedRoles} 
+        onLogout={handleLogout} 
+        currentLanguage={currentLanguage} 
+        setCurrentLanguage={setCurrentLanguage} 
       />
 
       {/* Main Core Content Wrapper */}
@@ -158,24 +343,21 @@ export default function App() {
                 setActiveRole={setActiveRole} 
                 triggerToast={triggerToast} 
                 resultsReleased={resultsReleased}
+                currentLanguage={currentLanguage}
               />
             )}
             
             {activeTab === 'about' && (
               <div className="mx-auto max-w-4xl px-4 py-16 sm:px-6 lg:px-8 space-y-12">
                 <div className="text-center">
-                  <h1 className="text-4xl font-extrabold text-white font-display">About the Recognition Initiative</h1>
-                  <p className="text-xs text-gray-400 mt-2">An official national program strengthening grassroots democracy and Viksit Bharat 2047.</p>
+                  <h1 className="text-4xl font-extrabold text-white font-display">{it.aboutHeader}</h1>
+                  <p className="text-xs text-gray-400 mt-2">{it.aboutSub}</p>
                 </div>
 
                 <div className="glass-panel p-8 rounded-3xl border-gray-800 space-y-6">
-                  <h2 className="text-xl font-bold text-white font-display">Governance Structure</h2>
-                  <p className="text-xs text-gray-300 leading-relaxed">
-                    The portal operates under a tripartite verification schema. Youth, NGOs, and community builders register their localized works. Ground-level verification is driven by Gram Panchayat members, District Welfare offices, and NSS/NCC coordinators.
-                  </p>
-                  <p className="text-xs text-gray-300 leading-relaxed">
-                    Evaluations are transparent and structured on a 100-point index reviewed by regional academic and government jury panels before final blockchain-secured certificate signatures are cleared by the State Secretary of Rural Development.
-                  </p>
+                  <h2 className="text-xl font-bold text-white font-display">{it.govStructure}</h2>
+                  <p className="text-xs text-gray-300 leading-relaxed">{it.govDesc1}</p>
+                  <p className="text-xs text-gray-300 leading-relaxed">{it.govDesc2}</p>
                 </div>
 
                 <div className="grid sm:grid-cols-2 gap-6">
@@ -190,12 +372,12 @@ export default function App() {
                         <circle cx="4.5" cy="3" r="0.25" fill="#000080" />
                       </svg>
                     </div>
-                    <h3 className="font-bold text-white text-base">Viksit Bharat</h3>
-                    <p className="text-xs text-gray-400 mt-1.5">Driving youth participation in grassroots governance & development.</p>
+                    <h3 className="font-bold text-white text-base">{it.viksitBharatTitle}</h3>
+                    <p className="text-xs text-gray-400 mt-1.5">{it.viksitBharatDesc}</p>
                   </div>
                   <div className="p-6 bg-slate-900 border border-gray-800 rounded-2xl">
-                    <h3 className="font-bold text-white text-sm">Government Collaboration</h3>
-                    <p className="text-xs text-gray-400 mt-2 leading-relaxed">Collaborating directly with Mandal Parishads, Gram Panchayats, and CSR partners to bridge micro-funding into local transformation ideas.</p>
+                    <h3 className="font-bold text-white text-sm">{it.govCollabTitle}</h3>
+                    <p className="text-xs text-gray-400 mt-2 leading-relaxed">{it.govCollabDesc}</p>
                   </div>
                 </div>
               </div>
@@ -204,21 +386,21 @@ export default function App() {
             {activeTab === 'awards' && (
               <div className="mx-auto max-w-6xl px-4 py-16 sm:px-6 lg:px-8 space-y-8">
                 <div className="text-center">
-                  <h1 className="text-4xl font-extrabold text-white font-display">Award Categories Directory</h1>
-                  <p className="text-xs text-gray-400 mt-2">We recognize 16 specialized spheres of rural and urban social engineering.</p>
+                  <h1 className="text-4xl font-extrabold text-white font-display">{it.awardsDirHeader}</h1>
+                  <p className="text-xs text-gray-400 mt-2">{it.awardsDirSub}</p>
                 </div>
 
                 <div className="p-6 rounded-2xl bg-indigo-950/10 border border-indigo-900/30 text-center max-w-xl mx-auto">
                   <h3 className="text-sm font-bold text-white mb-1.5 flex items-center justify-center gap-1.5 font-display">
                     <Award className="h-4.5 w-4.5 text-amber-500" />
-                    <span>Automatic Eligibility Check</span>
+                    <span>{it.autoCheck}</span>
                   </h3>
-                  <p className="text-xs text-gray-300 leading-relaxed">Submit a project in the nominee wizard, select your target category, and the system automatically matches your entry to corresponding SDGs.</p>
+                  <p className="text-xs text-gray-300 leading-relaxed">{it.autoCheckDesc}</p>
                   <button 
                     onClick={() => { setActiveRole('nominee'); setActiveTab('nominate'); }} 
                     className="mt-4 inline-flex items-center gap-1 text-xs text-indigo-400 font-bold hover:underline"
                   >
-                    <span>Open Nomination wizard</span>
+                    <span>{it.openWizard}</span>
                     <ArrowRight className="h-3 w-3" />
                   </button>
                 </div>
@@ -239,7 +421,7 @@ export default function App() {
                         <p className="text-xs text-gray-400 mt-3 leading-relaxed">{cat.desc}</p>
                       </div>
                       <div className="mt-5 border-t border-gray-900 pt-3 text-[10px] text-gray-500">
-                        Evaluated by Regional Jury panels.
+                        {it.evalJury}
                       </div>
                     </div>
                   ))}
@@ -248,7 +430,7 @@ export default function App() {
             )}
 
             {activeTab === 'dashboard' && (
-              <AnalyticsDashboard nominations={nominations} />
+              <AnalyticsDashboard nominations={nominations} currentLanguage={currentLanguage} triggerToast={triggerToast} />
             )}
           </>
         )}
@@ -256,7 +438,7 @@ export default function App() {
         {/* Render pages for Nominee Persona */}
         {activeRole === 'nominee' && (
           !authenticatedRoles.nominee ? (
-            <LoginPage role="nominee" onLogin={handleLogin} />
+            <LoginPage role="nominee" onLogin={handleLogin} currentLanguage={currentLanguage} />
           ) : (
             <>
               {activeTab === 'nominate' && (
@@ -265,20 +447,21 @@ export default function App() {
                   setSelectedCategory={setSelectedCategory}
                   onNominationSubmit={handleNominationSubmit}
                   triggerToast={triggerToast}
+                  currentLanguage={currentLanguage}
                 />
               )}
 
               {activeTab === 'my-status' && (
                 <div className="mx-auto max-w-4xl px-4 py-16 sm:px-6 lg:px-8 space-y-8">
                   <div className="text-center">
-                    <h1 className="text-4xl font-extrabold text-white font-display">My Nomination Status</h1>
-                    <p className="text-xs text-gray-400 mt-2">Track the live evaluation progress of your submitted social impact applications.</p>
+                    <h1 className="text-4xl font-extrabold text-white font-display">{it.myStatusHeader}</h1>
+                    <p className="text-xs text-gray-400 mt-2">{it.myStatusSub}</p>
                   </div>
 
                   <div className="space-y-6">
                     {nominations.length === 0 ? (
                       <div className="p-8 rounded-xl bg-gray-950/40 border border-gray-900 text-center text-gray-500 font-semibold">
-                        No applications found. Fill out a nomination first.
+                        {it.noAppsFound}
                       </div>
                     ) : (
                       nominations.slice(0, 3).map((nom, idx) => {
@@ -312,14 +495,14 @@ export default function App() {
 
                             <div className="grid sm:grid-cols-3 gap-6 pt-5 text-xs text-gray-400">
                               <div className="space-y-1">
-                                <p className="font-bold text-gray-300">Panchayat Location</p>
+                                <p className="font-bold text-gray-300">{it.panchayatLocation}</p>
                                 <p>{nom.village} GP, {nom.state}</p>
                               </div>
                               <div className="space-y-1">
-                                <p className="font-bold text-gray-300">Jury Grading</p>
+                                <p className="font-bold text-gray-300">{it.juryGrading}</p>
                                 {score !== null ? (
                                   <div>
-                                    <p className="text-emerald-400 font-bold mb-1.5">{score} / 100 Total Points</p>
+                                    <p className="text-emerald-400 font-bold mb-1.5">{score} / 100 {it.totalPoints}</p>
                                     <div className="grid grid-cols-2 gap-1 text-[9px]">
                                       {Object.entries(nom.juryScores).map(([k, v]) => (
                                         <div key={k} className="bg-gray-900 rounded px-1.5 py-0.5 flex justify-between border border-gray-800">
@@ -330,46 +513,46 @@ export default function App() {
                                     </div>
                                   </div>
                                 ) : (
-                                  <p>Pending evaluation</p>
+                                  <p>{it.pendingEval}</p>
                                 )}
                               </div>
                               <div className="space-y-1">
-                                <p className="font-bold text-gray-300">Field Inspection</p>
-                                <p>{nom.fieldVisit ? ('Scheduled: ' + nom.fieldVisit) : 'Not scheduled yet'}</p>
+                                <p className="font-bold text-gray-300">{it.fieldInspection}</p>
+                                <p>{nom.fieldVisit ? (it.scheduledOn + nom.fieldVisit) : it.notScheduled}</p>
                               </div>
                             </div>
 
                             {nom.juryRemarks && (
                               <div className="mt-5 p-3 rounded-lg bg-gray-950 border border-gray-900 text-xs">
-                                <span className="font-bold text-gray-300 block mb-1">Official Review Remarks:</span>
+                                <span className="font-bold text-gray-300 block mb-1">{it.reviewRemarks}</span>
                                 <p className="text-gray-400 italic">{nom.juryRemarks}</p>
                               </div>
                             )}
 
                             {/* Workflow Timeline */}
                             <div className="mt-6 border-t border-gray-900 pt-5">
-                              <h4 className="text-[10px] font-bold text-gray-500 uppercase tracking-wider mb-4">Multi-Level Approval Workflow Timeline</h4>
+                              <h4 className="text-[10px] font-bold text-gray-500 uppercase tracking-wider mb-4">{it.timelineTitle}</h4>
                               <div className="flex justify-between items-center relative z-0">
                                 <div className="absolute left-0 top-[7px] w-full h-0.5 bg-gray-900 -z-10"></div>
                                 <div className="flex flex-col items-center gap-2 w-16 text-center bg-gray-950/80">
                                   <div className="h-4 w-4 rounded-full bg-emerald-500 ring-4 ring-gray-950 glow-emerald"></div>
-                                  <span className="text-[9px] font-bold text-emerald-400 leading-tight">Submitted</span>
+                                  <span className="text-[9px] font-bold text-emerald-400 leading-tight">{it.stepSubmitted}</span>
                                 </div>
                                 <div className="flex flex-col items-center gap-2 w-16 text-center bg-gray-950/80">
                                   <div className="h-4 w-4 rounded-full bg-emerald-500 ring-4 ring-gray-950 glow-emerald"></div>
-                                  <span className="text-[9px] font-bold text-emerald-400 leading-tight">District Cleared</span>
+                                  <span className="text-[9px] font-bold text-emerald-400 leading-tight">{it.stepDistrict}</span>
                                 </div>
                                 <div className="flex flex-col items-center gap-2 w-16 text-center bg-gray-950/80">
                                   <div className={stage3Class}></div>
-                                  <span className={['text-[9px] font-bold leading-tight', stateStepActive ? 'text-emerald-400' : 'text-gray-600'].join(' ')}>State Endorsed</span>
+                                  <span className={['text-[9px] font-bold leading-tight', stateStepActive ? 'text-emerald-400' : 'text-gray-600'].join(' ')}>{it.stepState}</span>
                                 </div>
                                 <div className="flex flex-col items-center gap-2 w-16 text-center bg-gray-950/80">
                                   <div className={stage4Class}></div>
-                                  <span className={['text-[9px] font-bold leading-tight', score ? 'text-emerald-400' : 'text-gray-600'].join(' ')}>National Jury</span>
+                                  <span className={['text-[9px] font-bold leading-tight', score ? 'text-emerald-400' : 'text-gray-600'].join(' ')}>{it.stepJury}</span>
                                 </div>
                                 <div className="flex flex-col items-center gap-2 w-16 text-center bg-gray-950/80">
                                   <div className={stage5Class}></div>
-                                  <span className={['text-[9px] font-bold leading-tight', nom.status === 'Award Winner' ? 'text-rose-400' : 'text-gray-600'].join(' ')}>Ministry Final</span>
+                                  <span className={['text-[9px] font-bold leading-tight', nom.status === 'Award Winner' ? 'text-rose-400' : 'text-gray-600'].join(' ')}>{it.stepMinistry}</span>
                                 </div>
                               </div>
                             </div>
@@ -387,13 +570,14 @@ export default function App() {
         {/* Render pages for Jury Persona */}
         {activeRole === 'jury' && (
           !authenticatedRoles.jury ? (
-            <LoginPage role="jury" onLogin={handleLogin} />
+            <LoginPage role="jury" onLogin={handleLogin} currentLanguage={currentLanguage} />
           ) : activeTab === 'jury-reviews' && (
             <JuryPortal 
               nominations={nominations} 
               updateNominationStatus={updateNominationStatus}
               addJuryScores={addJuryScores}
               triggerToast={triggerToast}
+              currentLanguage={currentLanguage}
             />
           )
         )}
@@ -401,7 +585,7 @@ export default function App() {
         {/* Render pages for Admin Persona */}
         {activeRole === 'admin' && (
           !authenticatedRoles.admin ? (
-            <LoginPage role="admin" onLogin={handleLogin} />
+            <LoginPage role="admin" onLogin={handleLogin} currentLanguage={currentLanguage} />
           ) : activeTab === 'admin-dashboard' && (
             <AdminPanel 
               nominations={nominations} 
@@ -409,6 +593,7 @@ export default function App() {
               triggerToast={triggerToast}
               resultsReleased={resultsReleased}
               setResultsReleased={setResultsReleased}
+              currentLanguage={currentLanguage}
             />
           )
         )}
@@ -432,13 +617,17 @@ export default function App() {
         {!chatOpen ? (
           <button 
             onClick={() => setChatOpen(true)}
-            className="h-14 w-14 rounded-full bg-gradient-to-r from-emerald-600 to-teal-500 shadow-xl shadow-emerald-900/50 flex items-center justify-center text-white hover:scale-110 transition-transform border border-emerald-400/30 group"
+            className="h-14 w-14 rounded-full bg-gradient-to-tr from-emerald-600 to-teal-500 shadow-xl shadow-emerald-900/40 flex items-center justify-center text-white hover:scale-105 transition-all border border-emerald-400/30 group hover:shadow-emerald-600/30 relative"
           >
-            <Bot className="h-6 w-6 group-hover:animate-pulse" />
+            <Bot className="h-6 w-6 group-hover:animate-bounce" />
+            <span className="absolute -top-0.5 -right-0.5 flex h-3 w-3">
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+              <span className="relative inline-flex rounded-full h-3 w-3 bg-emerald-500"></span>
+            </span>
           </button>
         ) : (
-          <div className="w-80 h-96 bg-gray-950/95 backdrop-blur-xl border border-emerald-900/50 rounded-2xl shadow-2xl flex flex-col overflow-hidden animate-in slide-in-from-bottom-5">
-            <div className="h-14 bg-gradient-to-r from-emerald-900/80 to-slate-900 flex items-center justify-between px-4 border-b border-gray-800">
+          <div className="w-80 h-96 bg-slate-950/95 backdrop-blur-xl border border-emerald-500/20 rounded-2xl shadow-2xl flex flex-col overflow-hidden animate-in slide-in-from-bottom-5">
+            <div className="h-14 bg-gradient-to-r from-emerald-950/80 to-slate-900 flex items-center justify-between px-4 border-b border-gray-800">
               <div className="flex items-center gap-2">
                 <div className="h-2 w-2 rounded-full bg-emerald-400 animate-pulse"></div>
                 <span className="text-xs font-bold text-white font-display">AI Governance Assistant</span>
@@ -447,13 +636,13 @@ export default function App() {
                 <X className="h-4 w-4" />
               </button>
             </div>
-            <div className="flex-1 overflow-y-auto p-4 space-y-4 custom-scrollbar">
+            <div className="flex-1 overflow-y-auto p-4 space-y-4 custom-scrollbar bg-slate-950/30">
               {chatMessages.map((msg, i) => (
                 <div key={i} className={`flex ${msg.role === 'ai' ? 'justify-start' : 'justify-end'}`}>
-                  <div className={`max-w-[85%] p-3 rounded-2xl text-[11px] leading-relaxed ${
+                  <div className={`max-w-[85%] p-3.5 rounded-2xl text-[11px] leading-relaxed shadow-sm ${
                     msg.role === 'ai' 
-                      ? 'bg-slate-800/80 text-gray-200 border border-gray-700/50 rounded-tl-sm' 
-                      : 'bg-emerald-600 text-white rounded-tr-sm'
+                      ? 'bg-slate-900/80 text-gray-200 border border-gray-800/80 rounded-tl-sm' 
+                      : 'bg-gradient-to-r from-emerald-600 to-teal-600 text-white rounded-tr-sm'
                   }`}>
                     {msg.text}
                   </div>
@@ -517,6 +706,57 @@ export default function App() {
           <a href="https://panchayat.gov.in" target="_blank" rel="noopener noreferrer" className="hover:text-[#FF9933] transition-colors">panchayat.gov.in</a>
         </div>
       </footer>
+
+      {/* Mock Email Overlay */}
+      {activeMockEmail && (
+        <div className="fixed bottom-6 left-6 z-50 animate-float max-w-md w-full">
+          <div className="glass-panel p-5 rounded-2xl border-indigo-500/40 bg-[#07161b]/95 shadow-2xl text-xs text-left relative">
+            <button
+              onClick={() => setActiveMockEmail(null)}
+              className="absolute right-3.5 top-3.5 text-gray-400 hover:text-white"
+            >
+              <X className="h-4.5 w-4.5" />
+            </button>
+            <div className="flex items-center gap-2 mb-3 pb-2 border-b border-gray-900">
+              <div className="h-7 w-7 rounded-full bg-indigo-500/10 text-indigo-400 flex items-center justify-center border border-indigo-500/20 shrink-0">
+                <FileText className="h-4 w-4 animate-pulse" />
+              </div>
+              <div>
+                <p className="text-[10px] font-black text-indigo-400 uppercase tracking-widest">✉️ New Inbox Message</p>
+                <p className="text-[9px] text-gray-500">Sent to: {activeMockEmail.to}</p>
+              </div>
+            </div>
+
+            {/* Email Body layout */}
+            <div className="rounded-xl border border-gray-900 overflow-hidden bg-slate-950/60 shadow-inner">
+              {/* Government Tricolor Header */}
+              <div className="h-1.5 w-full flex">
+                <div className="flex-1 bg-[#FF9933]"></div>
+                <div className="flex-1 bg-white"></div>
+                <div className="flex-1 bg-[#138808]"></div>
+              </div>
+              <div className="p-4 space-y-3.5 text-gray-300">
+                <div className="flex justify-between items-start">
+                  <div>
+                    <h4 className="font-extrabold text-white text-[11px] font-display">{activeMockEmail.subject}</h4>
+                    <p className="text-[9px] text-gray-500 mt-0.5">From: awards-portal@panchayatawards.gov.in</p>
+                  </div>
+                  <span className="text-[8px] bg-indigo-950/60 border border-indigo-900/60 px-2 py-0.5 rounded text-indigo-400 uppercase font-black">SMTP Log</span>
+                </div>
+                <div className="w-full h-px bg-gray-900"></div>
+                <p className="whitespace-pre-line leading-relaxed text-[10.5px] font-mono text-gray-350">{activeMockEmail.body}</p>
+              </div>
+            </div>
+
+            <button
+              onClick={() => setActiveMockEmail(null)}
+              className="mt-3.5 w-full py-2 bg-indigo-600 hover:bg-indigo-500 text-white rounded-lg font-bold text-[10px] uppercase tracking-wider transition-colors shadow-md shadow-indigo-600/10"
+            >
+              Acknowledge & Close
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
