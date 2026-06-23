@@ -508,7 +508,7 @@ export default function App() {
                                 <p className="text-xs text-indigo-400 font-semibold">{nom.category}</p>
                               </div>
                               <div className="flex items-center gap-2">
-                                {nom.status === 'Award Winner' && (
+                                {nom.status === 'Award Winner' && resultsReleased && nom.certificateId && (
                                   <button
                                     onClick={() => {
                                       setActiveCert(nom);
@@ -628,6 +628,7 @@ export default function App() {
               setResultsReleased={setResultsReleased}
               currentLanguage={currentLanguage}
               deleteNomination={deleteNomination}
+              setNominations={setNominations}
             />
           )
         )}
@@ -898,7 +899,7 @@ export default function App() {
       )}
 
       {/* Certificate Modal Preview for Nominee */}
-      {activeCert && (
+      {activeCert && activeCert.certificateId && (
         <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-sm animate-in fade-in">
           <div className="glass-panel w-full max-w-2xl rounded-2xl p-6 relative border-gray-800 bg-slate-950 shadow-2xl overflow-y-auto max-h-[90vh]">
             <button
@@ -985,6 +986,7 @@ export default function App() {
                     {translations[currentLanguage]?.certDateIssued || translations.ENG.certDateIssued}
                   </p>
                   <p className="text-[9px] text-gray-500">{new Date().toISOString().slice(0, 10)}</p>
+                  <p className="text-[10px] font-bold text-gray-300 mt-1">Cert ID: {activeCert.certificateId}</p>
                 </div>
               </div>
             </div>

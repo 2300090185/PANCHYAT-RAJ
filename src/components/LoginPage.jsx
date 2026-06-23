@@ -5,9 +5,14 @@ import { Lock, User, FileText, Star, Shield, ArrowRight } from 'lucide-react';
 export default function LoginPage({ role, onLogin, currentLanguage }) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [captchaChecked, setCaptchaChecked] = useState(false);
   
   const handleLogin = (e) => {
     e.preventDefault();
+    if (role === 'jury' && !captchaChecked) {
+      alert("Verification failed: Please check the 'I'm not a robot' security box.");
+      return;
+    }
     if(email && password) {
       onLogin(role);
     }
@@ -115,6 +120,23 @@ export default function LoginPage({ role, onLogin, currentLanguage }) {
             </label>
             <span className={`text-[10px] font-bold ${config.color} cursor-pointer hover:underline`}>{t.forgotPass}</span>
           </div>
+
+          {role === 'jury' && (
+            <div className="flex items-center gap-3.5 p-3 rounded-xl bg-amber-950/10 border border-amber-900/20 my-4 select-none animate-in fade-in">
+              <input
+                type="checkbox"
+                required
+                id="captcha-check"
+                checked={captchaChecked}
+                onChange={(e) => setCaptchaChecked(e.target.checked)}
+                className="h-5.5 w-5.5 rounded border-gray-800 bg-gray-950 text-amber-500 focus:ring-0 cursor-pointer"
+              />
+              <label htmlFor="captcha-check" className="flex-grow flex items-center justify-between cursor-pointer">
+                <span className="text-xs font-bold text-gray-300">I'm not a robot</span>
+                <span className="text-[10px] text-gray-500 font-medium tracking-wide font-mono text-amber-400/80">reCAPTCHA v2</span>
+              </label>
+            </div>
+          )}
 
           <button
             type="submit"

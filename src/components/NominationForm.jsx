@@ -271,10 +271,35 @@ export default function NominationForm({ selectedCategory, setSelectedCategory =
         triggerToast('Please fill all mandatory project fields (Name, Dates, Location, Objectives, Challenges, Innovations, Sustainability, Community, Govt, CSR).');
         return false;
       }
+
+      // Check word count constraint for narrative textareas (50-100 words)
+      const narrativeFields = [
+        { name: 'objectives', label: 'Key Objectives' },
+        { name: 'challenges', label: 'Challenges Faced' },
+        { name: 'innovations', label: 'Key Innovations' },
+        { name: 'sustainabilityPlan', label: 'Sustainability & Future Plan' },
+        { name: 'communityParticipation', label: 'Community Participation' },
+        { name: 'governmentSupport', label: 'Government Support' },
+        { name: 'csrPartnership', label: 'CSR Partnership & Funding' }
+      ];
+      
+      for (const field of narrativeFields) {
+        const count = getWordCount(formData[field.name]);
+        if (count < 50 || count > 100) {
+          triggerToast(`"${field.label}" must be between 50 and 100 words. Current: ${count} words.`);
+          return false;
+        }
+      }
+      
       const fields = categoryCustomFields[formData.category] || [];
       for (const f of fields) {
         if (!formData.customFields[f.key] || formData.customFields[f.key].trim() === '') {
           triggerToast(`Please fill the required field: "${f.label}"`);
+          return false;
+        }
+        const count = getWordCount(formData.customFields[f.key]);
+        if (count < 50 || count > 100) {
+          triggerToast(`"${f.label}" response must be between 50 and 100 words. Current: ${count} words.`);
           return false;
         }
       }
@@ -475,6 +500,11 @@ export default function NominationForm({ selectedCategory, setSelectedCategory =
                       onChange={(e) => {
                         const file = e.target.files[0];
                         if (file) {
+                          if (file.size > 200 * 1024) {
+                            triggerToast('Professional photo size must be less than 200KB. Please choose a smaller file.');
+                            e.target.value = '';
+                            return;
+                          }
                           handleInputChange('professionalPhoto', file.name);
                           triggerToast(`Selected photo: ${file.name}`);
                         }
@@ -597,8 +627,8 @@ export default function NominationForm({ selectedCategory, setSelectedCategory =
                 <textarea required rows={2} placeholder="What did you aim to achieve?" value={formData.objectives}
                   onChange={(e) => handleInputChange('objectives', e.target.value)}
                   className="w-full rounded-lg bg-gray-950 border border-gray-800 px-3 py-2 text-xs text-white focus:outline-none focus:border-indigo-500" />
-                <div className={`text-[10px] text-right mt-1 ${getWordCount(formData.objectives) > 150 ? 'text-red-500 font-bold' : 'text-gray-500'}`}>
-                  {getWordCount(formData.objectives)} / 150 words
+                <div className={`text-[10px] text-right mt-1 ${getWordCount(formData.objectives) >= 50 && getWordCount(formData.objectives) <= 100 ? 'text-emerald-400 font-bold' : 'text-rose-500 font-bold'}`}>
+                  {getWordCount(formData.objectives)} / 50-100 words
                 </div>
               </div>
 
@@ -630,8 +660,8 @@ export default function NominationForm({ selectedCategory, setSelectedCategory =
                           onChange={(e) => handleCustomFieldChange(field.key, e.target.value)}
                           className="w-full rounded-lg bg-gray-950 border border-amber-900/30 px-3 py-2 text-xs text-white placeholder-gray-600 focus:outline-none focus:border-amber-500 transition-colors"
                         />
-                        <div className={`text-[10px] text-right mt-1 ${getWordCount(formData.customFields[field.key]) > 150 ? 'text-red-500 font-bold' : 'text-gray-500'}`}>
-                          {getWordCount(formData.customFields[field.key])} / 150 words
+                        <div className={`text-[10px] text-right mt-1 ${getWordCount(formData.customFields[field.key]) >= 50 && getWordCount(formData.customFields[field.key]) <= 100 ? 'text-emerald-400 font-bold' : 'text-rose-500 font-bold'}`}>
+                          {getWordCount(formData.customFields[field.key])} / 50-100 words
                         </div>
                       </div>
                     ))}
@@ -645,8 +675,8 @@ export default function NominationForm({ selectedCategory, setSelectedCategory =
                   <textarea rows={2} required placeholder="What roadblocks did you overcome?" value={formData.challenges}
                     onChange={(e) => handleInputChange('challenges', e.target.value)}
                     className="w-full rounded-lg bg-gray-950 border border-gray-800 px-3 py-2 text-xs text-white focus:outline-none focus:border-indigo-500" />
-                  <div className={`text-[10px] text-right mt-1 ${getWordCount(formData.challenges) > 150 ? 'text-red-500 font-bold' : 'text-gray-500'}`}>
-                    {getWordCount(formData.challenges)} / 150 words
+                  <div className={`text-[10px] text-right mt-1 ${getWordCount(formData.challenges) >= 50 && getWordCount(formData.challenges) <= 100 ? 'text-emerald-400 font-bold' : 'text-rose-500 font-bold'}`}>
+                    {getWordCount(formData.challenges)} / 50-100 words
                   </div>
                 </div>
                 <div>
@@ -654,8 +684,8 @@ export default function NominationForm({ selectedCategory, setSelectedCategory =
                   <textarea rows={2} required placeholder="What unique ideas did you execute?" value={formData.innovations}
                     onChange={(e) => handleInputChange('innovations', e.target.value)}
                     className="w-full rounded-lg bg-gray-950 border border-gray-800 px-3 py-2 text-xs text-white focus:outline-none focus:border-indigo-500" />
-                  <div className={`text-[10px] text-right mt-1 ${getWordCount(formData.innovations) > 150 ? 'text-red-500 font-bold' : 'text-gray-500'}`}>
-                    {getWordCount(formData.innovations)} / 150 words
+                  <div className={`text-[10px] text-right mt-1 ${getWordCount(formData.innovations) >= 50 && getWordCount(formData.innovations) <= 100 ? 'text-emerald-400 font-bold' : 'text-rose-500 font-bold'}`}>
+                    {getWordCount(formData.innovations)} / 50-100 words
                   </div>
                 </div>
                 <div>
@@ -663,8 +693,8 @@ export default function NominationForm({ selectedCategory, setSelectedCategory =
                   <textarea rows={2} required placeholder="How will the project sustain long-term?" value={formData.sustainabilityPlan}
                     onChange={(e) => handleInputChange('sustainabilityPlan', e.target.value)}
                     className="w-full rounded-lg bg-gray-950 border border-gray-800 px-3 py-2 text-xs text-white focus:outline-none focus:border-indigo-500" />
-                  <div className={`text-[10px] text-right mt-1 ${getWordCount(formData.sustainabilityPlan) > 150 ? 'text-red-500 font-bold' : 'text-gray-500'}`}>
-                    {getWordCount(formData.sustainabilityPlan)} / 150 words
+                  <div className={`text-[10px] text-right mt-1 ${getWordCount(formData.sustainabilityPlan) >= 50 && getWordCount(formData.sustainabilityPlan) <= 100 ? 'text-emerald-400 font-bold' : 'text-rose-500 font-bold'}`}>
+                    {getWordCount(formData.sustainabilityPlan)} / 50-100 words
                   </div>
                 </div>
                 <div>
@@ -672,8 +702,8 @@ export default function NominationForm({ selectedCategory, setSelectedCategory =
                   <textarea rows={2} required placeholder="How did local villagers engage?" value={formData.communityParticipation}
                     onChange={(e) => handleInputChange('communityParticipation', e.target.value)}
                     className="w-full rounded-lg bg-gray-950 border border-gray-800 px-3 py-2 text-xs text-white focus:outline-none focus:border-indigo-500" />
-                  <div className={`text-[10px] text-right mt-1 ${getWordCount(formData.communityParticipation) > 150 ? 'text-red-500 font-bold' : 'text-gray-500'}`}>
-                    {getWordCount(formData.communityParticipation)} / 150 words
+                  <div className={`text-[10px] text-right mt-1 ${getWordCount(formData.communityParticipation) >= 50 && getWordCount(formData.communityParticipation) <= 100 ? 'text-emerald-400 font-bold' : 'text-rose-500 font-bold'}`}>
+                    {getWordCount(formData.communityParticipation)} / 50-100 words
                   </div>
                 </div>
                 <div>
@@ -681,8 +711,8 @@ export default function NominationForm({ selectedCategory, setSelectedCategory =
                   <textarea rows={2} required placeholder="GP resolutions, block endorsements, or schemes." value={formData.governmentSupport}
                     onChange={(e) => handleInputChange('governmentSupport', e.target.value)}
                     className="w-full rounded-lg bg-gray-950 border border-gray-800 px-3 py-2 text-xs text-white focus:outline-none focus:border-indigo-500" />
-                  <div className={`text-[10px] text-right mt-1 ${getWordCount(formData.governmentSupport) > 150 ? 'text-red-500 font-bold' : 'text-gray-500'}`}>
-                    {getWordCount(formData.governmentSupport)} / 150 words
+                  <div className={`text-[10px] text-right mt-1 ${getWordCount(formData.governmentSupport) >= 50 && getWordCount(formData.governmentSupport) <= 100 ? 'text-emerald-400 font-bold' : 'text-rose-500 font-bold'}`}>
+                    {getWordCount(formData.governmentSupport)} / 50-100 words
                   </div>
                 </div>
                 <div>
@@ -690,8 +720,8 @@ export default function NominationForm({ selectedCategory, setSelectedCategory =
                   <textarea rows={2} required placeholder="Private sponsorships, corporate grants, etc." value={formData.csrPartnership}
                     onChange={(e) => handleInputChange('csrPartnership', e.target.value)}
                     className="w-full rounded-lg bg-gray-950 border border-gray-800 px-3 py-2 text-xs text-white focus:outline-none focus:border-indigo-500" />
-                  <div className={`text-[10px] text-right mt-1 ${getWordCount(formData.csrPartnership) > 150 ? 'text-red-500 font-bold' : 'text-gray-500'}`}>
-                    {getWordCount(formData.csrPartnership)} / 150 words
+                  <div className={`text-[10px] text-right mt-1 ${getWordCount(formData.csrPartnership) >= 50 && getWordCount(formData.csrPartnership) <= 100 ? 'text-emerald-400 font-bold' : 'text-rose-500 font-bold'}`}>
+                    {getWordCount(formData.csrPartnership)} / 50-100 words
                   </div>
                 </div>
               </div>

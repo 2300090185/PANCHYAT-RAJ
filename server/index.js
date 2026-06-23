@@ -28,7 +28,15 @@ app.get('/api/nominations', (req, res) => {
 app.post('/api/nominations', (req, res) => {
   try {
     const newNom = req.body;
-    const id = `nom-${Math.floor(100 + Math.random() * 900)}`;
+    const generate15CharId = () => {
+      const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+      let result = '';
+      for (let i = 0; i < 15; i++) {
+        result += chars.charAt(Math.floor(Math.random() * chars.length));
+      }
+      return result;
+    };
+    const id = generate15CharId();
     const submission = {
       ...newNom,
       id,
@@ -160,6 +168,81 @@ app.put('/api/nominations/:id/scores', (req, res) => {
     res.json(updated);
   } catch {
     res.status(500).json({ error: 'Failed to save jury scores' });
+  }
+});
+
+// 3.8. Update certificate ID (admin action)
+app.put('/api/nominations/:id/certificate', (req, res) => {
+  try {
+    const { id } = req.params;
+    const { certificateId } = req.body;
+    const updated = db.addCertificateId(id, certificateId);
+    
+    // Auto-generate notification
+    const alert = {
+      id: Date.now(),
+      title: 'Certificate Issued',
+      message: `Certificate ID ${certificateId} generated for Nomination #${id.slice(0, 5)}.`,
+      time: 'Just now',
+      read: false
+    };
+    db.saveNotification(alert);
+
+    res.json(updated);
+  } catch {
+    res.status(500).json({ error: 'Failed to save certificate ID' });
+  }
+});
+
+// 7. Create jury panel and invite (admin action)
+app.post('/api/jury/create', (req, res) => {
+  try {
+    const { category, emails } = req.body;
+    if (!category || !emails) {
+      return res.status(400).json({ error: 'Category and emails are required' });
+    }
+    
+    const emailList = emails.split(',').map(e => e.trim()).filter(Boolean);
+    const categorySlug = category.toLowerCase().replace(/[^a-z0-9]+/g, '-');
+    const generatedPassword = `Jury@${categorySlug.slice(0, 8)}`;
+    
+    // Log mock SMTP dispatches
+    console.log("\n=======================================================");
+    console.log(`✉️  [SMTP Server] Dispatching Jury Panel Invitations`);
+    console.log(`Category: ${category}`);
+    console.log(`Assigned Password: ${generatedPassword}`);
+    console.log("-------------------------------------------------------");
+    emailList.forEach(email => {
+      console.log(`To: ${email}`);
+      console.log(`Subject: Invitation: Category Jury Evaluation Panel for ${category}`);
+      console.log(`Body: Dear Evaluator,\n\nYou have been designated to serve on the Regional Jury Evaluation Panel for the "${category}" award category under the Ministry of Panchayati Raj.\n\nSecure Access Details:\n- Portal URL: http://localhost:5173/\n- Login Email: ${email}\n- Temp Password: ${generatedPassword}\n\nPlease verify this invitation by logging in and checking your assigned nominations list.\n\nBest regards,\nMinistry of Panchayati Raj,\nGovernment of India.\n`);
+    });
+    console.log("=======================================================\n");
+    
+    // Create system notification
+    const alert = {
+      id: Date.now(),
+      read: false,
+      title: 'New Jury Panel Registered',
+      message: `Jury panel generated for "${category}" with ${emailList.length} members.`,
+      time: 'Just now'
+    };
+    db.saveNotification(alert);
+    
+    res.status(201).json({
+      success: true,
+      category,
+      emails: emailList,
+      password: generatedPassword,
+      accessLink: `http://localhost:5173/`,
+      logs: emailList.map(email => ({
+        to: email,
+        subject: `Invitation: Category Jury Evaluation Panel for ${category}`,
+        body: `Dear Evaluator,\n\nYou have been designated to serve on the Regional Jury Evaluation Panel for the "${category}" award category under the Ministry of Panchayati Raj.\n\nSecure Access Details:\n- Portal URL: http://localhost:5173/\n- Login Email: ${email}\n- Temp Password: ${generatedPassword}\n\nPlease verify this invitation by logging in and checking your assigned nominations list.\n\nBest regards,\nMinistry of Panchayati Raj,\nGovernment of India.`
+      }))
+    });
+  } catch {
+    res.status(500).json({ error: 'Failed to create jury panel' });
   }
 });
 

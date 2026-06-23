@@ -282,6 +282,18 @@ export const db = {
     return data.nominations;
   },
 
+  addCertificateId: (id, certificateId) => {
+    const data = readDB();
+    data.nominations = data.nominations.map(n => {
+      if (n.id === id) {
+        return { ...n, certificateId };
+      }
+      return n;
+    });
+    writeDB(data);
+    return data.nominations.find(n => n.id === id);
+  },
+
   addJuryScores: (id, scores, remarks, fieldVisit) => {
     const data = readDB();
     data.nominations = data.nominations.map(n => {

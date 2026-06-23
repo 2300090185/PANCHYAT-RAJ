@@ -3,12 +3,16 @@ import { useState } from 'react';
 import { Shield, Award, CheckCircle2, QrCode, X, Printer, Search, FileJson, Bot, AlertTriangle, Trash2 } from 'lucide-react';
 import { categoryCustomFields } from '../constants/awardConfigs';
 
-export default function AdminPanel({ nominations, updateNominationStatus, triggerToast, resultsReleased, setResultsReleased, currentLanguage, deleteNomination }) {
+export default function AdminPanel({ nominations, updateNominationStatus, triggerToast, resultsReleased, setResultsReleased, currentLanguage, deleteNomination, setNominations }) {
   const [searchTerm, setSearchTerm] = useState('');
   const t = translations[currentLanguage] || translations.ENG;
   const [activeTab, setActiveTab] = useState('nominations'); // nominations, certificates, settings
   const [activeCert, setActiveCert] = useState(null); // Selected nomination for certificate preview
   const [showQrVerification, setShowQrVerification] = useState(false);
+  const [selectedJuryCategory, setSelectedJuryCategory] = useState(Object.keys(categoryCustomFields)[0]);
+  const [assignedJuryEmails, setAssignedJuryEmails] = useState('');
+  const [createdJuryPanel, setCreatedJuryPanel] = useState(null);
+  const [certificateIdInput, setCertificateIdInput] = useState('');
 
   // Status updates available to admin
   const availableStatuses = ['Pending', 'Under Review', 'Verified', 'Award Recommended', 'Award Winner'];
@@ -260,71 +264,141 @@ export default function AdminPanel({ nominations, updateNominationStatus, trigge
               <div className="space-y-4">
                 <div className="flex justify-between items-center">
                   <h3 className="text-sm font-bold text-gray-200 uppercase tracking-widest font-display">{t.certificateSandbox}</h3>
-                  <button 
-                    onClick={() => window.print()}
-                    className="flex items-center gap-1.5 rounded-lg bg-gray-900 border border-gray-800 px-3 py-1.5 text-xs font-semibold text-gray-300 hover:text-white"
-                  >
-                    <Printer className="h-4 w-4" />
-                    <span>{t.printBtn}</span>
-                  </button>
-                </div>
-
-                {/* Printable certificate design */}
-                <div className="printable-certificate-canvas rounded-2xl border-8 border-double border-amber-900/60 bg-slate-900 p-8 text-center text-slate-100 shadow-2xl relative overflow-hidden select-none">
-                  {/* Tricolor Ribbon/Stripe */}
-                  <div className="absolute top-0 left-0 right-0 h-1.5 flex print:h-2">
-                    <div className="flex-1 bg-[#FF9933]"></div>
-                    <div className="flex-1 bg-white"></div>
-                    <div className="flex-1 bg-[#138808]"></div>
-                  </div>
-
-                  {/* Subtle watermarks / shapes */}
-                  <div className="absolute -left-12 -top-12 h-44 w-44 rounded-full bg-emerald-500/5 blur-xl"></div>
-                  <div className="absolute -right-12 -bottom-12 h-44 w-44 rounded-full bg-amber-500/5 blur-xl"></div>
-                  
-                  <div className="flex justify-center mb-3">
-                    <Award className="h-10 w-10 text-amber-500" />
-                  </div>
-                  
-                  <span className="text-[10px] font-black tracking-widest text-amber-500 uppercase">{t.certPanchayatDept}</span>
-                  <h2 className="text-xl font-bold tracking-tight text-white mt-1.5 font-display">NATIONAL SOCIAL IMPACT AWARD</h2>
-                  
-                  <div className="h-0.5 w-24 bg-gradient-to-r from-transparent via-amber-500 to-transparent mx-auto my-4"></div>
-                  
-                  <p className="text-xs text-gray-400 italic">{t.certPresented}</p>
-                  <p className="text-lg font-black text-white tracking-wide mt-2 font-display">{activeCert.fullName}</p>
-                  
-                  <p className="text-xs text-gray-400 mt-2 max-w-sm mx-auto leading-relaxed">
-                    {t.certText}
-                  </p>
-                  <p className="text-xs font-black text-amber-400 mt-1 uppercase tracking-wider">{activeCert.category}</p>
-                  
-                  <p className="text-[10px] text-gray-500 mt-4 leading-relaxed">
-                    Project name: <span className="font-bold text-gray-300">"{activeCert.projectName}"</span> {t.certGramPanchayat} <span className="font-bold text-gray-300">{activeCert.village}</span>.
-                  </p>
-
-                  <div className="mt-8 flex justify-between items-center border-t border-gray-800 pt-6">
-                    <div className="text-left">
-                      <p className="text-[10px] font-bold text-gray-300">Shri R. K. Prasad</p>
-                      <p className="text-[9px] text-gray-500">{t.certSecretary}</p>
-                    </div>
-
-                    {/* QR Code Container */}
-                    <div 
-                      onClick={() => setShowQrVerification(true)}
-                      className="cursor-pointer p-1.5 rounded-lg bg-white hover:ring-2 hover:ring-emerald-500 transition-all flex flex-col items-center gap-0.5"
-                      title="Click to Verify QR Code"
+                  {activeCert.certificateId && (
+                    <button 
+                      onClick={() => window.print()}
+                      className="flex items-center gap-1.5 rounded-lg bg-gray-900 border border-gray-800 px-3 py-1.5 text-xs font-semibold text-gray-300 hover:text-white transition-colors"
                     >
-                      <QrCode className="h-10 w-10 text-slate-900" />
-                      <span className="text-[8px] text-slate-800 font-bold tracking-tighter">{t.secureVerify}</span>
-                    </div>
+                      <Printer className="h-4 w-4" />
+                      <span>{t.printBtn}</span>
+                    </button>
+                  )}
+                </div>
 
-                    <div className="text-right">
-                      <p className="text-[10px] font-bold text-gray-300">{t.certDateIssued}</p>
-                      <p className="text-[9px] text-gray-500">{new Date().toISOString().slice(0, 10)}</p>
+                {!activeCert.certificateId ? (
+                  <div className="glass-panel p-6 rounded-2xl border-gray-800 bg-slate-950/80 space-y-4 animate-in fade-in">
+                    <div className="flex items-center gap-2">
+                      <Award className="h-5 w-5 text-amber-500" />
+                      <h4 className="font-bold text-sm text-white">Generate Nominee Certificate</h4>
+                    </div>
+                    <p className="text-xs text-gray-400">
+                      To issue a certificate for <span className="font-bold text-indigo-400">{activeCert.fullName}</span>, assign a Certificate ID below. This record is based on regional jury evaluation (Score: <span className="font-bold text-emerald-400">{activeCert.juryScores ? Object.values(activeCert.juryScores).reduce((a,b)=>a+b,0) : '85'}</span>).
+                    </p>
+                    <div className="space-y-3">
+                      <div>
+                        <label className="block text-[10px] font-bold text-gray-500 uppercase tracking-wider mb-1.5">Certificate ID</label>
+                        <div className="flex gap-2">
+                          <input
+                            type="text"
+                            placeholder="e.g. CERT-2026-009"
+                            value={certificateIdInput}
+                            onChange={(e) => setCertificateIdInput(e.target.value)}
+                            className="flex-1 rounded-xl bg-gray-900 border border-gray-800 px-3.5 py-2 text-xs text-white placeholder-gray-600 focus:outline-none focus:border-rose-500 transition-colors"
+                          />
+                          <button
+                            type="button"
+                            onClick={() => {
+                              const randomSfx = Math.floor(1000 + Math.random() * 9000);
+                              setCertificateIdInput(`CERT-${activeCert.id.toUpperCase().slice(0, 5)}-${randomSfx}`);
+                            }}
+                            className="px-3 py-2 bg-gray-900 border border-gray-800 hover:border-gray-700 text-gray-300 hover:text-white text-xs font-bold rounded-xl transition-all"
+                          >
+                            Auto-Fill ID
+                          </button>
+                        </div>
+                      </div>
+                      <button
+                        type="button"
+                        onClick={() => {
+                          if (!certificateIdInput.trim()) {
+                            triggerToast("Please enter or generate a valid Certificate ID first.");
+                            return;
+                          }
+                          fetch(`/api/nominations/${activeCert.id}/certificate`, {
+                            method: 'PUT',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({ certificateId: certificateIdInput })
+                          })
+                            .then(res => {
+                              if (!res.ok) throw new Error();
+                              return res.json();
+                            })
+                            .then(updated => {
+                              activeCert.certificateId = updated.certificateId;
+                              setCertificateIdInput('');
+                              triggerToast("Certificate generated and issued successfully!");
+                              // Update local activeCert state copy so React re-renders it:
+                              setActiveCert({ ...activeCert });
+                              if (setNominations) {
+                                setNominations(prev => prev.map(n => n.id === activeCert.id ? updated : n));
+                              }
+                            })
+                            .catch(() => triggerToast("Failed to issue certificate."));
+                        }}
+                        className="w-full py-2.5 bg-rose-600 hover:bg-rose-500 text-white text-xs font-bold rounded-xl transition-colors shadow-lg shadow-rose-900/20"
+                      >
+                        Generate & Issue Certificate
+                      </button>
                     </div>
                   </div>
-                </div>
+                ) : (
+                  /* Printable certificate design */
+                  <div className="printable-certificate-canvas rounded-2xl border-8 border-double border-amber-900/60 bg-slate-900 p-8 text-center text-slate-100 shadow-2xl relative overflow-hidden select-none">
+                    {/* Tricolor Ribbon/Stripe */}
+                    <div className="absolute top-0 left-0 right-0 h-1.5 flex print:h-2">
+                      <div className="flex-1 bg-[#FF9933]"></div>
+                      <div className="flex-1 bg-white"></div>
+                      <div className="flex-1 bg-[#138808]"></div>
+                    </div>
+
+                    {/* Subtle watermarks / shapes */}
+                    <div className="absolute -left-12 -top-12 h-44 w-44 rounded-full bg-emerald-500/5 blur-xl"></div>
+                    <div className="absolute -right-12 -bottom-12 h-44 w-44 rounded-full bg-amber-500/5 blur-xl"></div>
+                    
+                    <div className="flex justify-center mb-3">
+                      <Award className="h-10 w-10 text-amber-500" />
+                    </div>
+                    
+                    <span className="text-[10px] font-black tracking-widest text-amber-500 uppercase">{t.certPanchayatDept}</span>
+                    <h2 className="text-xl font-bold tracking-tight text-white mt-1.5 font-display">NATIONAL SOCIAL IMPACT AWARD</h2>
+                    
+                    <div className="h-0.5 w-24 bg-gradient-to-r from-transparent via-amber-500 to-transparent mx-auto my-4"></div>
+                    
+                    <p className="text-xs text-gray-400 italic">{t.certPresented}</p>
+                    <p className="text-lg font-black text-white tracking-wide mt-2 font-display">{activeCert.fullName}</p>
+                    
+                    <p className="text-xs text-gray-400 mt-2 max-w-sm mx-auto leading-relaxed">
+                      {t.certText}
+                    </p>
+                    <p className="text-xs font-black text-amber-400 mt-1 uppercase tracking-wider">{activeCert.category}</p>
+                    
+                    <p className="text-[10px] text-gray-500 mt-4 leading-relaxed">
+                      Project name: <span className="font-bold text-gray-300">"{activeCert.projectName}"</span> {t.certGramPanchayat} <span className="font-bold text-gray-300">{activeCert.village}</span>.
+                    </p>
+
+                    <div className="mt-8 flex justify-between items-center border-t border-gray-800 pt-6">
+                      <div className="text-left">
+                        <p className="text-[10px] font-bold text-gray-300">Shri R. K. Prasad</p>
+                        <p className="text-[9px] text-gray-500">{t.certSecretary}</p>
+                      </div>
+
+                      {/* QR Code Container */}
+                      <div 
+                        onClick={() => setShowQrVerification(true)}
+                        className="cursor-pointer p-1.5 rounded-lg bg-white hover:ring-2 hover:ring-emerald-500 transition-all flex flex-col items-center gap-0.5"
+                        title="Click to Verify QR Code"
+                      >
+                        <QrCode className="h-10 w-10 text-slate-900" />
+                        <span className="text-[8px] text-slate-800 font-bold tracking-tighter">{t.secureVerify}</span>
+                      </div>
+
+                      <div className="text-right">
+                        <p className="text-[10px] font-bold text-gray-300">Cert ID: {activeCert.certificateId}</p>
+                        <p className="text-[9px] text-gray-500">{new Date().toISOString().slice(0, 10)}</p>
+                      </div>
+                    </div>
+                  </div>
+                )}
               </div>
             ) : (
               <div className="glass-panel p-8 rounded-2xl border-gray-800/80 text-center flex flex-col items-center justify-center h-96">
@@ -346,7 +420,11 @@ export default function AdminPanel({ nominations, updateNominationStatus, trigge
               <div className="space-y-4">
                 <div>
                   <label className="block text-[10px] font-bold text-gray-500 uppercase tracking-wider mb-1.5">Select Award Category</label>
-                  <select className="w-full rounded-xl bg-gray-900 border border-gray-800 px-3 py-2 text-xs text-white focus:border-rose-500 focus:outline-none">
+                  <select 
+                    value={selectedJuryCategory}
+                    onChange={(e) => setSelectedJuryCategory(e.target.value)}
+                    className="w-full rounded-xl bg-gray-950 border border-gray-800 px-3 py-2 text-xs text-white focus:outline-none focus:border-rose-500"
+                  >
                     {Object.keys(categoryCustomFields).map((cat, idx) => (
                       <option key={idx} value={cat}>{cat}</option>
                     ))}
@@ -354,10 +432,37 @@ export default function AdminPanel({ nominations, updateNominationStatus, trigge
                 </div>
                 <div>
                   <label className="block text-[10px] font-bold text-gray-500 uppercase tracking-wider mb-1.5">{t.assignJuryMembers}</label>
-                  <input type="text" placeholder="jury1@gov.in, jury2@gov.in" className="w-full rounded-xl bg-gray-900 border border-gray-800 px-3 py-2 text-xs text-white focus:border-rose-500 focus:outline-none" />
+                  <input 
+                    type="text" 
+                    placeholder="jury1@gov.in, jury2@gov.in" 
+                    value={assignedJuryEmails}
+                    onChange={(e) => setAssignedJuryEmails(e.target.value)}
+                    className="w-full rounded-xl bg-gray-950 border border-gray-800 px-3 py-2 text-xs text-white focus:outline-none focus:border-rose-500" 
+                  />
                 </div>
                 <button 
-                  onClick={() => triggerToast('Successfully generated secure Jury Portal link for selected category.')}
+                  type="button"
+                  onClick={() => {
+                    if (!assignedJuryEmails.trim()) {
+                      triggerToast("Please enter at least one jury email address.");
+                      return;
+                    }
+                    fetch('/api/jury/create', {
+                      method: 'POST',
+                      headers: { 'Content-Type': 'application/json' },
+                      body: JSON.stringify({ category: selectedJuryCategory, emails: assignedJuryEmails })
+                    })
+                      .then(res => {
+                        if (!res.ok) throw new Error();
+                        return res.json();
+                      })
+                      .then(data => {
+                        setCreatedJuryPanel(data);
+                        setAssignedJuryEmails('');
+                        triggerToast("Jury panel generated and invitations sent successfully!");
+                      })
+                      .catch(() => triggerToast("Failed to create jury panel."));
+                  }}
                   className="w-full py-2 bg-rose-600 hover:bg-rose-500 text-white rounded-lg text-xs font-bold transition-colors shadow-lg shadow-rose-600/20"
                 >
                   {t.generateLinkBtn}
@@ -445,6 +550,57 @@ export default function AdminPanel({ nominations, updateNominationStatus, trigge
               className="w-full mt-5 rounded-lg bg-emerald-600 py-2 text-xs font-bold text-white hover:bg-emerald-500"
             >
               {t.closeDiagnostics}
+            </button>
+          </div>
+        </div>
+      )}
+
+      {/* JURY CREATION DETAILS POPUP OVERLAY */}
+      {createdJuryPanel && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-sm animate-in fade-in">
+          <div className="glass-panel w-full max-w-md rounded-2xl p-6 relative border-rose-500/30 bg-[#0c0d12]/95 shadow-2xl animate-float">
+            <button
+              onClick={() => setCreatedJuryPanel(null)}
+              className="absolute right-4 top-4 text-gray-400 hover:text-white"
+            >
+              <X className="h-5 w-5" />
+            </button>
+            
+            <div className="flex justify-center mb-4">
+              <div className="h-12 w-12 rounded-full bg-rose-500/10 text-rose-400 border border-rose-500/20 flex items-center justify-center">
+                <Shield className="h-6 w-6 animate-pulse" />
+              </div>
+            </div>
+
+            <h3 className="text-center text-base font-bold text-white font-display">Jury Dashboard Created!</h3>
+            <p className="text-center text-xs text-gray-400 mt-1">Invitation credentials have been dispatched to designated evaluators.</p>
+
+            <div className="mt-5 p-4 rounded-xl bg-gray-900 border border-gray-800 text-xs space-y-3 text-gray-300">
+              <div>
+                <span className="text-[10px] font-bold text-gray-500 uppercase tracking-wider block">Assigned Award Category</span>
+                <span className="font-semibold text-rose-400 mt-0.5 block">{createdJuryPanel.category}</span>
+              </div>
+              <div>
+                <span className="text-[10px] font-bold text-gray-500 uppercase tracking-wider block">Jury Member Emails</span>
+                <span className="font-mono text-white mt-0.5 block break-all">{createdJuryPanel.emails.join(', ')}</span>
+              </div>
+              <div>
+                <span className="text-[10px] font-bold text-gray-500 uppercase tracking-wider block">Temp Password Credentials</span>
+                <span className="font-mono text-amber-400 font-bold mt-0.5 block">{createdJuryPanel.password}</span>
+              </div>
+              <div>
+                <span className="text-[10px] font-bold text-gray-500 uppercase tracking-wider block">Portal Access Link</span>
+                <a href={createdJuryPanel.accessLink} target="_blank" rel="noopener noreferrer" className="text-blue-400 hover:underline break-all mt-0.5 block">
+                  {createdJuryPanel.accessLink}
+                </a>
+              </div>
+            </div>
+
+            <button
+              onClick={() => setCreatedJuryPanel(null)}
+              className="w-full mt-5 rounded-lg bg-rose-600 hover:bg-rose-500 py-2.5 text-xs font-bold text-white transition-colors"
+            >
+              Acknowledge & Close
             </button>
           </div>
         </div>
