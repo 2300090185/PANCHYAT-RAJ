@@ -6,7 +6,7 @@ import AnalyticsDashboard from './components/AnalyticsDashboard';
 import JuryPortal from './components/JuryPortal';
 import AdminPanel from './components/AdminPanel';
 import LoginPage from './components/LoginPage';
-import { Award, ArrowRight, ShieldCheck, X, Send, Bot, FileText } from 'lucide-react';
+import { Award, ArrowRight, ShieldCheck, X, Send, Bot, FileText, Copy } from 'lucide-react';
 
 const inlineTranslations = {
   "ENG": {
@@ -193,6 +193,7 @@ export default function App() {
   const [activeMockEmail, setActiveMockEmail] = useState(null);
   const [selectedCategory, setSelectedCategory] = useState('Village Development Award');
   const [resultsReleased, setResultsReleased] = useState(false);
+  const [submittedNomination, setSubmittedNomination] = useState(null);
 
   const [chatOpen, setChatOpen] = useState(false);
   const [chatMessages, setChatMessages] = useState([
@@ -266,6 +267,7 @@ export default function App() {
       })
       .then(saved => {
         setNominations(prev => [saved, ...prev]);
+        setSubmittedNomination(saved); // Open success credentials popup
         if (saved.mockEmailSent) {
           setActiveMockEmail(saved.mockEmailSent);
         }
@@ -754,6 +756,111 @@ export default function App() {
             >
               Acknowledge & Close
             </button>
+          </div>
+        </div>
+      )}
+      {/* Nomination Success Credentials Modal Popup */}
+      {submittedNomination && (
+        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-sm animate-in fade-in">
+          <div className="glass-panel w-full max-w-md rounded-2xl p-6 relative border-indigo-500/40 bg-[#09101b]/95 shadow-2xl animate-float">
+            <button
+              onClick={() => setSubmittedNomination(null)}
+              className="absolute right-4 top-4 text-gray-400 hover:text-white"
+            >
+              <X className="h-5 w-5" />
+            </button>
+
+            <div className="flex justify-center mb-4">
+              <div className="h-12 w-12 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 flex items-center justify-center">
+                <ShieldCheck className="h-6 w-6" />
+              </div>
+            </div>
+
+            <h3 className="text-center text-lg font-bold text-white font-display">Nomination Submitted!</h3>
+            <p className="text-center text-xs text-gray-400 mt-1">Below are your credentials to log in and track your application status.</p>
+
+            <div className="mt-5 space-y-3">
+              {/* Reference ID Block */}
+              <div className="p-3.5 rounded-xl bg-gray-900 border border-gray-800 text-xs">
+                <span className="text-[10px] text-gray-500 font-bold uppercase tracking-wider block">Application Reference ID</span>
+                <div className="flex justify-between items-center mt-1">
+                  <span className="font-mono font-bold text-indigo-400 text-sm">{submittedNomination.id}</span>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      navigator.clipboard.writeText(submittedNomination.id);
+                      triggerToast('Copied Reference ID to clipboard.');
+                    }}
+                    className="text-gray-400 hover:text-white hover:scale-105 transition-all"
+                    title="Copy Reference ID"
+                  >
+                    <Copy className="h-4 w-4" />
+                  </button>
+                </div>
+              </div>
+
+              {/* Login Email Block */}
+              <div className="p-3.5 rounded-xl bg-gray-900 border border-gray-800 text-xs">
+                <span className="text-[10px] text-gray-500 font-bold uppercase tracking-wider block">Login Username (Email)</span>
+                <div className="flex justify-between items-center mt-1">
+                  <span className="font-medium text-white">{submittedNomination.email}</span>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      navigator.clipboard.writeText(submittedNomination.email);
+                      triggerToast('Copied Username to clipboard.');
+                    }}
+                    className="text-gray-400 hover:text-white hover:scale-105 transition-all"
+                    title="Copy Username"
+                  >
+                    <Copy className="h-4 w-4" />
+                  </button>
+                </div>
+              </div>
+
+              {/* Generated Password Block */}
+              <div className="p-3.5 rounded-xl bg-gray-900 border border-gray-800 text-xs">
+                <span className="text-[10px] text-gray-500 font-bold uppercase tracking-wider block">Login Password</span>
+                <div className="flex justify-between items-center mt-1">
+                  <span className="font-mono text-emerald-400 font-bold">Panchayat@{submittedNomination.id.split('-')[1]}</span>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      navigator.clipboard.writeText(`Panchayat@${submittedNomination.id.split('-')[1]}`);
+                      triggerToast('Copied Password to clipboard.');
+                    }}
+                    className="text-gray-400 hover:text-white hover:scale-105 transition-all"
+                    title="Copy Password"
+                  >
+                    <Copy className="h-4 w-4" />
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <div className="mt-6 flex gap-3">
+              <button
+                type="button"
+                onClick={() => {
+                  setSubmittedNomination(null);
+                  setActiveRole('nominee');
+                  setActiveTab('my-status');
+                  setAuthenticatedRoles(prev => ({ ...prev, nominee: true }));
+                  triggerToast('Logged in to Nominee Dashboard.');
+                }}
+                className="flex-1 py-2.5 bg-emerald-600 hover:bg-emerald-500 text-white rounded-lg text-xs font-bold transition-all shadow-lg shadow-emerald-600/20 flex items-center justify-center gap-1.5"
+              >
+                <span>Access Dashboard Now</span>
+                <ArrowRight className="h-4 w-4" />
+              </button>
+              <button
+                type="button"
+                onClick={() => setSubmittedNomination(null)}
+                className="px-4 py-2.5 rounded-lg border border-gray-800 text-xs font-bold text-gray-400 hover:text-white hover:border-gray-700 transition-all"
+              >
+                Close
+              </button>
+            </div>
           </div>
         </div>
       )}
