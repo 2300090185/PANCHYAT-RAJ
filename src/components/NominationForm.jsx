@@ -386,8 +386,8 @@ export default function NominationForm({ selectedCategory, setSelectedCategory =
               <circle cx="4.5" cy="3" r="0.25" fill="#000080" />
             </svg>
             <div>
-              <h2 className="text-xl font-bold text-white font-display">Panchayat Awards — Nomination Form</h2>
-              <p className="text-xs text-gray-400 mt-0.5">Submit your project details to represent your community and stand a chance to win Panchayati Raj Rural Awards — Ministry of Panchayati Raj, Govt. of India.</p>
+              <h2 className="text-xl font-bold text-white font-display">Bharat Gram Vikas Awards — Nomination Form</h2>
+              <p className="text-xs text-gray-400 mt-0.5">Submit your project details to represent your community and stand a chance to win Bharat Gram Vikas Awards — Ministry of Panchayati Raj, Govt. of India.</p>
             </div>
           </div>
           <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-emerald-500/10 text-emerald-400 text-xs font-semibold border border-emerald-500/25 shrink-0">

@@ -25,3 +25,4 @@ dist-ssr
 
 # Runtime database (auto-seeded on first run, do not commit)
 server/db.json
+.vercel

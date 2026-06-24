@@ -51,7 +51,7 @@ export const translations = {
     csrPartners: "CSR Partners",
     villagesCovered: "Villages Covered",
     officialAnnouncement: "Official Announcement",
-    winnersTitle: "Panchayat Award Winners",
+    winnersTitle: "Bharat Gram Vikas Award Winners",
     winnersDesc: "The final evaluation process has concluded. Congratulations to the outstanding individuals and projects leading grassroots transformation across the nation.",
     visionMission: "Our Vision & Mission",
     visionDesc: "To build India's largest digital platform that recognizes, documents, supports, and inspires youth, NGOs, institutions, and community leaders contributing to rural and urban transformation while advancing the United Nations Sustainable Development Goals (SDGs) and Viksit Bharat 2047.",
@@ -98,8 +98,8 @@ export const translations = {
     submitRegister: "Submit Registration",
 
     // Nomination Form
-    nominationFormHeader: "Panchayat Awards — Nomination Form",
-    nominationFormSub: "Submit your project details to represent your community and stand a chance to win Panchayati Raj Rural Awards — Ministry of Panchayati Raj, Govt. of India.",
+    nominationFormHeader: "Bharat Gram Vikas Awards — Nomination Form",
+    nominationFormSub: "Submit your project details to represent your community and stand a chance to win Bharat Gram Vikas Awards — Ministry of Panchayati Raj, Govt. of India.",
     awardSpecificApp: "Award-Specific Application",
     step1Title: "Step 1: Nominee Profile & Demographics",
     nomineeTypeLabel: "Nominee Type",
@@ -268,7 +268,7 @@ export const translations = {
     csrPartners: "सीएसआर भागीदार",
     villagesCovered: "कवर किए गए गाँव",
     officialAnnouncement: "आधिकारिक घोषणा",
-    winnersTitle: "पंचायत पुरस्कार विजेता",
+    winnersTitle: "भारत ग्राम विकास पुरस्कार विजेता",
     winnersDesc: "अंतिम मूल्यांकन प्रक्रिया समाप्त हो गई है। देश भर में जमीनी स्तर पर बदलाव का नेतृत्व करने वाले उत्कृष्ट व्यक्तियों और परियोजनाओं को बधाई।",
     visionMission: "हमारा दृष्टिकोण और मिशन",
     visionDesc: "भारत का सबसे बड़ा डिजिटल प्लेटफॉर्म बनाना जो संयुक्त राष्ट्र के सतत विकास लक्ष्यों (एसडीजी) और विकसित भारत 2047 को आगे बढ़ाते हुए ग्रामीण और शहरी बदलाव में योगदान देने वाले युवाओं, गैर सरकारी संगठनों, संस्थानों और सामुदायिक नेताओं को पहचानता है, उनका समर्थन करता है और उन्हें प्रेरित करता है।",
@@ -315,8 +315,8 @@ export const translations = {
     submitRegister: "पंजीकरण सबमिट करें",
 
     // Nomination Form
-    nominationFormHeader: "पंचायत पुरस्कार - नामांकन फॉर्म",
-    nominationFormSub: "अपने समुदाय का प्रतिनिधित्व करने और पंचायती राज ग्रामीण पुरस्कार जीतने का मौका पाने के लिए अपने प्रोजेक्ट का विवरण जमा करें।",
+    nominationFormHeader: "भारत ग्राम विकास पुरस्कार - नामांकन फॉर्म",
+    nominationFormSub: "अपने समुदाय का प्रतिनिधित्व करने और भारत ग्राम विकास पुरस्कार जीतने का मौका पाने के लिए अपने प्रोजेक्ट का विवरण जमा करें।",
     awardSpecificApp: "पुरस्कार-विशिष्ट आवेदन",
     step1Title: "चरण 1: नामांकित व्यक्ति की प्रोफ़ाइल और जनसांख्यिकी",
     nomineeTypeLabel: "नामांकित व्यक्ति का प्रकार",
@@ -485,7 +485,7 @@ export const translations = {
     csrPartners: "CSR భాగస్వాములు",
     villagesCovered: "కవర్ చేయబడిన గ్రామాలు",
     officialAnnouncement: "అధికారిక ప్రకటన",
-    winnersTitle: "पंचायत అవార్డు విజేతలు",
+    winnersTitle: "భారత్ గ్రామ్ వికాస్ అవార్డు విజేతలు",
     winnersDesc: "తుది మూల్యాంకన ప్రక్రియ ముగిసింది. దేశవ్యాప్తంగా గ్రామీణ స్థాయిలో పరివర్తనకు నాయకత్వం వహిస్తున్న అద్భుతమైన వ్యక్తులకు మరియు ప్రాజెక్టులకు అభినందనలు.",
     visionMission: "మా దృష్టి & మిషన్",
     visionDesc: "ఐక్యరాజ్యసమితి సుస్థిరాభివృద్ధి లక్ష్యాలు (SDGs) మరియు వికసిత్ భారత్ 2047 ను ముందుకు తీసుకెళ్తూ గ్రామీణ మరియు పట్టణ పరివర్తనకు దోహదపడే యువత, స్వచ్ఛంద సంస్థలు, సంస్థలు మరియు సమాజ నాయకులను గుర్తించే, మద్దతు ఇచ్చే మరియు ప్రేరేపించే భారతదేశపు అతిపెద్ద డిజిటల్ ప్లాట్‌ఫారమ్‌ను నిర్మించడం.",
@@ -532,8 +532,8 @@ export const translations = {
     submitRegister: "నమోదును సమర్పించండి",
 
     // Nomination Form
-    nominationFormHeader: "పంచాయతీ అవార్డులు — నామినేషన్ ఫారమ్",
-    nominationFormSub: "మీ సంఘానికి ప్రాతినిధ్యం వహించడానికి మరియు పంచాయతీ రాజ్ రూరల్ అవార్డులను గెలుచుకునే అవకాశం కోసం మీ ప్రాజెక్ట్ వివరాలను సమర్పించండి.",
+    nominationFormHeader: "భారత్ గ్రామ్ వికాస్ అవార్డులు — నామినేషన్ ఫారమ్",
+    nominationFormSub: "మీ సంఘానికి ప్రాతినిధ్యం వహించడానికి మరియు భారత్ గ్రామ్ వికాస్ అవార్డులను గెలుచుకునే అవకాశం కోసం మీ ప్రాజెక్ట్ వివరాలను సమర్పించండి.",
     awardSpecificApp: "అవార్డు-నిర్దిష్ట దరఖాస్తు",
     step1Title: "దశ 1: నామినీ ప్రొఫైల్ & డెమోగ్రాఫిక్స్",
     nomineeTypeLabel: "నామినీ రకం",
@@ -702,7 +702,7 @@ export const translations = {
     csrPartners: "CSR கூட்டாளிகள்",
     villagesCovered: "உள்ளடக்கப்பட்ட கிராமங்கள்",
     officialAnnouncement: "அதிகாரப்பூர்வ அறிவிப்பு",
-    winnersTitle: "பஞ்சாயத்து விருது வெற்றியாளர்கள்",
+    winnersTitle: "பாரத் கிராம் விகாஸ் விருது வெற்றியாளர்கள்",
     winnersDesc: "இறுதி மதிப்பீட்டு செயல்முறை முடிந்தது. நாடு முழுவதும் அடிமட்ட மாற்றத்திற்கு தலைமை தாங்கும் சிறந்த நபர்களுக்கும் திட்டங்களுக்கும் வாழ்த்துகள்.",
     visionMission: "எங்கள் பார்வை & பணி",
     visionDesc: "ஐக்கிய நாடுகளின் நிலையான வளர்ச்சி இலக்குகள் (SDGs) மற்றும் விக்சித் பாரத் 2047 ஐ முன்னெடுத்துச் செல்லும்போது கிராமப்புற மற்றும் நகர்ப்புற மாற்றத்திற்கு பங்களிக்கும் இளைஞர்கள், தன்னார்வ தொண்டு நிறுவனங்கள், நிறுவனங்கள் மற்றும் சமூகத் தலைவர்களை அங்கீகரிக்கும், ஆதரிக்கும் மற்றும் ஊக்குவிக்கும் இந்தியாவின் மிகப்பெரிய டிஜிட்டல் தளத்தை உருவாக்குதல்.",
@@ -749,8 +749,8 @@ export const translations = {
     submitRegister: "பதிவைச் சமர்ப்பிக்கவும்",
 
     // Nomination Form
-    nominationFormHeader: "பஞ்சாயத்து விருதுகள் — விண்ணப்ப படிவம்",
-    nominationFormSub: "உங்கள் சமூகத்தை பிரதிநிதித்துவப்படுத்தவும், பஞ்சாயத்து ராஜ் கிராமப்புற விருதுகளை வெல்லும் வாய்ப்பைப் பெறவும் உங்கள் திட்ட விவரங்களைச் சமர்ப்பிக்கவும்.",
+    nominationFormHeader: "பாரத் கிராம் விகாஸ் விருதுகள் — விண்ணப்ப படிவம்",
+    nominationFormSub: "உங்கள் சமூகத்தை பிரதிநிதித்துவப்படுத்தவும், பாரத் கிராம் விகாஸ் விருதுகளை வெல்லும் வாய்ப்பைப் பெறவும் உங்கள் திட்ட விவரங்களைச் சமர்ப்பிக்கவும்.",
     awardSpecificApp: "விருது சார்ந்த விண்ணப்பம்",
     step1Title: "படி 1: விண்ணப்பதாரர் சுயவிவரம் & மக்கள்தொகை",
     nomineeTypeLabel: "விண்ணப்பதாரர் வகை",
@@ -919,7 +919,7 @@ export const translations = {
     csrPartners: "सीएसआर भागीदार",
     villagesCovered: "कव्हर केलेली गावे",
     officialAnnouncement: "अधिकृत घोषणा",
-    winnersTitle: "पंचायत पुरस्कार विजेते",
+    winnersTitle: "भारत ग्राम विकास पुरस्कार विजेते",
     winnersDesc: "अंतिम मूल्यांकन प्रक्रिया पूर्ण झाली आहे. देशभरात तळागाळात बदल घडवून आणणाऱ्या उत्कृष्ट व्यक्ती आणि प्रकल्पांचे अभिनंदन.",
     visionMission: "आमचा दृष्टिकोन आणि ध्येय",
     visionDesc: "भारतातील सर्वात मोठे डिजिटल व्यासपीठ तयार करणे जे संयुक्त राष्ट्रांच्या शाश्वत विकास उद्दिष्टांना (SDGs) आणि विकसित भारत 2047 ला पुढे नेत ग्रामीण आणि शहरी परिवर्तनात योगदान देणाऱ्या तरुण, स्वयंसेवी संस्था, संस्था आणि समुदाय नेत्यांना ओळखते, त्यांचे समर्थन करते आणि त्यांना प्रेरित करते.",
@@ -966,8 +966,8 @@ export const translations = {
     submitRegister: "नोंदणी सबमिट करा",
 
     // Nomination Form
-    nominationFormHeader: "पंचायत पुरस्कार — नामांकन अर्ज",
-    nominationFormSub: "तुमच्या समुदायाचे प्रतिनिधित्व करण्यासाठी आणि पंचायती राज ग्रामीण पुरस्कार जिंकण्याची संधी मिळवण्यासाठी तुमच्या प्रकल्पाचा तपशील सबमिट करा.",
+    nominationFormHeader: "भारत ग्राम विकास पुरस्कार — नामांकन अर्ज",
+    nominationFormSub: "तुमच्या समुदायाचे प्रतिनिधित्व करण्यासाठी आणि भारत ग्राम विकास पुरस्कार जिंकण्याची संधी मिळवण्यासाठी तुमच्या प्रकल्पाचा तपशील सबमिट करा.",
     awardSpecificApp: "पुरस्कार-विशिष्ट अर्ज",
     step1Title: "पायरी 1: नामांकित प्रोफाइल आणि लोकसंख्याशास्त्र",
     nomineeTypeLabel: "नामांकित प्रकार",

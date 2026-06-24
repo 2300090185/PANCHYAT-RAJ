@@ -59,9 +59,9 @@ app.post('/api/nominations', (req, res) => {
     db.saveNotification(alert);
 
     // Trigger Mock SMTP email log
-    const emailTo = submission.email || 'nominee@panchayatawards.gov.in';
+    const emailTo = submission.email || 'nominee@bgvawards.gov.in';
     const emailSubject = `Nomination Submission Received - Ref ID: ${id}`;
-    const emailBody = `Dear ${submission.fullName},\n\nWe have received your nomination application for the project "${submission.projectName}" under the category "${submission.category}" for the National Panchayat Raj Awards.\n\nYour application reference ID is: ${id}.\nThe verification process will be conducted at three levels (Block, District, and State level) before final compilation by the Jury Panel.\n\nYou can track your live application status in the Nominee Portal using your credentials.\n\nBest regards,\nMinistry of Panchayati Raj,\nGovernment of India.`;
+    const emailBody = `Dear ${submission.fullName},\n\nWe have received your nomination application for the project "${submission.projectName}" under the category "${submission.category}" for the National Bharat Gram Vikas Awards.\n\nYour application reference ID is: ${id}.\nThe verification process will be conducted at three levels (Block, District, and State level) before final compilation by the Jury Panel.\n\nYou can track your live application status in the Nominee Portal using your credentials.\n\nBest regards,\nMinistry of Panchayati Raj,\nGovernment of India.`;
 
     console.log("\n=======================================================");
     console.log(`✉️  [SMTP Server] Sending Nomination Success Email to: ${emailTo}`);
@@ -99,8 +99,8 @@ app.post('/api/register', (req, res) => {
     db.saveNotification(alert);
 
     // Trigger Mock SMTP email log
-    const emailSubject = `Registration Confirmation - National Panchayat Awards`;
-    const emailBody = `Dear ${name},\n\nThank you for registering as a ${role.toUpperCase()} on the Panchayat Raj Sustainable Development Portal.\n\nRegistered Details:\n- Role: ${role.toUpperCase()}\n- Focus Area: ${interest.toUpperCase()}\n- Mobile: ${phone}\n${org ? `- Organization: ${org}\n` : ''}\nYour credentials have been successfully updated in the National Sustainable Development Registry database. Our local block representatives and community managers will reach out to you with specific updates and volunteer guidelines.\n\nBest regards,\nMinistry of Panchayati Raj,\nGovernment of India.`;
+    const emailSubject = `Registration Confirmation - National Bharat Gram Vikas Awards`;
+    const emailBody = `Dear ${name},\n\nThank you for registering as a ${role.toUpperCase()} on the Bharat Gram Vikas Sustainable Development Portal.\n\nRegistered Details:\n- Role: ${role.toUpperCase()}\n- Focus Area: ${interest.toUpperCase()}\n- Mobile: ${phone}\n${org ? `- Organization: ${org}\n` : ''}\nYour credentials have been successfully updated in the National Sustainable Development Registry database. Our local block representatives and community managers will reach out to you with specific updates and volunteer guidelines.\n\nBest regards,\nMinistry of Panchayati Raj,\nGovernment of India.`;
 
     console.log("\n=======================================================");
     console.log(`✉️  [SMTP Server] Sending Registration Success Email to: ${email}`);

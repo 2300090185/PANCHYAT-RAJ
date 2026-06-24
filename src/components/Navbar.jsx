@@ -54,14 +54,14 @@ export default function Navbar({ activeRole, setActiveRole, activeTab, setActive
             <div className="flex items-center gap-3 cursor-pointer" onClick={() => { setActiveTab('home'); setActiveRole('public'); }}>
               <div className="relative flex h-11 w-11 items-center justify-center rounded-xl bg-gradient-to-tr from-amber-600/20 to-emerald-600/20 border border-gray-800 text-white shadow-lg">
                 <div className="text-center font-black tracking-tighter leading-none flex flex-col items-center select-none">
-                  <span className="text-[11px] text-[#138808] font-black uppercase leading-none">PR</span>
+                  <span className="text-[11px] text-[#138808] font-black uppercase leading-none">BGV</span>
                 </div>
                 <div className="absolute -right-1 -top-1 h-3 w-3 rounded-full bg-orange-500 border border-white"></div>
               </div>
               <div>
                 <div className="flex items-center gap-1.5">
                   <span className="font-black text-lg sm:text-xl tracking-tight text-white font-display flex items-center">
-                    <span className="text-gray-300 font-medium">Panchayat</span>
+                    <span className="text-gray-300 font-medium">Bharat Gram Vikas</span>
                   </span>
                   <span className="rounded-full bg-amber-500/10 px-2 py-0.5 text-[9px] font-bold text-[#ff9933] border border-[#ff9933]/20 uppercase tracking-wider">Awards</span>
                 </div>

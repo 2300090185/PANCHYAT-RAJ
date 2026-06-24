@@ -94,7 +94,7 @@ class PanchayatRajApp extends StatelessWidget {
     );
 
     return MaterialApp(
-      title: 'Panchayat Raj Social Impact Portal',
+      title: 'Bharat Gram Vikas Awards Portal',
       theme: darkTheme,
       debugShowCheckedModeBanner: false,
       initialRoute: '/',

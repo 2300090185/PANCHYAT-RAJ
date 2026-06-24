@@ -157,7 +157,7 @@ export default function PublicPortal({ nominations = [], setSelectedCategory, se
                   <circle cx="4.5" cy="3" r="0.25" fill="#000080" />
                 </svg>
               </span>
-              <span>Official Panchayati Raj Initiative</span>
+              <span>Official Bharat Gram Vikas Initiative</span>
             </div>
             <h1 className="text-4xl font-extrabold tracking-tight text-white sm:text-6xl font-display leading-[1.1]">
               Recognize. Inspire.<br />
@@ -291,7 +291,7 @@ export default function PublicPortal({ nominations = [], setSelectedCategory, se
             
             <div className="relative z-10 text-center mb-10">
               <span className="inline-block px-3 py-1 bg-emerald-500/20 border border-emerald-500/30 rounded-full text-[10px] font-black text-emerald-400 uppercase tracking-widest mb-4">Official Announcement</span>
-              <h2 className="text-3xl sm:text-5xl font-black text-white font-display">Panchayat Award Winners</h2>
+              <h2 className="text-3xl sm:text-5xl font-black text-white font-display">Bharat Gram Vikas Award Winners</h2>
               <p className="mt-3 text-gray-300 max-w-2xl mx-auto">The final evaluation process has concluded. Congratulations to the outstanding individuals and projects leading grassroots transformation across the nation.</p>
             </div>
 
@@ -647,7 +647,7 @@ export default function PublicPortal({ nominations = [], setSelectedCategory, se
             <h2 className="text-2xl font-bold text-white font-display">News & Events</h2>
             <div className="space-y-4">
               {[
-                { title: 'National Panchayat Award Registrations', date: 'July 15, 2026', time: '11:00 AM', desc: 'Pre-nomination webinars for youth groups.' },
+                { title: 'National Bharat Gram Vikas Award Registrations', date: 'July 15, 2026', time: '11:00 AM', desc: 'Pre-nomination webinars for youth groups.' },
                 { title: 'Ground Jury Field Visits Commencing', date: 'August 01, 2026', time: 'All Day', desc: 'Verification phase across 12 selected districts.' },
                 { title: 'Rural Climate Action Youth Hackathon', date: 'August 24, 2026', time: '09:00 AM', desc: 'Design challenge for low-cost solar ideas.' }
               ].map((ev, idx) => (

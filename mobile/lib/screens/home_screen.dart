@@ -138,7 +138,7 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
             ),
             Text(
-              'Panchayati Raj Awards',
+              'Bharat Gram Vikas Awards',
               style: GoogleFonts.inter(
                 fontSize: 14,
                 color: const Color(0xFF94A3B8),

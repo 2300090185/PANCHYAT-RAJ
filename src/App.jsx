@@ -200,7 +200,7 @@ export default function App() {
 
   const [chatOpen, setChatOpen] = useState(false);
   const [chatMessages, setChatMessages] = useState([
-    { role: 'ai', text: 'Namaste! I am your AI Governance Assistant. How can I help you with your Panchayat Award application today?' }
+    { role: 'ai', text: 'Namaste! I am your AI Governance Assistant. How can I help you with your Bharat Gram Vikas Award application today?' }
   ]);
   const [chatInput, setChatInput] = useState('');
 
@@ -730,7 +730,7 @@ export default function App() {
             <circle cx="4.5" cy="3" r="0.4" fill="#FFFFFF" />
             <circle cx="4.5" cy="3" r="0.25" fill="#000080" />
           </svg>
-          <span className="text-gray-300 font-semibold text-sm">Panchayat Awards</span>
+          <span className="text-gray-300 font-semibold text-sm">Bharat Gram Vikas Awards</span>
         </div>
         <p className="text-gray-400">&quot;Recognize. Inspire. Transform. Sustain.&quot;</p>
         <p className="mt-2 text-[10px] text-gray-600">© 2026 Ministry of Panchayati Raj & Rural Development, Government of India | भारत सरकार</p>
@@ -774,7 +774,7 @@ export default function App() {
                 <div className="flex justify-between items-start">
                   <div>
                     <h4 className="font-extrabold text-white text-[11px] font-display">{activeMockEmail.subject}</h4>
-                    <p className="text-[9px] text-gray-500 mt-0.5">From: awards-portal@panchayatawards.gov.in</p>
+                    <p className="text-[9px] text-gray-500 mt-0.5">From: awards-portal@bgvawards.gov.in</p>
                   </div>
                   <span className="text-[8px] bg-indigo-950/60 border border-indigo-900/60 px-2 py-0.5 rounded text-indigo-400 uppercase font-black">SMTP Log</span>
                 </div>
@@ -855,11 +855,11 @@ export default function App() {
               <div className="p-3.5 rounded-xl bg-gray-900 border border-gray-800 text-xs">
                 <span className="text-[10px] text-gray-500 font-bold uppercase tracking-wider block">Login Password</span>
                 <div className="flex justify-between items-center mt-1">
-                  <span className="font-mono text-emerald-400 font-bold">Panchayat@{submittedNomination.id.split('-')[1]}</span>
+                  <span className="font-mono text-emerald-400 font-bold">BGVAwards@{submittedNomination.id.split('-')[1]}</span>
                   <button
                     type="button"
                     onClick={() => {
-                      navigator.clipboard.writeText(`Panchayat@${submittedNomination.id.split('-')[1]}`);
+                      navigator.clipboard.writeText(`BGVAwards@${submittedNomination.id.split('-')[1]}`);
                       triggerToast('Copied Password to clipboard.');
                     }}
                     className="text-gray-400 hover:text-white hover:scale-105 transition-all"
