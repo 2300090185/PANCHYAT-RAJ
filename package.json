@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "vite",
     "server": "nodemon server/index.js",
-    "client": "vite",
+    "client": "vite --host",
     "dev:fullstack": "concurrently --kill-others \"npm run server\" \"npm run client\"",
     "build": "vite build",
     "lint": "eslint .",

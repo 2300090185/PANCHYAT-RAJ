@@ -4,7 +4,9 @@ import { fileURLToPath } from 'url';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
-const DB_FILE_PATH = path.join(__dirname, 'db.json');
+const DB_FILE_PATH = process.env.VERCEL 
+  ? path.join('/tmp', 'db.json') 
+  : path.join(__dirname, 'db.json');
 const DB_VERSION = 5; // Increment this to trigger auto-reseed on schema changes
 
 const DEFAULT_NOMINATIONS = [

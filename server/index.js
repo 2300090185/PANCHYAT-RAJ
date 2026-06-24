@@ -266,7 +266,11 @@ app.post('/api/notifications/clear', (req, res) => {
   }
 });
 
-// Start listening
-app.listen(PORT, () => {
-  console.log(`[Express] Backend server running on http://localhost:${PORT}`);
-});
+export default app;
+
+// Start listening if run directly and not on Vercel
+if (process.env.NODE_ENV !== 'production' || !process.env.VERCEL) {
+  app.listen(PORT, () => {
+    console.log(`[Express] Backend server running on http://localhost:${PORT}`);
+  });
+}
